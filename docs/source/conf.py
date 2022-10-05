@@ -2,7 +2,7 @@
 
 # -- Project information
 
-project = 'P1 - Private Documentation'
+project = 'documentation'
 copyright = '2021, Pioneer Centre for AI'
 author = 'Pioneer Centre for AI'
 
