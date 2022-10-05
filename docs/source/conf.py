@@ -3,7 +3,7 @@
 # -- Project information
 
 project = 'documentation'
-copyright = '2021, Pioneer Centre for AI'
+copyright = '2022, Pioneer Centre for AI'
 author = 'Pioneer Centre for AI'
 
 release = '0.2'
