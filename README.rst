@@ -1,9 +1,5 @@
-Template for the Read the Docs tutorial
+P1's Private Documentation
 =======================================
-
-This GitHub template includes fictional Python library
-with some basic Sphinx docs.
-
-Read the tutorial here:
-
-https://docs.readthedocs.io/en/stable/tutorial/
+Built with Sphinx and ReadTheDocs for Business - https://docs.readthedocs.io/en/stable/tutorial/
+The stable branch is - https://pioneer-centre-for-ai-private-documentation.readthedocs-hosted.com/en/stable/
+The latest branch is - https://pioneer-centre-for-ai-private-documentation.readthedocs-hosted.com/en/latest/
