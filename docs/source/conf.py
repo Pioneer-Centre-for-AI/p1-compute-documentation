@@ -2,9 +2,9 @@
 
 # -- Project information
 
-project = 'Private Documentation'
-copyright = '2022, Pioneer Centre for Artificial Intelligence'
-author = 'Pioneer Centre for Artificial Intelligence'
+project = 'Lumache'
+copyright = '2021, Graziella'
+author = 'Graziella'
 
 release = '0.1'
 version = '0.1.0'
