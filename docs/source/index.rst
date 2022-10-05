@@ -1,15 +1,24 @@
-Welcome to the Pioneer Centre for Artificial Intelligence's documentation!
+Welcome to Lumache's documentation!
 ===================================
 
-The Pioneer Centre for Artificial Intelligence (P1 for short) is a Danish cross-university research centre. This private documentation is for all affiliates to share and communicate. Access is controleed through the GitHub repo and organization. See the :ref:`contributing` page to learn how to contribute to the documentation.
+**Lumache** (/lu'make/) is a Python library for cooks and food lovers
+that creates recipes mixing random ingredients.
+It pulls data from the `Open Food Facts database <https://world.openfoodfacts.org/>`_
+and offers a *simple* and *intuitive* API.
 
-Unless you are actively working on documentation pages, you should prefer the stable branch. You can check and switch versions in the lower left corner.
+Check out the :doc:`usage` section for further information, including
+how to :ref:`installation` the project.
 
+.. note::
+
+   This project is under active development.
 
 Contents
 --------
 
 .. toctree::
 
-   contributing
+   usage
+   api
    
+Lumache has its documentation hosted on Read the Docs.
