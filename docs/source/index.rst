@@ -11,8 +11,7 @@ Contents
 
 .. toctree::
 
-   welcome
-   organization
    contributing
    introtalks
-   
+   welcome
+   organization
