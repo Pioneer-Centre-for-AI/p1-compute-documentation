@@ -10,8 +10,8 @@ Contents
 --------
 
 .. toctree::
-
-   contributing
-   introtalks
    welcome
    organization
+   contributing
+   introtalks
+   
