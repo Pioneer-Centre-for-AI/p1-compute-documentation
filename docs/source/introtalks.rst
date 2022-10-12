@@ -1,7 +1,6 @@
 P1 Intro Talks
 ==============
-P1 Intro Talks is a series of talks focused on high-level explanations of more software engineering and computer science related topics tailored specifically for deep learners and data scientists.
-Questions and discussions are welcome. The talks will feature a mix of classic talks, live coding, use case studies and external visits.
+P1 Intro Talks is a series of talks focused on high-level explanations of more software engineering and computer science related topics tailored specifically for deep learners and data scientists. Questions and discussions are welcome. The talks will feature a mix of classic talks, live coding, use case studies and external visits.
 
 .. list-table:: Intro Talks
    :widths: 15 30 45 10 10
