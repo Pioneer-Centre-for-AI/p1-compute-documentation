@@ -13,5 +13,6 @@ Contents
    welcome
    organization
    contributing
+   compute-resources
    introtalks
    
