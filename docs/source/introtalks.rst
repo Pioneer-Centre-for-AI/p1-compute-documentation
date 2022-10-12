@@ -6,7 +6,7 @@ Table of past talks, youtube link, slides
 +----------+----------------------------+----------------------------------+-----------------+------------------+
 |   Date   |           Title            |             Speaker              |     Slides      |     YouTube      |
 +----------+----------------------------+----------------------------------+-----------------+------------------+
-| 27/09/22 |    Introduction to GPUs    | Hans Henrik Brandenborg Sørensen | `270922SLIDES`_ | `270922YOUTUBE`_ |
+| 27/09/22 |    Introduction to GPUs    | Hans Henrik Brandenborg Sørensen | `Slides <270922SLIDES>`_ | `Video <270922YOUTUBE>`_ |
 +----------+----------------------------+----------------------------------+-----------------+------------------+
 
 
