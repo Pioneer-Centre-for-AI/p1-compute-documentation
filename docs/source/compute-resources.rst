@@ -1,0 +1,20 @@
+Compute Resources
+#################
+In this section you will find an overview of various compute resources available to P1. We will also describe each installation, how to get access and how to use it.
+
+The compute hierarchy. Desktop. Interactive local cluster. Batch local cluster. Supercomputers. Commercial cloud.
+
+Overview
+********
+.. list-table:: Compute Resources - Local
+   :widths: 30 30 20 20
+   :header-rows: 1
+
+   * - Name
+     - Type
+     - Affiliation
+     - Access
+   * - `DTU Compute GPU Cluster <https://itswiki.compute.dtu.dk/index.php/GPU_Cluster>`_ 
+     - Interactive Local Cluster
+     - DTU Only
+     - DTU Only
