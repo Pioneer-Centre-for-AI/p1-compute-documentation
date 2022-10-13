@@ -6,7 +6,7 @@ The compute hierarchy. Desktop. Interactive local cluster. Batch local cluster. 
 
 Overview
 ********
-.. list-table:: Compute Resources - Local
+.. list-table:: Local Clusters
    :widths: 30 30 20 20
    :header-rows: 1
 
@@ -15,6 +15,32 @@ Overview
      - Affiliation
      - Access
    * - `DTU Compute GPU Cluster <https://itswiki.compute.dtu.dk/index.php/GPU_Cluster>`_ 
-     - Interactive Local Cluster
+     - Interactive and Trust Based
      - DTU Only
      - DTU Only
+
+.. list-table:: Supercomputers
+   :widths: 30 30 20 20
+   :header-rows: 1
+
+   * - Name
+     - Type
+     - Affiliation
+     - Access
+   * - `MeluXina <https://docs.lxp.lu/>`_ 
+     - Interactive and Batch Based
+     - EuroHPC
+     - Application
+
+.. list-table:: Cloud
+   :widths: 30 30 20 20
+   :header-rows: 1
+
+   * - Name
+     - Type
+     - Affiliation
+     - Access
+   * - `UCloud <https://cloud.sdu.dk/app/login>`_ 
+     - GUI, Interactive and Batch Based
+     - SDU, AU, AAU
+     - Paid
