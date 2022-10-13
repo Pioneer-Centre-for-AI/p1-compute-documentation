@@ -16,7 +16,3 @@ python:
 formats:
   - pdf
   - epub
-
-jobs:
-  pre_install:
-    - git update-index --assume-unchanged environment.yml docs/conf.py
