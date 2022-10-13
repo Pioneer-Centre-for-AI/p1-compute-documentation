@@ -2,10 +2,10 @@ Compute Resources
 #################
 In this section you will find an overview of various compute resources available to P1. We will also describe each installation, how to get access and how to use it.
 
-The compute hierarchy. Desktop. Interactive local cluster. Batch local cluster. Supercomputers. Commercial cloud.
+The compute hierarchy.
 
-Overview
-********
+Landscape
+*********
 .. list-table:: Local Clusters
    :widths: 30 30 20 20
    :header-rows: 1
