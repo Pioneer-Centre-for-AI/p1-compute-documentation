@@ -16,7 +16,7 @@ Landscape
      - Access
    * - `DTU Compute GPU Cluster <https://itswiki.compute.dtu.dk/index.php/GPU_Cluster>`_ 
      - Interactive and Trust Based
-     - DTU Only
+     - DTU
      - DTU Only
 
 .. list-table:: Supercomputers
@@ -44,3 +44,23 @@ Landscape
      - GUI, Interactive and Batch Based
      - SDU, AU, AAU
      - Paid
+
+
+Local Clusters
+**************
+
+DTU Compute GPU Cluster
+=======================
+
+
+Supercomputers
+**************
+
+MeluXina
+========
+
+Cloud
+*****
+
+UCloud
+======
