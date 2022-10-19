@@ -8,6 +8,7 @@ If you need an overview of the centre's organization, see the :doc:`organization
 See the :doc:`contributing` page to learn how to contribute to the documentation.
 See the :doc:`compute-resources` page for an overview of the relevant compute resources.
 See the :doc:`introtalks` page for educational material from the P1 Intro Talks series.
+See the :doc:`learning-resources` page for educational material in machine learning systems and HPC.
 
 Unless you are actively working on documentation pages, you should prefer the stable branch. You can check and switch versions in the lower left corner.
 
@@ -21,3 +22,4 @@ Contents
    contributing
    compute-resources
    introtalks
+   learning-resources
