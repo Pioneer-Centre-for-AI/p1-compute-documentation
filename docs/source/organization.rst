@@ -11,15 +11,15 @@ Organization
      - Contact
    * - Director
      - Serge Belongie
-     - DIKU
+     - UCPH
      - s.belongie@di.ku.dk
    * - COO
      - Michelle Cumming Løkkegaard
-     - DIKU
+     - UCPH
      - mcl@di.ku.dk
    * - Co-Lead
      - Mads Nielsen
-     - DIKU
+     - UCPH
      - madsn@di.ku.dk
    * - Co-Lead
      - Lars Kai Hansen
