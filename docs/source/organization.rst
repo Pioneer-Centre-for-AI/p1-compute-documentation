@@ -1,7 +1,7 @@
 Organization
 ############
 
-.. list-table:: Organization
+.. list-table:: Leadership
    :widths: 15 35 15 30
    :header-rows: 1
 
@@ -37,3 +37,21 @@ Organization
      - 
      - AAU
      - 
+
+
+.. list-table:: Administrative Staff
+   :widths: 15 35 15 30
+   :header-rows: 1
+
+   * - Role
+     - Name
+     - University
+     - Contact
+   * - Secretary
+     - Bettina Kassebeer
+     - UCPH
+     - beka@di.ku.dk
+   * - Compute Guy
+     - Anders Bo Sørensen
+     - DTU
+     - aboso@dtu.dk

@@ -1,6 +1,6 @@
 Compute Resources
 #################
-In this section you will find an overview of various compute resources available to P1. We will also describe each installation, how to get access and how to use it.
+In this section you will find an overview of various compute resources available to P1, but not owned by P1. We will also describe each installation, how to get access and how to use it.
 
 The compute hierarchy.
 
