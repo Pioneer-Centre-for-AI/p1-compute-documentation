@@ -17,7 +17,7 @@ To contribute on GitHub create a new branch from the branching menu IMAGE HERE a
 
 Git Workflow
 ============
-Intro to contributing through git
+Intro to contributing through git. CHANGED SOMETHING HERE.
 
 
 Tips and Tricks
