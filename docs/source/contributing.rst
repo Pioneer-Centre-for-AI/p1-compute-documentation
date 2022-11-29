@@ -1,7 +1,15 @@
 Contributing
 ############
+
+About
+=====
+
+Setup Contribution
+==================
 Intro to setup and read the docs
 
+Git Workflow
+============
 Intro to contributing through git
 
 If the documents are built, but you don't see an update of the relevant page, highlight the URL at the top of the doc and delete the url until it is just latest and press enter. This is likely to show your update.
