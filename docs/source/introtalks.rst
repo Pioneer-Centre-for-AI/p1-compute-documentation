@@ -16,3 +16,8 @@ P1 Intro Talks is a series of talks focused on high-level explanations of more s
      - Hans Henrik Brandenborg Sørensen
      - `Slides <https://github.com/Pioneer-Centre-for-AI/private-documentation/blob/main/docs/files/HHBSIntroToGPUs210922.pdf>`_
      - `Video <https://youtu.be/maCqve4VzhE>`_
+   * - 30/11/22
+     - Introduction to HPC Systems
+     - Bernd Dammann
+     - `Slides <https://github.com/Pioneer-Centre-for-AI/private-documentation/blob/main/docs/files/HHBSIntroToGPUs210922.pdf>`_
+     - `Video <https://youtu.be/maCqve4VzhE>`_
