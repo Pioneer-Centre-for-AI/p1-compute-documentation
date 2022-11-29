@@ -4,7 +4,7 @@ To get viewing and contribution privileges to this documentation contact one of 
 
 About
 =====
-This documnetation resource is meant to support sharing of information within P1. The heterogeneity of P1 can make it hard to communicate and retain information. Slack is simply not the channel and this resource is meant to make it easier to be a researcher at P1.
+This documentation resource is meant to support sharing of information within P1. The heterogeneity of P1 can make it hard to communicate and retain information. Slack is simply not the channel and this resource is meant to make it easier to be a researcher at P1.
 There are two presentable versions of the documentation. One is latest, which is tied to the main branch of the GitHub repository. The other version is the stable version which is tied to a specific branch and updated occassionally.
 
 Setup Contribution
