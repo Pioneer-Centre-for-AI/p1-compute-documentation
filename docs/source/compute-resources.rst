@@ -30,6 +30,14 @@ Landscape
      - Interactive and Batch Based
      - EuroHPC
      - Application
+   * - `LUMI <https://lumi-supercomputer.eu/>`_ 
+     - Interactive and Batch Based
+     - EuroHPC
+     - Application
+   * - `Karolina <https://www.it4i.cz/en/infrastructure/karolina>`_ 
+     - Interactive and Batch Based
+     - EuroHPC
+     - Application
 
 .. list-table:: Cloud
    :widths: 30 30 20 20
@@ -42,6 +50,10 @@ Landscape
    * - `UCloud <https://cloud.sdu.dk/app/login>`_ 
      - GUI, Interactive and Batch Based
      - SDU, AU, AAU
+     - Paid, DEIC
+   * - `AWS <https://aws.amazon.com/>`_ 
+     - GUI, Interactive and Batch Based
+     - Amazon
      - Paid
 
 
@@ -60,12 +72,15 @@ Supercomputers is the domain where you can perform large scale training. Resourc
 
 MeluXina
 ========
+Supercomputer in Luxembourg
 
 LUMI
 ====
+Supercomputer in Finland
 
 Karolina
 ========
+Supercomputer in the Czech Republic
 
 Cloud
 *****
