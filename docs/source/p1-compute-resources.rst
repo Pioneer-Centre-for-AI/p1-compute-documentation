@@ -15,6 +15,7 @@ Most HPC hardware has an expected utilization time of approximately 5 years.
 
 An example of a compute budget expenditure - a researcher might have 400k DKK for non-GDPR computing. In that case P1 can purchase a 2xA100 node, with the researcher getting priority access. With the last 100k DKK, we recommend a diversification of the researchers compute portfolio. Using some of the 100k for personal computers with powerful GPU's and reserving a siginificant portion of funds for later. This could be for storage or cloud compute. Having the budget to spring for cloud compute if peak pressure on other computing resources makes training a model in time for a submission deadline infeasible can be necessary.
 
+
 P1C@DTU
 *******
 Our compute cluster for non-sensitive data. It is hosted/administrated by DCC/DTU Compute, primary contact Henning Christiansen.
