@@ -15,7 +15,7 @@ GitHub Workflow
 ===============
 To contribute on GitHub create a new branch from the branching menu and name it after the feature you want to create. 
 
-.. image:: images/contributing/github_contributing_01.png
+.. image:: docs/images/contributing/github_contributing_01.png
   :width: 400
   :alt: Get on the right branch or create a new one
 
