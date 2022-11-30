@@ -71,9 +71,6 @@ Once all checks have passed you can click the "Merge pull request"-button or wai
   :width: 600
   :alt: Optionally add more descriptions and comments to the pull request.
 
-
-Write your features with the edit button IMAGE HERE. Once you are done writing your contributions, verify that it builds on ReadTheDocs LINK HERE. Now it is time to merge all the changes that might have happened since you branched out into your current branch. This is to make sure that merging your newly created features don't create conflicts when merging your branch back into the main branch. Once you have also confirmed that your branch, having the main branch merged into it, builds you are ready to merge your branch back into the main branch. Once again make sure the branch (now it should be the latest branch) builds.
-
 Git Workflow
 ============
 Intro to contributing through git.
