@@ -13,11 +13,17 @@ Contributions can be performed one of two ways. Directly on GitHub or through gi
 
 GitHub Workflow
 ===============
-To contribute on GitHub create a new branch from the branching menu IMAGE HERE and name it after the feature you want to create. Write your features with the edit button IMAGE HERE. Once you are done writing your contributions, verify that it builds on ReadTheDocs LINK HERE. Now it is time to merge all the changes that might have happened since you branched out into your current branch. This is to make sure that merging your newly created features don't create conflicts when merging your branch back into the main branch. Once you have also confirmed that your branch, having the main branch merged into it, builds you are ready to merge your branch back into the main branch. Once again make sure the branch (now it should be the latest branch) builds.
+To contribute on GitHub create a new branch from the branching menu and name it after the feature you want to create. 
+
+.. image:: ../images/github_contributing_01.PNG
+  :width: 400
+  :alt: Get on the right branch or create a new one
+
+Write your features with the edit button IMAGE HERE. Once you are done writing your contributions, verify that it builds on ReadTheDocs LINK HERE. Now it is time to merge all the changes that might have happened since you branched out into your current branch. This is to make sure that merging your newly created features don't create conflicts when merging your branch back into the main branch. Once you have also confirmed that your branch, having the main branch merged into it, builds you are ready to merge your branch back into the main branch. Once again make sure the branch (now it should be the latest branch) builds.
 
 Git Workflow
 ============
-Intro to contributing through git. CHANGED SOMETHING HERE.
+Intro to contributing through git.
 
 
 Tips and Tricks
