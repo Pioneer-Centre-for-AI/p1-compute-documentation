@@ -1,7 +1,7 @@
 Organization
 ############
 
-.. list-table:: Leadership
+.. list-table:: Management
    :widths: 15 35 15 30
    :header-rows: 1
 
@@ -51,7 +51,7 @@ Organization
      - Bettina Kassebeer
      - UCPH
      - beka@di.ku.dk
-   * - Compute Guy
+   * - Compute Coordinator
      - Anders Bo Sørensen
      - DTU
      - aboso@dtu.dk

@@ -11,13 +11,66 @@ Setup Contribution
 ==================
 Contributions can be performed one of two ways. Directly on GitHub or through git interactions.
 
+
+What is Git
+===========
+What are commits and merges.
+
+
 GitHub Workflow
 ===============
 To contribute on GitHub create a new branch from the branching menu and name it after the feature you want to create. 
 
 .. image:: images/contributing/github_contributing_01.png
-  :width: 400
-  :alt: Get on the right branch or create a new one
+  :width: 600
+  :alt: Get on the right branch or create a new one.
+
+GitHub will prompt you to create a new branch with the name of your feature. Click create branch.
+
+.. image:: images/contributing/github_contributing_02.png
+  :width: 600
+  :alt: GitHub will suggest creating a new branch.
+
+Once on the correct branch - navigate to the file you want to edit and click the edit button to go into editor mode.
+
+.. image:: images/contributing/github_contributing_03.png
+  :width: 600
+  :alt: Click the editor button.
+
+Perform your edits, this part can be performed multiple times, and with each commit make sure to put in a title that is informative and makes sense. If the title is too long feel free to describe your changes in greater details in the extended description. Make sure you commit to your newly created branch.
+
+.. image:: images/contributing/github_contributing_04.png
+  :width: 600
+  :alt: Make your changes to the text and create an informative commit description.
+
+Go back to the main repository page and ensure you are still on your own branch. Click "Compare & pull request" to begin the pull request and merging process.
+
+.. image:: images/contributing/github_contributing_05.png
+  :width: 600
+  :alt: Ensure you are on the correct branch and go to the pull request and merge screen.
+
+Set the buttons highlighted in green to "base: main" and "compare: $my_branch$". Write an overall message for your pull request and click the "Create pull request"-button.
+
+.. image:: images/contributing/github_contributing_06.png
+  :width: 600
+  :alt: Ensure you are merging from and to the correct branches and create a pull request with an informative description.
+
+ReadTheDocs will commence building your changes and make sure that your changes are valid. This ensures you don't bring down the main branch with your changes.
+
+.. image:: images/contributing/github_contributing_07.png
+  :width: 600
+  :alt: ReadTheDocs will build your changes to ensure they are valid.
+
+Once all checks have passed you can click the "Merge pull request"-button or wait until an administrator has approved your pull request. If your pull request did not build correctly, continue working on your changes until ReadTheDocs can build your changes.
+
+.. image:: images/contributing/github_contributing_08.png
+  :width: 600
+  :alt: Once ReadTheDocs builds your changes the pull request can be merged.
+
+.. image:: images/contributing/github_contributing_09.png
+  :width: 600
+  :alt: Optionally add more descriptions and comments to the pull request.
+
 
 Write your features with the edit button IMAGE HERE. Once you are done writing your contributions, verify that it builds on ReadTheDocs LINK HERE. Now it is time to merge all the changes that might have happened since you branched out into your current branch. This is to make sure that merging your newly created features don't create conflicts when merging your branch back into the main branch. Once you have also confirmed that your branch, having the main branch merged into it, builds you are ready to merge your branch back into the main branch. Once again make sure the branch (now it should be the latest branch) builds.
 
