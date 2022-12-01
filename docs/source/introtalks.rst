@@ -21,5 +21,5 @@ The talks will feature a mix of classic talks, live coding, use case studies and
    * - 30/11/22
      - Introduction to HPC Systems
      - Bernd Dammann
-     - `Slides <https://github.com/Pioneer-Centre-for-AI/private-documentation/blob/main/docs/files/HHBSIntroToGPUs210922.pdf>`_
+     -
      - `Video <https://youtu.be/maCqve4VzhE>`_

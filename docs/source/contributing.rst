@@ -145,3 +145,66 @@ Source:
   .. code-block:: python
 
     import numpy as np
+
+Link to an external URL
+=======================
+`ReadTheDocs <https://readthedocs.com/>`_
+
+Source:
+
+.. code-block:: RST
+
+  `ReadTheDocs <https://readthedocs.com/>`_
+
+
+Link to an internal page
+========================
+Make sure to use the name of the file in your link.
+
+:doc:`welcome`
+
+Source:
+
+.. code-block:: RST
+
+  :doc:`welcome`
+
+Create a table
+==============
+.. list-table:: Management
+   :widths: 15 35 15 30
+   :header-rows: 1
+
+   * - Role
+     - Name
+     - University
+     - Contact
+   * - Director
+     - Serge Belongie
+     - UCPH
+     - s.belongie@di.ku.dk
+   * - COO
+     - Michelle Cumming Løkkegaard
+     - UCPH
+     - mcl@di.ku.dk
+
+Source:
+
+.. code-block:: RST
+
+  .. list-table:: Management
+   :widths: 15 35 15 30
+   :header-rows: 1
+
+   * - Role
+     - Name
+     - University
+     - Contact
+   * - Director
+     - Serge Belongie
+     - UCPH
+     - s.belongie@di.ku.dk
+   * - COO
+     - Michelle Cumming Løkkegaard
+     - UCPH
+     - mcl@di.ku.dk
