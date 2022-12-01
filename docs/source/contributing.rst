@@ -4,12 +4,16 @@ To get viewing and contribution privileges to this documentation contact one of 
 
 About
 =====
-This documentation resource is meant to support sharing of information within P1. The heterogeneity of P1 can make it hard to communicate and retain information. Slack is simply not the channel and this resource is meant to make it easier to be a researcher at P1.
-There are two presentable versions of the documentation. One is latest, which is tied to the main branch of the GitHub repository. The other version is the stable version which is tied to a specific branch and updated occassionally.
+This documentation resource is meant to support sharing of information within P1. 
+The heterogeneity of P1 can make it hard to communicate and retain information. 
+Slack is simply not the channel and this resource is meant to make it easier to be a researcher at P1.
+There are two presentable versions of the documentation. 
+One is latest, which is tied to the main branch of the GitHub repository. 
+The other version is the stable version which is tied to a specific branch and updated occassionally.
 
 What is ReadTheDocs
 ===================
-`ReadTheDocs <https://readthedocs.com/>`_ is a widely used system for generating rich documentation. This documentation is generated with the paid version in order for us to have private documentation with login control, while allowing users access through their GitHub login. The repository holding all of the configuration and source files for this documentation is held by a GitHub repository owned by P1's GitHub organization. Every time a new update is pushed to the documentation, ReadTheDocs builds the documentation and sends an error message. Our ReadTheDocs instance has been configured to also fail on warnings. This allows us to catch errors like an image not being found, which is actually a warning. ReadTheDocs also allows us to choose which branches from our repository we want as our stable and latest branches.
+`ReadTheDocs <https://readthedocs.com/>`_ is a system widely used for generating rich documentation. This documentation is generated with the paid version in order for us to have private documentation with login control, while allowing users access through their GitHub login. The repository holding all of the configuration and source files for this documentation is held by a GitHub repository owned by P1's GitHub organization. Every time a new update is pushed to the documentation, ReadTheDocs builds the documentation and sends an error message. Our ReadTheDocs instance has been configured to also fail on warnings. This allows us to catch errors like an image not being found, which is actually a warning. ReadTheDocs also allows us to choose which branches from our repository we want as our stable and latest branches.
 
 
 What is git
@@ -21,10 +25,9 @@ What is GitHub
 ==============
 GitHub is the most widely used repository hosting service. It is also the one that most programmers have an account with. ReadTheDocs allows us to administrate access and login to our documentation through GitHub. The web based interface also allows for non-technical staff to contribute to the documentation without having to learn too much about Git processes or install anything.
 
-
 GitHub Workflow
 ===============
-To contribute on GitHub create a new branch from the branching menu and name it after the feature you want to create. 
+This is the easier of the two workflows, but if you are making a larger amount of edits, the git workflow may be faster. To contribute on GitHub create a new branch from the branching menu and name it after the feature you want to create. 
 
 .. image:: images/contributing/github_contributing_01.png
   :width: 600
