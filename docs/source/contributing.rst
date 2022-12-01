@@ -97,7 +97,7 @@ If your pull request did not build correctly, continue working on your changes u
   :width: 600
   :alt: Optionally add more descriptions and comments to the pull request.
 
-Git Workflow
+git Workflow
 ************
 Intro to contributing through git.
 
@@ -208,3 +208,32 @@ Source:
      - Michelle Cumming Løkkegaard
      - UCPH
      - mcl@di.ku.dk
+
+Code Text
+*********
+
+Use the double backquotes to show your text as ``code``.
+
+.. code-block:: RST
+
+  My text in ``code``
+
+
+Italic Text
+***********
+
+Use single asterisks to format text as *italic*.
+
+.. code-block:: RST
+
+  My text in *italic*
+
+
+Bold Text
+*********
+
+Use double asterisks to format text as **bold**.
+
+.. code-block:: RST
+
+  My text in **bold**
