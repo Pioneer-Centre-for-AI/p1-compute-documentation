@@ -116,6 +116,37 @@ This is likely to show your update.
    * - `Git branch and merge guide <https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/defining-the-mergeability-of-pull-requests/managing-a-branch-protection-rule>`_
    * - `RST guide <https://sublime-and-sphinx-guide.readthedocs.io/en/latest/index.html>`_
 
+Code Text
+=========
+
+Use the double backquotes to show your text as ``code``.
+
+.. code-block:: RST
+
+  My text in ``code``
+
+
+Italic Text
+===========
+
+Use single asterisks to format text as *italic*.
+
+.. code-block:: RST
+
+  My text in *italic*
+
+
+Bold Text
+=========
+
+Use double asterisks to format text as **bold**.
+
+.. code-block:: RST
+
+  My text in **bold**
+
+
+
 Link to an image
 ================
 .. image:: images/contributing/github_contributing_06.png
@@ -208,32 +239,3 @@ Source:
      - Michelle Cumming Løkkegaard
      - UCPH
      - mcl@di.ku.dk
-
-Code Text
-*********
-
-Use the double backquotes to show your text as ``code``.
-
-.. code-block:: RST
-
-  My text in ``code``
-
-
-Italic Text
-***********
-
-Use single asterisks to format text as *italic*.
-
-.. code-block:: RST
-
-  My text in *italic*
-
-
-Bold Text
-*********
-
-Use double asterisks to format text as **bold**.
-
-.. code-block:: RST
-
-  My text in **bold**
