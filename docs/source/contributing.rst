@@ -1,6 +1,9 @@
 Contributing
 ############
-To get viewing and contribution privileges to this documentation contact one of the GitHub organization owners or the compute coordinator. Once you have been added to the GitHub you just have to access one of the links to the documentation in the ReadMe of the repository. This will result in a prompt from ReadTheDocs asking for access to your GitHub. This will allow for ReadTheDocs to use your GitHub login as authentication.
+To get viewing and contribution privileges to this documentation contact one of the GitHub organization owners or the compute coordinator. 
+Once you have been added to the GitHub you just have to access one of the links to the documentation in the ReadMe of the repository. 
+This will result in a prompt from ReadTheDocs asking for access to your GitHub. 
+This will allow for ReadTheDocs to use your GitHub login as authentication.
 
 About
 =====
@@ -13,7 +16,14 @@ The other version is the stable version which is tied to a specific branch and u
 
 What is ReadTheDocs
 ===================
-`ReadTheDocs <https://readthedocs.com/>`_ is a system widely used for generating rich documentation. This documentation is generated with the paid version in order for us to have private documentation with login control, while allowing users access through their GitHub login. The repository holding all of the configuration and source files for this documentation is held by a GitHub repository owned by P1's GitHub organization. Every time a new update is pushed to the documentation, ReadTheDocs builds the documentation and sends an error message. Our ReadTheDocs instance has been configured to also fail on warnings. This allows us to catch errors like an image not being found, which is actually a warning. ReadTheDocs also allows us to choose which branches from our repository we want as our stable and latest branches.
+`ReadTheDocs <https://readthedocs.com/>`_ is a system widely used for generating rich documentation. 
+This documentation is generated with the paid version in order for us to have private documentation with login control, 
+while allowing users access through their GitHub login. 
+The repository holding all of the configuration and source files for this documentation is held by a GitHub repository owned by P1's GitHub organization. 
+Every time a new update is pushed to the documentation, ReadTheDocs builds the documentation and sends an error message. 
+Our ReadTheDocs instance has been configured to also fail on warnings. 
+This allows us to catch errors like an image not being found, which is actually a warning. 
+ReadTheDocs also allows us to choose which branches from our repository we want as our stable and latest branches.
 
 
 What is git
@@ -23,11 +33,16 @@ What are commits and merges.
 
 What is GitHub
 ==============
-GitHub is the most widely used repository hosting service. It is also the one that most programmers have an account with. ReadTheDocs allows us to administrate access and login to our documentation through GitHub. The web based interface also allows for non-technical staff to contribute to the documentation without having to learn too much about Git processes or install anything.
+GitHub is the most widely used repository hosting service. 
+It is also the one that most programmers have an account with. 
+ReadTheDocs allows us to administrate access and login to our documentation through GitHub. 
+The web based interface also allows for non-technical staff to contribute to the documentation 
+without having to learn too much about Git processes or install anything.
 
 GitHub Workflow
 ===============
-This is the easier of the two workflows, but if you are making a larger amount of edits, the git workflow may be faster. To contribute on GitHub create a new branch from the branching menu and name it after the feature you want to create. 
+This is the easier of the two workflows, but if you are making a larger amount of edits, the git workflow may be faster. 
+To contribute on GitHub create a new branch from the branching menu and name it after the feature you want to create. 
 
 .. image:: images/contributing/github_contributing_01.png
   :width: 600
@@ -45,7 +60,9 @@ Once on the correct branch - navigate to the file you want to edit and click the
   :width: 600
   :alt: Click the editor button.
 
-Perform your edits, this part can be performed multiple times, and with each commit make sure to put in a title that is informative and makes sense. If the title is too long feel free to describe your changes in greater details in the extended description. Make sure you commit to your newly created branch.
+Perform your edits, this part can be performed multiple times, and with each commit make sure to put in a title that is informative and makes sense. 
+If the title is too long feel free to describe your changes in greater details in the extended description. 
+Make sure you commit to your newly created branch.
 
 .. image:: images/contributing/github_contributing_04.png
   :width: 600
@@ -69,7 +86,8 @@ ReadTheDocs will commence building your changes and make sure that your changes 
   :width: 600
   :alt: ReadTheDocs will build your changes to ensure they are valid.
 
-Once all checks have passed you can click the "Merge pull request"-button or wait until an administrator has approved your pull request. If your pull request did not build correctly, continue working on your changes until ReadTheDocs can build your changes.
+Once all checks have passed you can click the "Merge pull request"-button or wait until an administrator has approved your pull request. 
+If your pull request did not build correctly, continue working on your changes until ReadTheDocs can build your changes.
 
 .. image:: images/contributing/github_contributing_08.png
   :width: 600
@@ -86,7 +104,8 @@ Intro to contributing through git.
 
 Tips and Tricks
 ===============
-If the documents are built, but you don't see an update of the relevant page, highlight the URL at the top of the doc and delete the url until it is just latest and press enter. This is likely to show your update.
+If the documents are built, but you don't see an update of the relevant page, highlight the URL at the top of the doc and delete the url until it is just latest and press enter. 
+This is likely to show your update.
 
 .. list-table:: Useful Resources
    :widths: 60

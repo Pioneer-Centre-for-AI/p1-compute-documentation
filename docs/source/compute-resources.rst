@@ -1,6 +1,7 @@
 Compute Resources
 #################
-In this section you will find an overview of various compute resources available to P1, but not owned by P1. We will also describe each installation, how to get access and how to use it.
+In this section you will find an overview of various compute resources available to P1, but not owned by P1. 
+We will also describe each installation, how to get access and how to use it.
 
 
 Landscape
@@ -68,7 +69,9 @@ Only available to researchers at DTU Compute.
 
 Supercomputers
 **************
-Supercomputers is the domain where you can perform large scale training. Resource acquisition in this domain usually takes time, so please orient yourself on the options and apply as early as possible. At the very least you should expect 15-20 calendar days response time.
+Supercomputers is the domain where you can perform large scale training. 
+Resource acquisition in this domain usually takes time, so please orient yourself on the options and apply as early as possible. 
+At the very least you should expect 15-20 calendar days response time.
 
 MeluXina
 ========
