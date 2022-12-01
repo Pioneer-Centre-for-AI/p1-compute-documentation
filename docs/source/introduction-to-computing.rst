@@ -24,3 +24,5 @@ Performance Optimization in Deep Learning
 Eager vs graph execution mode
 
 A PyTorch example
+  .. code-block:: python
+    import numpy as np
