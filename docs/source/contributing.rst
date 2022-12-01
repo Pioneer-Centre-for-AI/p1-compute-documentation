@@ -6,7 +6,7 @@ This will result in a prompt from ReadTheDocs asking for access to your GitHub.
 This will allow for ReadTheDocs to use your GitHub login as authentication.
 
 About
-=====
+*****
 This documentation resource is meant to support sharing of information within P1. 
 The heterogeneity of P1 can make it hard to communicate and retain information. 
 Slack is simply not the channel and this resource is meant to make it easier to be a researcher at P1.
@@ -15,7 +15,7 @@ One is latest, which is tied to the main branch of the GitHub repository.
 The other version is the stable version which is tied to a specific branch and updated occassionally.
 
 What is ReadTheDocs
-===================
+*******************
 `ReadTheDocs <https://readthedocs.com/>`_ is a system widely used for generating rich documentation. 
 This documentation is generated with the paid version in order for us to have private documentation with login control, 
 while allowing users access through their GitHub login. 
@@ -27,12 +27,12 @@ ReadTheDocs also allows us to choose which branches from our repository we want 
 
 
 What is git
-===========
+***********
 Version control.
 What are commits and merges.
 
 What is GitHub
-==============
+**************
 GitHub is the most widely used repository hosting service. 
 It is also the one that most programmers have an account with. 
 ReadTheDocs allows us to administrate access and login to our documentation through GitHub. 
@@ -40,7 +40,7 @@ The web based interface also allows for non-technical staff to contribute to the
 without having to learn too much about Git processes or install anything.
 
 GitHub Workflow
-===============
+***************
 This is the easier of the two workflows, but if you are making a larger amount of edits, the git workflow may be faster. 
 To contribute on GitHub create a new branch from the branching menu and name it after the feature you want to create. 
 
@@ -98,12 +98,12 @@ If your pull request did not build correctly, continue working on your changes u
   :alt: Optionally add more descriptions and comments to the pull request.
 
 Git Workflow
-============
+************
 Intro to contributing through git.
 
 
 Tips and Tricks
-===============
+***************
 If the documents are built, but you don't see an update of the relevant page, highlight the URL at the top of the doc and delete the url until it is just latest and press enter. 
 This is likely to show your update.
 
@@ -115,3 +115,33 @@ This is likely to show your update.
    * - `ReadTheDocs guide <https://docs.readthedocs.io/en/stable/>`_
    * - `Git branch and merge guide <https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/defining-the-mergeability-of-pull-requests/managing-a-branch-protection-rule>`_
    * - `RST guide <https://sublime-and-sphinx-guide.readthedocs.io/en/latest/index.html>`_
+
+Link to an image
+================
+.. image:: images/contributing/github_contributing_06.png
+  :width: 600
+  :alt: Ensure you are merging from and to the correct branches and create a pull request with an informative description.
+
+Source: 
+
+.. code-block:: RST
+
+  .. image:: images/contributing/github_contributing_06.png
+  :width: 600
+  :alt: Ensure you are merging from and to the correct branches and create a pull request with an informative description.
+
+Show a code block
+=================
+Remember the space between the code-block line and your code.
+
+.. code-block:: python
+
+  import numpy as np
+
+Source:
+
+.. code-block:: RST
+
+  .. code-block:: python
+
+    import numpy as np
