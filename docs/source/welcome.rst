@@ -18,5 +18,3 @@ We want you to apply to as many of these installations as soon as possible to en
 necessary compute hours allocated elsewhere for when our own compute resources are under peak pressure.
 
 Links to DDSA
-
-
