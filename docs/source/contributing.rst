@@ -9,12 +9,23 @@ There are two presentable versions of the documentation. One is latest, which is
 
 Setup Contribution
 ==================
-Contributions can be performed one of two ways. Directly on GitHub or through git interactions.
+Contributions can be performed one of two ways. Directly on GitHub or through git.
 
+What is ReadTheDocs
+===================
+Building python and rst documents
+Build system
+Login control
+Access through GitHub
 
 What is Git
 ===========
+Version control.
 What are commits and merges.
+
+What is GitHub
+==============
+GitHub is the most widely used repository hosting service. It is also the one that most programmers have an account with. ReadTheDocs allows us to administrate access and login to our documentation through GitHub. The web based interface also allows for non-technical staff to contribute to the documentation without having to learn too much about Git processes or install anything.
 
 
 GitHub Workflow
