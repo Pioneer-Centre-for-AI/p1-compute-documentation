@@ -7,18 +7,12 @@ About
 This documentation resource is meant to support sharing of information within P1. The heterogeneity of P1 can make it hard to communicate and retain information. Slack is simply not the channel and this resource is meant to make it easier to be a researcher at P1.
 There are two presentable versions of the documentation. One is latest, which is tied to the main branch of the GitHub repository. The other version is the stable version which is tied to a specific branch and updated occassionally.
 
-Setup Contribution
-==================
-Contributions can be performed one of two ways. Directly on GitHub or through git.
-
 What is ReadTheDocs
 ===================
-Building python and rst documents
-Build system
-Login control
-Access through GitHub
+`ReadTheDocs<https://readthedocs.com/>`_ is a widely used system for generating rich documentation. This documentation is generated with the paid version in order for us to have private documentation with login control, while allowing users access through their GitHub login. The repository holding all of the configuration and source files for this documentation is held by a GitHub repository owned by P1's GitHub organization. Every time a new update is pushed to the documentation, ReadTheDocs builds the documentation and sends an error message. Our ReadTheDocs instance has been configured to also fail on warnings. This allows us to catch errors like an image not being found, which is actually a warning. ReadTheDocs also allows us to choose which branches from our repository we want as our stable and latest branches.
 
-What is Git
+
+What is git
 ===========
 Version control.
 What are commits and merges.
