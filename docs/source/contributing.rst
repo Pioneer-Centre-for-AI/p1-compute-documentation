@@ -163,7 +163,7 @@ Source:
 
 Show a code block
 =================
-Remember the space between the code-block line and your code.
+Remember the space between the code-block line and your code. Also remember two spaces before your code. Otherwise the code-block won't pick up the element.
 
 .. code-block:: python
 
