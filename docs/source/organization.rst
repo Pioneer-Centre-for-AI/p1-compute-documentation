@@ -61,12 +61,12 @@ Acknowledgements
 When publishing a paper supported by P1
  
 .. code-block:: RST
- 
+
 $NAME was supported by the Danish Pioneer Centre for AI, DNRF grant number P1
- 
+
  
 When having used support from DCC (the DTU HPC center administrating our DTU cluster) please cite the following reference
- 
+
 .. code-block:: RST
- 
+
 http://doi.org/10.48714/DTU.HPC.0001
