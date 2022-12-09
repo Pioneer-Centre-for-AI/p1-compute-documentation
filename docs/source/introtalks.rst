@@ -22,4 +22,4 @@ The talks will feature a mix of classic talks, live coding, use case studies and
      - Introduction to HPC Systems
      - Bernd Dammann
      -
-     - `Video <https://youtu.be/maCqve4VzhE>`_
+     - `Video <https://youtu.be/HJ2qeROTcu4>`_
