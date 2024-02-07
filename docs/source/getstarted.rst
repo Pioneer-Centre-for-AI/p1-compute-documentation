@@ -1,72 +1,30 @@
-Organization
-############
+Get started
+###########
 
-.. list-table:: Management
-   :widths: 15 35 15 30
-   :header-rows: 1
+The mission of the P1 HPC is to support research from affiliates. So to get
+access to the cluster, one should first [register to be a member of
+P1](https://www.aicentre.dk/affiliation). The next step is to get a DTU 
+account, so that the DTU compute environment can be accessed. This can be obtained on: TODO.com.
+Please note that the P1 HPC is only accessible through the DTU network, so
+if you are not within the network you have to be on the [VPN](https://www.hpc.dtu.dk/?page_id=4317).
 
-   * - Role
-     - Name
-     - University
-     - Contact
-   * - Director
-     - Serge Belongie
-     - UCPH
-     - s.belongie@di.ku.dk
-   * - COO
-     - Michelle Cumming Løkkegaard
-     - UCPH
-     - mcl@di.ku.dk
-   * - Co-Lead
-     - Mads Nielsen
-     - UCPH
-     - madsn@di.ku.dk
-   * - Co-Lead
-     - Lars Kai Hansen
-     - DTU
-     - lkai@dtu.dk
-   * - Co-Lead
-     - 
-     - ITU
-     - 
-   * - Co-Lead
-     - 
-     - AU
-     - 
-   * - Co-Lead
-     - 
-     - AAU
-     - 
+The compute cluster can be accessed through ssh on login9.hpc.dtu.dk, where the
+user will log into their own home directory. Note that the home directories
+have limited storage (50gb), and there is much more storage available on
+/TODO/.
 
-
-.. list-table:: Administrative Staff
-   :widths: 15 35 15 30
-   :header-rows: 1
-
-   * - Role
-     - Name
-     - University
-     - Contact
-   * - Secretary
-     - Bettina Kassebeer
-     - UCPH
-     - beka@di.ku.dk
-   * - Compute Coordinator
-     - Anders Bo Sørensen
-     - DTU
-     - aboso@dtu.dk
-     
-Acknowledgements
-******************************
-When publishing a paper supported by P1
- 
-.. code-block:: RST
-
-  $NAME was supported by the Danish Pioneer Centre for AI, DNRF grant number P1
+We have X interactive nodes, which you can use for installing packages and 
+try-runs of your experiments. Please do not run any heavy jobs on the login
+node, and use [batch jobs](https://www.hpc.dtu.dk/?page_id=1416) for your
+experiments.
 
  
-When having used support from DCC (the DTU HPC center administrating our DTU cluster) please cite the following reference
+When having used support from DCC (the DTU HPC center administrating our DTU
+cluster) please cite the following reference:
 
 .. code-block:: RST
 
   http://doi.org/10.48714/DTU.HPC.0001
+
+
+TODO, do we want to have our own reference?

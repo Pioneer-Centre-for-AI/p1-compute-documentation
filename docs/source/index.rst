@@ -26,10 +26,6 @@ Contents
    :maxdepth: 2
    
    getstarted
-   organization
-   contributing
-   introduction-to-computing
-   p1-compute-resources
    compute-resources
-   introtalks
    learning-resources
+   contact

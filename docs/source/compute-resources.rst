@@ -1,95 +1,28 @@
-Compute Resources
-#################
-In this section you will find an overview of various compute resources available to P1, but not owned by P1. 
-We will also describe each installation, how to get access and how to use it.
+P1-Owned Compute Resources
+##########################
 
+The current hardware configuration consists of 7 Lenovo ThinkSystem SR665 V3 servers, each with 2 AMD EPYC 9354 32-Core Processors, and 768GB of RAM. Each node is equipped with 2 NVIDIA H100 PCIe GPU cards, with 80 GB of memory each.
 
-Landscape
-*********
-.. list-table:: Local Clusters
-   :widths: 30 30 20 20
-   :header-rows: 1
+The Operating System is Alma Linux (ver. 9.2), and the servers are under control of a scheduling environment (LSF), to manage the concurrent workload of several simultaneous users. 
 
-   * - Name
-     - Type
-     - Affiliation
-     - Access
-   * - `DTU Compute GPU Cluster <https://itswiki.compute.dtu.dk/index.php/GPU_Cluster>`_ 
-     - Interactive and Trust Based
-     - DTU
-     - DTU Only
+5 of the servers are available for batch jobs and in a queue named p1. 
+2 of the servers are reserved for interactive usage, and should be used for setting up the models, the computational environment, and for everything that needs interactive access.
 
-.. list-table:: Supercomputers
-   :widths: 30 30 20 20
-   :header-rows: 1
+The servers are connected to a 60TiB storage, accessible under /dtu/p1, this is reserved to P1 users.  
 
-   * - Name
-     - Type
-     - Affiliation
-     - Access
-   * - `MeluXina <https://docs.lxp.lu/>`_ 
-     - Interactive and Batch Based
-     - EuroHPC
-     - Application
-   * - `LUMI <https://lumi-supercomputer.eu/>`_ 
-     - Interactive and Batch Based
-     - EuroHPC
-     - Application
-   * - `Karolina <https://www.it4i.cz/en/infrastructure/karolina>`_ 
-     - Interactive and Batch Based
-     - EuroHPC
-     - Application
+Investing Your Compute Budget
+*****************************
+If you have compute funding or are applying for compute funding, you are very welcome to contact P1's compute coordinator for a consultation.
 
-.. list-table:: Cloud
-   :widths: 30 30 20 20
-   :header-rows: 1
+Generally, P1 can help purchasing hardware for you if it is to be a part of P1's clusters. 
+In this setup you would have priority access to the hardware that you purchase, but if it is unused other researchers at P1 can use it as well. 
+Most HPC hardware has an expected utilization time of approximately 5 years.
 
-   * - Name
-     - Type
-     - Affiliation
-     - Access
-   * - `UCloud <https://cloud.sdu.dk/app/login>`_ 
-     - GUI, Interactive and Batch Based
-     - SDU, AU, AAU
-     - Paid, DEIC
-   * - `AWS <https://aws.amazon.com/>`_ 
-     - GUI, Interactive and Batch Based
-     - Amazon
-     - Paid
+An example of a compute budget expenditure - a researcher might have 400k DKK for non-GDPR computing. 
+In that case P1 can purchase a 2xA100 node, with the researcher getting priority access. 
+With the last 100k DKK, we recommend a diversification of the researchers compute portfolio. 
+Using some of the 100k for personal computers with powerful GPU's and reserving a siginificant portion of funds for later. 
+This could be for storage or cloud compute. 
+Having the budget to spring for cloud compute if peak pressure on other computing resources 
+makes training a model in time for a submission deadline infeasible can be necessary.
 
-
-Local Clusters
-**************
-The local clusters are usually university-owned, but might only be accessible by a subset of P1 researchers.
-
-DTU Compute GPU Cluster
-=======================
-Only available to researchers at DTU Compute.
-
-
-Supercomputers
-**************
-Supercomputers is the domain where you can perform large scale training. 
-Resource acquisition in this domain usually takes time, so please orient yourself on the options and apply as early as possible. 
-At the very least you should expect 15-20 calendar days response time.
-
-MeluXina
-========
-Supercomputer in Luxembourg
-
-LUMI
-====
-Supercomputer in Finland
-
-Karolina
-========
-Supercomputer in the Czech Republic
-
-Cloud
-*****
-
-UCloud
-======
-
-AWS
-===
