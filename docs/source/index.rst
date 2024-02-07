@@ -1,22 +1,23 @@
-Welcome to the P1's private documentation!
+Welcome to the P1's HPC documentation!
 ##########################################
 
-The **Pioneer Centre for Artificial Intelligence** (P1 for short) is a Danish cross-university research centre. 
-This private documentation is for all affiliates to share and communicate. 
-Access is controlled through the GitHub repo and organization. 
+The **Pioneer Centre for Artificial Intelligence** (P1 for short) is a Danish
+cross-university research centre. This documentation is for the HPC which is
+made available for affiliates of the center. For more information regarding the
+centre, we refer to https://www.aicentre.dk/the-centre-p1
 
-* If you are new see the :doc:`welcome` page for an introduction to the centre.
-* See the :doc:`organization` page for an overview of the centre's organization.
-* See the :doc:`contributing` page to learn how to contribute to the documentation.
-* See the :doc:`introduction-to-computing` page for a P1/AI-centric introduction to computing.
-* See the :doc:`p1-compute-resources` page for an overview and guide to the P1-owned compute resources.
-* See the :doc:`compute-resources` page for an overview of other relevant compute resources.
-* See the :doc:`introtalks` page for educational material from the P1 Intro Talks series.
-* See the :doc:`learning-resources` page for educational material in machine learning systems and HPC.
+The goal of the P1 HPC is to:
 
-Unless you are actively working on documentation pages, you should prefer the stable branch. 
-You can check and switch versions in the lower left corner.
+* Enable research opportunities for affiliates of P1, with regards to its objectives
+* Support collaborations within the center
 
+However, since resources are limited and we hope to serve as many P1 members as
+possible, large scale projects are better supported within their own funding. 
+
+In this documentation, we cover only the use-cases and setup of the cluster.
+Since the cluster is situated within the [DTU Computing Center](https://www.hpc.dtu.dk/), the
+documentation of the technical side of things can be found on their website,
+and the P1 specific page there: https://www.hpc.dtu.dk/?page_id=5028
 
 Contents
 --------
@@ -24,7 +25,7 @@ Contents
 .. toctree::
    :maxdepth: 2
    
-   welcome
+   getstarted
    organization
    contributing
    introduction-to-computing
