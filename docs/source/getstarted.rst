@@ -26,5 +26,6 @@ cluster) please cite the following reference:
 
   http://doi.org/10.48714/DTU.HPC.0001
 
+For more technical information please refer to the P1 compute cluster documentation at DTU DCC: https://www.hpc.dtu.dk/?page_id=5028
 
 TODO, do we want to have our own reference?
