@@ -11,7 +11,7 @@ if you are not within the network you have to be on the [VPN](https://www.hpc.dt
 The compute cluster can be accessed through ssh on login9.hpc.dtu.dk, where the
 user will log into their own home directory. Note that the home directories
 have limited storage (50gb), and there is much more storage available on
-/TODO/.
+`/dtu/p1/`.
 
 We have X interactive nodes, which you can use for installing packages and 
 try-runs of your experiments. Please do not run any heavy jobs on the login
