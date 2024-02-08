@@ -10,6 +10,21 @@ The Operating System is Alma Linux (ver. 9.2), and the servers are under control
 
 The servers are connected to a 60TiB storage, accessible under /dtu/p1, this is reserved to P1 users.  
 
+Fair Use 
+########
+The goal of the P1 HPC is to enable research (collaborations) as widely as
+possible within P1. However, the goal is not to support very large projects, as
+this would hinder the usability for other users (we would rather support 10
+smaller projects, then 1 large one). In practical terms this means that for
+example training a large language or vision model from scratch is not the
+intended use-case.
+
+With these goals in mind, we have set the following limitations: 
+
+* maximum wall time: 72 hours
+* maximum amount of nodes/GPU's used: 50% of the available resources
+* 500 gb of storage (+50gb in home directory)
+
 Investing Your Compute Budget
 *****************************
 If you have compute funding or are applying for compute funding, you are very welcome to contact P1's compute coordinator for a consultation.
