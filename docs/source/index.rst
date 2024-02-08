@@ -14,7 +14,7 @@ The goal of the P1 HPC is to:
 However, since resources are limited and we hope to serve as many P1 members as
 possible, large scale projects are better supported within their own funding. 
 
-In this documentation, we cover only the use-cases and setup of the cluster.
+In this documentation, we cover only the basics for getting started.
 Since the cluster is situated within the [DTU Computing Center](https://www.hpc.dtu.dk/), the
 documentation of the technical side of things can be found on their website,
 and the P1 specific page there: https://www.hpc.dtu.dk/?page_id=5028
