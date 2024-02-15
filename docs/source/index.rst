@@ -4,7 +4,7 @@ Welcome to the P1's HPC documentation!
 The **Pioneer Centre for Artificial Intelligence** (P1 for short) is a Danish
 cross-university research centre. This documentation is for the HPC which is
 made available for affiliates of the center. For more information regarding the
-centre, we refer to https://www.aicentre.dk/the-centre-p1
+centre, we refer to `P1 Homepage <https://www.aicentre.dk/the-centre-p1>`_.
 
 The goal of the P1 HPC is to:
 
@@ -15,9 +15,9 @@ However, since resources are limited and we hope to serve as many P1 members as
 possible, large scale projects are better supported within their own funding. 
 
 In this documentation, we cover only the basics for getting started.
-Since the cluster is situated within the `DTU Computing Center <https://www.hpc.dtu.dk/>`, 
+Since the cluster is situated within the `DTU Computing Center <https://www.hpc.dtu.dk/>`_ ,
 the documentation of the technical side of things can be found on their website,
-and the `P1 specific page there <https://www.hpc.dtu.dk/?page_id=5028>`.
+and the `P1 specific page there <https://www.hpc.dtu.dk/?page_id=5028>`_ .
 
 Contents
 --------
