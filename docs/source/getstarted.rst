@@ -26,6 +26,27 @@ cluster) please cite the following reference:
 
   http://doi.org/10.48714/DTU.HPC.0001
 
+Accessing the cluster outside of DTU
+************************************
+To access the cluster from outside of DTU the section below describes one possible option for Linux machines.
+
+**First access steps:**
+1. Download Cisco AnyConnect VPN client.
+2. Go to https://dtubasen.dtu.dk and choose sign-in via Azure multi-factor auth using your full DTU username (including @dtu.dk).
+3. Set up a new multi-factor auth to DTU e.g via Authenticator app.
+4. Establish connection to vpn.dtu.dk in the AnyConnect client.
+5. Log-in to the cluster via SSH at login9.hpc.dtu.dk using your DTU credentials (username without @dtu.dk).
+6. Close connection to the cluster.
+
+You can choose to keep using VPN to access the cluster or use SSH keys + passwords instead. For the latter please follow the steps below.
+
+**Access with SSH keys + passwords**
+1. Ensure that you have completed the steps described above to establish access via VPN.
+2. Generate a SSH key using ssh-keygen.
+3. Copy the key to the server e.g. using: ssh-copy-id -i ~/.ssh/keyname username@login9.hpc.dtu.dk
+4. Log-in to the cluster: ssh username@login9.hpc.dtu.dk
+
+
 For more technical information please refer to the 
 `P1 compute cluster documentation <https://www.hpc.dtu.dk/?page_id=5028>`_ at DTU DCC.
 
