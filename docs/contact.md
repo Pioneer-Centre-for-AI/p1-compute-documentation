@@ -9,13 +9,13 @@ For questions regarding the cluster, we have the following two contact e-mails:
 If your submission to join the cluster has been pending for more than a week, you can contact the member 
 of the P1 HPC committee of your institution:
 
-Institution | Name | E-mail
---- | --- | ---
-DTU | Nicki Skafte Detlefsen | <nsde@dtu.dk>
-ITU | Rob van der Goot | <robv@itu.dk>
-KU | Mikkel Fruelund Odgaard | <miod@di.ku.dk>
-AAU | Andreas Aakerberg | <anaa@create.aau.dk>
+Institution | Name                    | E-mail
+----------- | ----------------------- | ---
+DTU         | Nicki Skafte Detlefsen  | <nsde@dtu.dk>
+ITU         | Rob van der Goot        | <robv@itu.dk>
+KU          | Mikkel Fruelund Odgaard | <miod@di.ku.dk>
+AAU         | Andreas Aakerberg       | <anaa@create.aau.dk>
 
-General announcments regarding the cluster will be made in the *#compute* channel on the official P1-slack.
+General announcments regarding the cluster will be made in the `#compute` channel on the official P1-slack.
 Simiarly if you have general questions regarding compute, including using the P1-cluster, feel free to post
-those questions in the *#ask-compute* channel.
+those questions in the `#ask-compute` channel.

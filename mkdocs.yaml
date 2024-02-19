@@ -48,6 +48,7 @@ markdown_extensions:
   - pymdownx.tabbed:
       alternate_style: true
   - def_list
+  - tables
   - pymdownx.tasklist:
       custom_checkbox: true
   - pymdownx.superfences
@@ -58,22 +59,23 @@ markdown_extensions:
 plugins:
   - search
   - glightbox
-  - same-dir
-  - git-revision-date-localized:
-      enable_creation_date: true
 
 extra:
   social:
     - icon: material/email
-      link: mailto:skaftenicki@gmail.com
+      link: mailto:aicentre@ku.dk
+    - icon: material/web
+      link: https://www.aicentre.dk/
     - icon: fontawesome/brands/github
-      link: https://github.com/SkafteNicki
-    - icon: fontawesome/brands/linkedin
-      link: https://www.linkedin.com/in/nicki-skafte-detlefsen/
+      link: https://github.com/Pioneer-Centre-for-AI
 
 extra_css:
   - stylesheets/extra.css
 
 nav:
   - Home: home.md
+  - Get started: getstarted.md
+  - Compute Resources: compute_resources.md
+  - Learning Resources: learning_resources.md
   - Contact: contact.md
+  
