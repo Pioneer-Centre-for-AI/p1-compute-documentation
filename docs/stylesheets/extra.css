@@ -1,0 +1,29 @@
+:root {
+    --md-primary-fg-color:        #D8DCE2;
+    --md-primary-fg-color--light: #FFEC4B;
+    --md-primary-fg-color--dark:  #4B4F63;
+  }
+
+a:link {
+  color: ;
+}
+
+ /* unvisited link */
+ a:link {
+  color: #FFEC4B;
+}
+
+/* visited link */
+a:visited {
+  color: #FFEC4B;
+}
+
+/* mouse over link */
+a:hover {
+  color: #FFEC4B;
+}
+
+/* selected link */
+a:active {
+  color: #FFEC4B;
+} 
