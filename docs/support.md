@@ -1,13 +1,14 @@
-# Contact
+# Support
 
-For questions regarding the cluster, we have the following two contact e-mails:
+In general the P1 does not have official support staff. Instead we rely on the community to help each other. However,
+for questions regarding the cluster, we have the following two contact e-mails:
 
-* For technical issues, like broken or missing packages, contact support@hpc.dtu.dk 
+* For technical issues, like broken or missing packages, contact <support@hpc.dtu.dk> 
 
-* For policy issues, like priority access, queuing system etc. contact compute-governance-p1@aicentre.dk
+* For policy issues, like priority access, queuing system etc. contact <compute-governance-p1@aicentre.dk>
 
-If your submission to join the cluster has been pending for more than a week, you can contact the member 
-of the P1 HPC committee of your institution:
+If your submission to join the cluster has been pending for more than a week, you can contact the member of the P1 HPC 
+committee of your institution:
 
 Institution | Name                    | E-mail
 ----------- | ----------------------- | ---

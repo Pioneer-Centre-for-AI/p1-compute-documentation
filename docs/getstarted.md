@@ -2,11 +2,13 @@
 
 The mission of the P1 HPC is to support research from affiliates. To get access to the cluster, one should first 
 [register to be a member of P1](https://www.aicentre.dk/affiliation). Since the cluster is hosted at DTU, the next 
-step is to get a DTU account, so that the DTU compute environment can be accessed. This can be obtained on: TODO.com. 
-To access the cluster outside of DTUs network please refer to the guide in the following section.
+step is to get a DTU account, so that the DTU compute environment can be accessed. This can be obtained by sending a
+email to head of DTUs compute center, Henning Christiansen, at <hench@dtu.dk>. He will manually create an account for
+you and contact you with the details. To access the cluster outside of DTUs network please refer to the guide in the 
+following section.
 
-The compute cluster is accessible at login9.hpc.dtu.dk via SSH, where the user will log into their home directory. Note 
-that the home directories have limited storage (50gb), but more storage is available at `/dtu/p1/`.
+The compute cluster is accessible at `login9.hpc.dtu.dk` via SSH, where the user will log into their home directory. 
+Note hat the home directories have limited storage (50gb), but more storage is available at `/dtu/p1/`.
 
 We have 1 interactive node that you can use for installing packages and try-runs of your experiments. Please do not run 
 any heavy jobs on the login node, and use `batch jobs <https://www.hpc.dtu.dk/?page_id=1416>`_ for your experiments.

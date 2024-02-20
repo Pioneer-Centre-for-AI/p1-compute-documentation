@@ -73,9 +73,9 @@ extra_css:
   - stylesheets/extra.css
 
 nav:
-  - Home: home.md
+  - Home: index.md
   - Get started: getstarted.md
   - Compute Resources: compute_resources.md
   - Learning Resources: learning_resources.md
-  - Contact: contact.md
+  - Support: contact.md
   
