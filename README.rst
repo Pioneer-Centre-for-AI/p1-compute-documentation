@@ -4,7 +4,7 @@ This repository contains the documentation for the P1's cluster. It is built usi
 with the [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/) theme. The documentation is hosted on
 [GitHub Pages](https://pages.github.com/). To build the documentation locally, follow the instructions below.
 
-```bash
+```
 # Clone the repository
 git clone https://github.com/Pioneer-Centre-for-AI/private-documentation
 cd private-documentation
