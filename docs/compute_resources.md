@@ -40,6 +40,12 @@ The following rules are in place to ensure fair use of the P1 HPC:
 If you have a project that requires more resources than the above, please contact the governance group 
 <compute-governance-p1@aicentre.dk> to discuss your needs.
 
+!!! warning
+    The current P1 HPC cluster is only intended for non-GDPR data e.g. public datasets, open benchmarks, etc. To be more
+    specific, you can still work on private datasets because your home directory is not shared with other users, but 
+    data is not encrypted in a way to be GDPR compliant. P1 is in the process of setting up a separate HPC for GDPR 
+    data.
+
 ## Investing Your Compute Budget
 
 If you have compute funding or are applying for compute funding, you are very welcome to contact P1's compute 
