@@ -35,7 +35,7 @@ The following rules are in place to ensure fair use of the P1 HPC:
 
 * maximum wall time: 72 hours
 * maximum amount of nodes/GPU's used: 50% of the available resources
-* 500 gb of storage (+50gb in home directory)
+* 500 gb of storage (+30gb in home directory)
 
 If you have a project that requires more resources than the above, please contact the governance group 
 <compute-governance-p1@aicentre.dk> to discuss your needs.
