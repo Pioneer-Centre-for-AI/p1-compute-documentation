@@ -11,3 +11,6 @@ cd private-documentation
 pip install -r requirements.txt
 mkdocs serve
 ```
+
+Documentation is online here:
+<https://pioneer-centre-for-ai.github.io/p1-compute-documentation/>

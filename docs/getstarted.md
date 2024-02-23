@@ -11,8 +11,8 @@ The compute cluster is accessible at `login9.hpc.dtu.dk` via SSH, where the user
 Note hat the home directories have limited storage (50gb), but more storage is available at `/dtu/p1/`.
 
 We have 1 interactive node that you can use for installing packages and try-runs of your experiments. Please do not run 
-any heavy jobs on the login node, and use `batch jobs <https://www.hpc.dtu.dk/?page_id=1416>`_ for your experiments.
- 
+any heavy jobs on the login node, and use [batch jobs](https://www.hpc.dtu.dk/?page_id=1416) for your experiments.
+
 When having used support from DCC (the DTU HPC center administrating our DTU cluster) please cite the following 
 reference:
 
