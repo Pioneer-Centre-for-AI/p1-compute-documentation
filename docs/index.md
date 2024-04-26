@@ -14,4 +14,9 @@ better supported within their own funding. The compute cluster *cannot* be used 
 
 In this documentation, we cover only the basics for getting started. Since the cluster is situated within the 
 [DTU Computing Center](https://www.hpc.dtu.dk/), the documentation of the technical side of things can be found on their 
-website and the [P1 specific page there](https://www.hpc.dtu.dk/?page_id=5028).
+website and the [P1 specific page there](https://www.hpc.dtu.dk/?page_id=5028). When having used support from DCC 
+(the DTU HPC center administrating our DTU cluster) please cite the following reference:
+
+```{bib}
+http://doi.org/10.48714/DTU.HPC.0001
+```
