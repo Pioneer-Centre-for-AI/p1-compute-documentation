@@ -18,7 +18,4 @@ DTU         | [Nicki Skafte Detlefsen](https://orbit.dtu.dk/en/persons/nicki-ska
 ITU         | [Rob van der Goot](https://pure.itu.dk/en/persons/rob-van-der-goot)               | <robv@itu.dk>
 KU          | [Mikkel Fruelund Odgaard](https://di.ku.dk/ansatte/?pure=da/persons/770606)       | <miod@di.ku.dk>
 AAU         | [Andreas Aakerberg](https://vbn.aau.dk/da/persons/132677)                         | <anaa@create.aau.dk>
-AU          | TBD*                                                                              | -
-
-\* If you would like to nominate someone (self-nominations included) for this role, please email the governance group
-at the above mentioned e-mail address.
+AU          | [Akhil Arora](https://www.au.dk/en/akhil.arora@cs.au.dk)                          | <akhil.arora@cs.au.dk>
