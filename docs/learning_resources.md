@@ -1,7 +1,6 @@
 # Learning Resources
-In this section you will find a variety of learning resources in topics such as machine learning operations, machine 
-learning systems, performance optimization and HPC systems. For course and training offered by the DTU HPC team, please
-visit [this page](https://www.hpc.dtu.dk/?page_id=105)
+
+In this section you will find a variety of learning resources in topics such as machine learning operations, machine learning systems, performance optimization and HPC systems. For course and training offered by the DTU HPC team, please visit [this page](https://www.hpc.dtu.dk/?page_id=105)
 
 ## Intro talks
 
