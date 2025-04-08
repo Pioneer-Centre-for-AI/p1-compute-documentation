@@ -1,16 +1,24 @@
 # Support
 
 In general the P1 does not have official support staff. Instead we rely on the community to help each other. However,
-for questions regarding the cluster, we have the following two contact e-mails:
+for questions regarding the clusters, we have the following contact points:
 
-* For technical issues, like broken or missing packages, contact <support@hpc.dtu.dk> 
+## Technical Support
 
-* For policy issues, like priority access, queuing system etc. contact <compute-governance-p1@aicentre.dk>
+- **P1 DTU HPC:** For technical issues, like broken or missing packages, contact <support@hpc.dtu.dk>
+- **P1 NGC HPC:** For technical issues, contact the NGC support, contact <support@ngc.dk>
+- **P1 Gefion HPC:** For technical issues, contact the [Compute Coordinator](mailto:bstja@dtu.dk)
 
-If your submission to join the cluster has been pending for more than a week, you can contact the member of the P1 HPC 
-committee of your institution. General announcments regarding the cluster will be made in the `#compute` channel on the 
-official P1-slack. Simiarly if you have general questions regarding compute, including using the P1-cluster, feel free 
-to post those questions in the `#ask-compute` channel.
+## Policy and Access Support
+
+- For policy issues, like priority access, queuing system etc. contact <compute-governance-p1@aicentre.dk>
+
+If your submission to join any of the clusters has been pending for more than a week, you can contact the member of the P1 HPC
+committee of your institution. General announcements regarding the clusters will be made in the `#compute` channel on the
+official P1-slack. Similarly if you have general questions regarding compute, including using the P1-clusters, feel free
+to post those questions in the `#ask-compute` channel or contact the [Compute Coordinator](mailto:bstja@dtu.dk).
+
+## P1 HPC Committee Members
 
 Institution | Name                                                                              | E-mail
 ----------- | --------------------------------------------------------------------------------- | ---

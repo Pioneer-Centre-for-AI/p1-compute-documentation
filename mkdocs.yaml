@@ -74,8 +74,11 @@ extra_css:
 
 nav:
   - Home: index.md
-  - Get started: getstarted.md
-  - Compute Resources: compute_resources.md
+  - About P1 HPCs: about_compute_resources.md
+  - Getting Access: getting_access.md
+  - Overview of HPC Facilities: hpc_facilities.md
+  - Overview of Hardware: hardware_specifications.md
+  - Terms of Use: terms_of_use.md
   - Learning Resources: learning_resources.md
   - Support: support.md
   - Contribute: contribute.md
