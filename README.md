@@ -17,7 +17,7 @@ cd p1-compute-documentation
 
 Choose one of the following methods to set up your development environment:
 
-#### Option A: Using Nix and Direnv (Recommended but arguably a bit involved)
+#### Option A: Using Nix and Direnv
 
 If you use Nix and Direnv, you can simply allow the Direnv shell augmentation:
 
@@ -33,7 +33,7 @@ If you have `uv` installed, you can set up the virtual environment:
 uv sync
 ```
 
-#### Option C: Using pip (Alternative)
+#### Option C: Using pip
 
 If you don't have Nix or uv, you can use pip with the generated requirements.txt:
 
@@ -56,5 +56,5 @@ The documentation will be available at `http://127.0.0.1:8000`.
 
 ## Online Documentation
 
-The documentation is also available online at:
+The latest release of the documentation is also available online at:
 <https://pioneer-centre-for-ai.github.io/p1-compute-documentation/>

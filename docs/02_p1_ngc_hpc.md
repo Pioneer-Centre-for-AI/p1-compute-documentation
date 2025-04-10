@@ -1,5 +1,9 @@
 # P1 NGC HPC
 
+!!! warning "Waiting List"
+    
+    We are currently in the process of tackling some requirements related to the setup of data processing agreements. We are not onboarding new users until this is in place. You can still sign up now to be placed on the waiting list, and we'll keep you updated on the progress.
+
 ## Overview
 The P1 NGC HPC is hosted at the National Genome Centre and is designed for secure data processing with GDPR compliance. It provides a secure environment for handling sensitive data and research projects.
 
@@ -8,14 +12,17 @@ Before accessing the P1 NGC HPC, you must first [register to become a member of 
 
 ### Account Setup
 
-Contact the [Compute Coordinator](mailto:bstja@dtu.dk) to request access. You will need a data processing agreement to bring your own data.
+Complete and sign the [NGC user creation form](https://www.ngc.dk/blanketter-og-vejledninger#infrastrukturforpersonligmedicin) and forward it to the [Compute Coordinator](mailto:bstja@dtu.dk) to request access.
+
+- You will need a data processing agreement to bring your own data. Ensure that the DPA explicitly states that the data is allowed to be stored on NGC.
+- You will be added to the NGC slack channel once you gain access.
 
 ### Accessing the Cluster
 The P1 NGC HPC is an air-gapped system requiring:
 
 - Multi-factor authentication (MFA)
 - A client for accessing the remote VM entrypoint
-- Specific access instructions will be provided by NGC support after registration
+- Specific access instructions will will follow after registration. But you can expect to use SFTP for the transferring if data into the system.
 
 ## Support
 - **Technical Support:** For technical issues, contact <support@ngc.dk>
