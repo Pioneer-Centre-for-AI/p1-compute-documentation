@@ -2,9 +2,11 @@
 
 The **Pioneer Centre for Artificial Intelligence** (P1 for short) is a Danish cross-university research centre. This documentation provides a concise overview for P1 affiliates on using our three available HPC facilities:
 
-- **P1 DTU HPC (Tier 3):** Located at the Technical University of Denmark (DTU) aimed at general purpose AI workloads..
-- **P1 NGC HPC (Tier 3):** Based at the National Genome Centre (GDPR compliant) administered by University of Copenhagen (UCPH).
-- **P1 Gefion HPC (Tier 2/1):** Denmark's national HPC facility, capable of training large models and supporting some European-level workloads.
+| System    | Tier | Price (compute)  | Price (storage)  | GDPR data    |
+| --------- | ---- | ---------------- | ---------------- | ------------ |
+| P1 DTU    | 3    | Free to P1 users | Free to P1 users | No           |
+| P1 NGC    | 3    | Free to P1 users | Free to P1 users | Yes          |
+| P1 Gefion | 1/2  | Pay-per-hour     | Pay-per-month    | No (not yet) |
 
 For additional details on P1, visit the [P1 Homepage](https://www.aicentre.dk/) and [P1 Computing](https://www.aicentre.dk/computing).
 

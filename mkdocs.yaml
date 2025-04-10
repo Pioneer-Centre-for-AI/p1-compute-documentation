@@ -1,4 +1,4 @@
-site_name: P1 Documentation
+site_name: P1 Computing Documentation
 docs_dir: docs
 site_dir: site
 repo_url: https://github.com/Pioneer-Centre-for-AI/private-documentation
@@ -26,6 +26,7 @@ theme:
         name: Switch to light mode
   features:
     - navigation.instant
+    - navigation.expand
     - navigation.indexes
     - content.code.copy
     - content.code.annotate
@@ -74,11 +75,10 @@ extra_css:
 
 nav:
   - Home: index.md
-  - About Compute Resources: about.md
-  - P1 DTU HPC: 01_p1_dtu_hpc.md
-  - P1 NGC HPC: 02_p1_ngc_hpc.md
-  - P1 Gefion HPC: 03_p1_gefion_hpc.md
-  - Terms of Use: 04_terms_of_use.md
-  - Learning Resources: 05_learning_resources.md
-  - Contribute: 06_contribute.md
-
+  - About Compute Resources:
+      - about.md
+      - P1 DTU HPC: 01_p1_dtu_hpc.md
+      - P1 NGC HPC: 02_p1_ngc_hpc.md
+      - P1 Gefion HPC: 03_p1_gefion_hpc.md
+  - Learning Resources: 04_learning_resources.md
+  - Contribute: 05_contribute.md
