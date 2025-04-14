@@ -1,4 +1,4 @@
-site_name: P1 Computing Documentation
+site_name: P1 HPC Computing Documentation
 docs_dir: docs
 site_dir: site
 repo_url: https://github.com/Pioneer-Centre-for-AI/private-documentation
@@ -72,6 +72,9 @@ extra:
 
 extra_css:
   - stylesheets/extra.css
+
+extra_javascript:
+  - javascripts/shortcuts.js
 
 nav:
   - Home: index.md
