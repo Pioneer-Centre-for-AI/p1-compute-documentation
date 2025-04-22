@@ -10,11 +10,14 @@ The P1 NGC HPC is hosted at the National Genome Centre and is designed for secur
 ## Getting Access
 Before accessing the P1 NGC HPC, you must first [register to become a member of P1](https://www.aicentre.dk/affiliation) by filling out this [form](https://da.surveymonkey.com/r/P1Affiliation).
 
+Each project needs to bring a record (a signed Data Processing Agreement should do) that explicitly mentions NGC as a data processor and that the data is allowed to be stored there.
+
+- If the project poses a high risk to individuals whose personal data is being processed a Data Protection Impact Assessment (DPIA) will be needed also. 
+
 ### Account Setup
 
 Complete and sign the [NGC user creation form](https://www.ngc.dk/blanketter-og-vejledninger#infrastrukturforpersonligmedicin) and forward it to the [Compute Coordinator](mailto:bstja@dtu.dk) to request access.
 
-- You will need a data processing agreement to bring your own data. Ensure that the DPA explicitly states that the data is allowed to be stored on NGC.
 - You will be added to the NGC slack channel once you gain access.
 
 ### Accessing the Cluster
