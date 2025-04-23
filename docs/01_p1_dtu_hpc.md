@@ -45,8 +45,8 @@ For more technical information, refer to the [P1 compute cluster documentation](
 
 The following rules are in place to ensure fair use of the P1 DTU HPC:
 
-- maximum wall time: 72 hours
-- maximum amount of nodes/GPU's used: 50% of the available resources
+- Maximum wall time: 72 hours
+- Maximum number of GPUs in a job: 2 (one node)
 - 500 gb of storage (+30gb in home directory)
 
 If you have a project that requires more resources than the above, please contact the governance group
