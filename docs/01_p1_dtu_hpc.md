@@ -49,7 +49,7 @@ The following rules are in place to ensure fair use of the P1 DTU HPC:
 - Maximum number of GPUs in a job: 2 (one node)
 - 500 gb of storage (+30gb in home directory)
 
-If you have a project that requires more resources than the above, please contact the governance group
+If you have a project that requires more storage resources than the above, please contact the governance group
 <compute-governance-p1@aicentre.dk> to discuss your needs.
 
 !!! warning
