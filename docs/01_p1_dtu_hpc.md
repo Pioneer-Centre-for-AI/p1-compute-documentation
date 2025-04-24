@@ -69,14 +69,15 @@ Using some of the 100k for personal computers with powerful GPU's
 and reserving a significant portion of funds for later. This could be for storage or cloud compute. Having the budget to spring for cloud compute if peak pressure on other computing resources makes training a model in time for a submission deadline infeasible can be necessary.
 
 ## Hardware Specifications
+
 - 7 Lenovo ThinkSystem SR665 V3 servers
 - Each node specifications:
-  - 2 AMD EPYC 9354 32-Core Processors
-  - 768GB RAM
-  - 2 NVIDIA H100 PCIe GPUs (80GB each)
+    - 2 AMD EPYC 9354 32-Core Processors
+    - 768GB RAM
+    - 2 NVIDIA H100 PCIe GPUs (80GB each)
 - Storage: 60TiB shared storage
 - Operating System: Alma Linux 9.2
 - Scheduling Environment: LSF
 - Resource Allocation:
-  - 5 servers available for batch jobs (queue: `p1`)
-  - 2 servers reserved for interactive usage (queue: `p1i`)
+    - 5 nodes available for batch jobs (queue: `p1`)
+    - 2 nodes reserved for interactive usage (queue: `p1i`)

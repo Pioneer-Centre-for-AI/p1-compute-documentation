@@ -1,14 +1,14 @@
-# P1 Gefion HPC
+# Gefion HPC (Partner)
 
 !!! warning "Not Free, Waiting List"
 
     Gefion is not free. P1 might be able to cover some expenses for a test run, but it's expected that researchers at this point will bring their own funding. DCAI and Novo Nordisk might publish grant applications that provide GPU hours through vouchers. We are currently working out the onboarding details. You can still sign up now to be placed on the waiting list, and we'll keep you updated on the progress.
 
 ## Overview
-The P1 Gefion HPC is a national-level facility that can support both Tier 2 and some Tier 1 workloads. It is particularly suitable for large-scale model training and distributed computing tasks.
+The Gefion HPC is a national-level facility that can support both Tier 2 and some Tier 1 workloads. It is particularly suitable for large-scale model training and distributed computing tasks.
 
 ## Getting Access
-Before accessing the P1 Gefion HPC, you must first [register to become a member of P1](https://www.aicentre.dk/affiliation) by filling out this [form](https://da.surveymonkey.com/r/P1Affiliation).
+Before accessing the Gefion HPC, you must first [register to become a member of P1](https://www.aicentre.dk/affiliation) by filling out this [form](https://da.surveymonkey.com/r/P1Affiliation).
 
 ### Account Setup
 
