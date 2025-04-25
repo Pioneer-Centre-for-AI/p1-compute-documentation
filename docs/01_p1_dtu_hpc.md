@@ -47,6 +47,7 @@ The following rules are in place to ensure fair use of the P1 DTU HPC:
 
 - Maximum wall time: 72 hours
 - Maximum number of GPUs in a job: 2 (one node)
+- Maximum running jobs: ~50% of total available GPUs
 - 500 gb of storage (+30gb in home directory)
 
 If you have a project that requires more storage resources than the above, please contact the governance group
