@@ -15,7 +15,7 @@ The form will be processed by Henning Christiansen, head of DTU's compute center
 ### Accessing the Cluster
 The compute cluster is accessible at `login9.hpc.dtu.dk` via SSH. Note that:
 
-- Home directories have limited storage (50GB)
+- Home directories have limited storage (30GB)
 - Additional storage is available at `/dtu/p1/`
 - Interactive node is available for package installation and test runs
 - Heavy jobs should be submitted as batch jobs
@@ -29,9 +29,16 @@ The compute cluster is accessible at `login9.hpc.dtu.dk` via SSH. Note that:
 
 For persistent access, you can set up SSH keys:
 
-1. Generate an SSH key using ssh-keygen
-2. Copy the key: `ssh-copy-id -i ~/.ssh/keyname username@login9.hpc.dtu.dk`
-3. Connect: `ssh username@login9.hpc.dtu.dk`
+```
+# 1. Generate key
+ssh-keygen -t ed25519 -f ~/.ssh/keyname
+
+# 2. Copy public key
+ssh-copy-id -i ~/.ssh/keyname.pub username@login9.hpc.dtu.dk
+
+# 3. Connect
+ssh -i ~/.ssh/keyname username@login9.hpc.dtu.dk
+```
 
 ## Support
 - **Technical Support:** For issues like broken or missing packages, contact <support@hpc.dtu.dk>
@@ -77,8 +84,8 @@ and reserving a significant portion of funds for later. This could be for storag
     - 768GB RAM
     - 2 NVIDIA H100 PCIe GPUs (80GB each)
 - Storage: 60TiB shared storage
-- Operating System: Alma Linux 9.2
+- Operating System: Alma Linux
 - Scheduling Environment: LSF
 - Resource Allocation:
-    - 5 nodes available for batch jobs (queue: `p1`)
-    - 2 nodes reserved for interactive usage (queue: `p1i`)
+    - 7 nodes available for batch jobs (queue: `p1`)
+    - 1 node reserved for interactive usage (queue: `p1i`)
