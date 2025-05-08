@@ -757,7 +757,7 @@
 <h3 id="accessing-the-cluster">Accessing the Cluster</h3>
 <p>The compute cluster is accessible at <code>login9.hpc.dtu.dk</code> via SSH. Note that:</p>
 <ul>
-<li>Home directories have limited storage (50GB)</li>
+<li>Home directories have limited storage (30GB)</li>
 <li>Additional storage is available at <code>/dtu/p1/</code></li>
 <li>Interactive node is available for package installation and test runs</li>
 <li>Heavy jobs should be submitted as batch jobs</li>
@@ -771,11 +771,15 @@
 <li>SSH to <code>login9.hpc.dtu.dk</code> using your DTU credentials</li>
 </ol>
 <p>For persistent access, you can set up SSH keys:</p>
-<ol>
-<li>Generate an SSH key using ssh-keygen</li>
-<li>Copy the key: <code>ssh-copy-id -i ~/.ssh/keyname username@login9.hpc.dtu.dk</code></li>
-<li>Connect: <code>ssh username@login9.hpc.dtu.dk</code></li>
-</ol>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a># 1. Generate key
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ssh-keygen -t ed25519 -f ~/.ssh/keyname
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a># 2. Copy public key
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ssh-copy-id -i ~/.ssh/keyname.pub username@login9.hpc.dtu.dk
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a># 3. Connect
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>ssh -i ~/.ssh/keyname username@login9.hpc.dtu.dk
+</span></code></pre></div>
 <h2 id="support">Support</h2>
 <ul>
 <li><strong>Technical Support:</strong> For issues like broken or missing packages, contact <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#115;&#117;&#112;&#112;&#111;&#114;&#116;&#64;&#104;&#112;&#99;&#46;&#100;&#116;&#117;&#46;&#100;&#107;">&#115;&#117;&#112;&#112;&#111;&#114;&#116;&#64;&#104;&#112;&#99;&#46;&#100;&#116;&#117;&#46;&#100;&#107;</a></li>
@@ -816,11 +820,11 @@ and reserving a significant portion of funds for later. This could be for storag
 </ul>
 </li>
 <li>Storage: 60TiB shared storage</li>
-<li>Operating System: Alma Linux 9.2</li>
+<li>Operating System: Alma Linux</li>
 <li>Scheduling Environment: LSF</li>
 <li>Resource Allocation:<ul>
-<li>5 nodes available for batch jobs (queue: <code>p1</code>)</li>
-<li>2 nodes reserved for interactive usage (queue: <code>p1i</code>)</li>
+<li>7 nodes available for batch jobs (queue: <code>p1</code>)</li>
+<li>1 node reserved for interactive usage (queue: <code>p1i</code>)</li>
 </ul>
 </li>
 </ul>
