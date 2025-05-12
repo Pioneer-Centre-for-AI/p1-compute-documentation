@@ -6,7 +6,7 @@ The P1 DTU HPC is hosted at DTU and provides high-performance computing resource
 ## Getting Access
 Before accessing the P1 DTU HPC, you must first [register to become a member of P1](https://www.aicentre.dk/affiliation) by filling out this [form](https://da.surveymonkey.com/r/P1Affiliation).
 
-If you are a P1 member with a MSc, research assistant (RA) role, or similar, then you are not eligible for access without an approval of exception from a co-lead or P1 faculty member. Please fill in this [P1 HPC Access Exception Form](https://forms.gle/q1ETeFCAeho6qqMK6) and have the approving person send a confirmation to the governance mail at <compute-governance-p1@aicentre.dk>.
+If you are a P1 member currently enrolled in a MSc, research assistant (RA) role, or similar, then you are not eligible for access without a written approval of exception from a responsible person (a P1 co-lead or faculty member) who can vouch for your request. Please fill in this [P1 HPC Access Exception Form](https://forms.gle/q1ETeFCAeho6qqMK6) and have the responsible person send a confirmation to the governance mail at <compute-governance-p1@aicentre.dk> so they can audit the request.
 
 ### Account Setup
 
