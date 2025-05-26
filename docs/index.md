@@ -10,7 +10,7 @@ The **Pioneer Centre for Artificial Intelligence** (P1 for short) is a Danish cr
 
 For additional details on P1, visit the [P1 Homepage](https://www.aicentre.dk/) and [P1 Computing](https://www.aicentre.dk/computing).
 
-The goal of the P1 HPCs is to enable research opportunities for affiliates of P1, supporting projects of various scales. While we prioritize smaller projects as they represent the majority of research needs, we also support larger projects through our tiered compute resources, including the capability to train very large models and support some European-level workloads on Tier 2/1 facilities.
+The goal of the P1 HPCs is to enable research opportunities for P1 affiliates who are registered at partner universities, supporting projects of various scales. While we prioritize smaller projects as they represent the majority of research needs, we also support larger projects through our tiered compute resources, including the capability to train very large models and support European-level workloads on Tier 2/1 facilities.
 
 However, since resources are limited and we aim to serve as many P1 members as possible, very large scale projects might be better supported within their own funding. The compute clusters are primarily intended for research projects. While commercial use is generally not permitted on the P1 DTU and NGC HPCs, the Gefion HPC may accommodate certain commercial research projects on a case-by-case basis, subject to approval and specific terms.
 
