@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ 'stylesheets/landing.css' | url }}">
+{% endblock %}
+
+{% block content %}
+<div class="cover-art">
+  <img src="{{ 'figures/landing/cover-art.avif' | url }}" alt="Attribution: Background photo by Silvan Schuppisser on Unsplash: https://unsplash.com/photos/green-grass-field-near-sea-under-white-sky-during-daytime-R2fzDVNkJ6I" style="display:none;" />
+  <div class="cover-content">
+    <h1>Welcome to P1's HPC Documentation</h1>
+    <p>Your comprehensive guide to high-performance computing resources at the Pioneer Centre for AI in Denmark</p>
+    <!-- Unsplash credit is now only in the image alt attribute -->
+  </div>
+  <div class="scroll-indicator">
+    <span>&#8595;</span>
+  </div>
+</div>
+
+<section class="hpc-sections">
+  <div class="hpc-row">
+    <div class="hpc-image">
+      <div class="hpc-keywords">
+        <span class="hpc-keyword tier">Tier 3</span>
+      </div>
+      <img src="{{ 'figures/landing/compute.avif' | url }}" alt="General Purpose HPC" loading="lazy" />
+    </div>
+    <div class="hpc-content">
+      <h2>General Purpose HPC</h2>
+      <p>
+        The <strong>P1 DTU HPC</strong> cluster is designed for general research workloads. It offers free compute and storage resources for P1 affiliated researchers, making it ideal for a wide range of academic and scientific projects. This cluster is not GDPR-compliant and is best suited for non-sensitive data and standard research tasks.
+      </p>
+      <div class="hpc-actions">
+        <a href="{{ '01_p1_dtu_hpc' | url }}" class="hpc-btn hpc-btn-outline">Learn More</a>
+        <!-- <a href="/apply-dtu" class="hpc-btn hpc-btn-filled">Apply</a> -->
+      </div>
+    </div>
+  </div>
+
+  <div class="hpc-row hpc-row-reverse">
+    <div class="hpc-image">
+      <div class="hpc-keywords">
+        <span class="hpc-keyword tier">Tier 3</span>
+        <span class="hpc-keyword gdpr">GDPR</span>
+        <span class="hpc-keyword waiting">waiting list</span>
+      </div>
+      <img src="{{ 'figures/landing/ngc.avif' | url }}" alt="Sensitive HPC" loading="lazy" />
+    </div>
+    <div class="hpc-content">
+      <h2>Sensitive HPC</h2>
+      <p>
+        The <strong>P1 NGC HPC</strong> cluster provides a GDPR-compliant computing environment with free resources for P1 affiliates. It is specifically designed for projects that require handling of sensitive or personal data, ensuring compliance with data protection regulations while supporting advanced research needs.
+      </p>
+      <div class="hpc-actions">
+        <a href="{{ '02_p1_ngc_hpc' | url }}" class="hpc-btn hpc-btn-outline">Learn More</a>
+        <!-- <a href="/apply-ngc" class="hpc-btn hpc-btn-filled">Apply</a> -->
+      </div>
+    </div>
+  </div>
+
+  <div class="hpc-row hpc-row-alt">
+    <div class="hpc-image">
+      <div class="hpc-keywords">
+        <span class="hpc-keyword tier">Tier 1/2</span>
+        <span class="hpc-keyword waiting">waiting list</span>
+        <span class="hpc-keyword notfree">not free</span>
+      </div>
+      <img src="{{ 'figures/landing/gefion.avif' | url }}" alt="Large Scale HPC" loading="lazy" />
+    </div>
+    <div class="hpc-content">
+      <h2>Large Scale HPC</h2>
+      <p>
+        The <strong>Gefion HPC</strong> is a partner facility offering pay-per-use compute and storage resources for larger scale projects. It is ideal for users with high computational demands that exceed the capacity of the standard P1 clusters. Access is subject to approval and specific terms.
+      </p>
+      <div class="hpc-actions">
+        <a href="{{ '03_p1_gefion_hpc' | url }}" class="hpc-btn hpc-btn-outline">Learn More</a>
+        <!-- <a href="/apply-gefion" class="hpc-btn hpc-btn-filled">Apply</a> -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hpc-expect">
+  <ul class="hpc-expect__list">
+    <li class="hpc-expect__item">
+      <div class="hpc-expect__icon">
+        <span class="twemoji">
+          {% include ".icons/material/account.svg" %}
+        </span>
+      </div>
+      <div class="hpc-expect__description">
+        <h2>Intended Use</h2>
+        <p>Our compute clusters are primarily intended to support research projects. Commercial use is generally not permitted on the P1 DTU and NGC HPCs; however, the Gefion HPC may accommodate certain commercial research projects on a case-by-case basis.</p>
+      </div>
+    </li>
+    <li class="hpc-expect__item">
+      <div class="hpc-expect__icon">
+        <span class="twemoji">
+          {% include ".icons/material/key-chain.svg" %}
+        </span>
+      </div>
+      <div class="hpc-expect__description">
+        <h2>Resource Policy</h2>
+        <p>Resources are limited and are primarily prioritized for P1 members at the PhD, postdoc, and faculty levels. We are committed to open access and strive to serve as many P1 members as possible. For very large-scale projects, we encourage you to reach out to discuss potential solutions.</p>
+      </div>
+    </li>
+    <li class="hpc-expect__item">
+      <div class="hpc-expect__icon">
+        <span class="twemoji">
+          {% include ".icons/material/bookshelf.svg" %}
+        </span>
+      </div>
+      <div class="hpc-expect__description">
+        <h2>Detailed Cluster Information</h2>
+        <p>Each cluster is hosted at a separate institution and managed by its own administrators. This site provides an overview and a starting point for accessing P1 compute resources. For the most up-to-date technical details, please refer to the respective cluster websites and support channels.</p>
+      </div>
+    </li>
+    <li class="hpc-expect__item">
+      <div class="hpc-expect__icon">
+        <span class="twemoji">
+          {% include ".icons/material/lifebuoy.svg" %}
+        </span>
+      </div>
+      <div class="hpc-expect__description">
+        <h2>Citation</h2>
+        <p>If you have received support from DCC (the DTU HPC center administering our DTU cluster), please cite: <a href="https://doi.org/10.48714/DTU.HPC.0001" target="_blank">http://doi.org/10.48714/DTU.HPC.0001</a>. A great deal of effort goes into ensuring that compute resources are available and that the infrastructure runs smoothly—your citation helps recognize and support this work.</p>
+      </div>
+    </li>
+  </ul>
+</section>
+
+{% endblock %} 
