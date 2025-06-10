@@ -67,9 +67,10 @@ If you have a project that requires more storage resources than the above, pleas
 <compute-governance-p1@aicentre.dk> to discuss your needs.
 
 !!! warning
-The P1 DTU HPC is only intended for non-GDPR data e.g. public datasets, open benchmarks, etc. To be more
-specific, you can still work on private datasets because your home directory is not shared with other users, but
-data is not encrypted in a way to be GDPR compliant. For GDPR-compliant data processing, please use the P1 NGC HPC.
+
+    The P1 DTU HPC is only intended for non-GDPR data e.g. public datasets, open benchmarks, etc. To be more
+    specific, you can still work on private datasets because your home directory is not shared with other users, but
+    data is not encrypted in a way to be GDPR compliant. For GDPR-compliant data processing, please use the P1 NGC HPC.
 
 ## Investing Your Compute Budget
 
