@@ -18,10 +18,11 @@
     
     
       
-        <title>P1 HPC Computing Documentation</title>
+        <title>Home - P1 HPC Computing Documentation</title>
       
     
     
+
       <link rel="stylesheet" href="assets/stylesheets/main.4af4bdda.min.css">
       
         
@@ -31,6 +32,8 @@
 
 
     
+<link rel="stylesheet" href="stylesheets/landing.css">
+
     
       
     
@@ -79,11 +82,6 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
-      
-        
-        <a href="#welcome-to-the-p1s-hpc-documentation" class="md-skip">
-          Skip to content
-        </a>
       
     </div>
     <div data-md-component="announce">
@@ -225,7 +223,9 @@
           
             
               
-              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" hidden>
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     
@@ -268,8 +268,6 @@
       
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
-      
-        
       
       
       <a href="." class="md-nav__link md-nav__link--active">
@@ -350,7 +348,7 @@
   
   
   <span class="md-ellipsis">
-    Available Compute Resources
+    Introduction
     
   </span>
   
@@ -489,7 +487,9 @@
             
             
               
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" hidden>
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     
@@ -497,8 +497,6 @@
 <nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
-  
-    
   
   
 </nav>
@@ -511,73 +509,131 @@
             <div class="md-content" data-md-component="content">
               <article class="md-content__inner md-typeset">
                 
-                  
+<div class="cover-art">
+  <img src="figures/landing/cover-art.avif" alt="Attribution: Background photo by Silvan Schuppisser on Unsplash: https://unsplash.com/photos/green-grass-field-near-sea-under-white-sky-during-daytime-R2fzDVNkJ6I" style="display:none;" />
+  <div class="cover-content">
+    <h1>Welcome to P1's HPC Documentation</h1>
+    <p>Your overview guide to high-performance computing resources at the Pioneer Centre for AI in Denmark</p>
+    <!-- Unsplash credit is now only in the image alt attribute -->
+  </div>
+  <div class="scroll-indicator">
+    <span>&#8595;</span>
+  </div>
+</div>
+
+<section class="hpc-sections">
+  <div class="hpc-row">
+    <div class="hpc-image">
+      <div class="hpc-keywords">
+        <span class="hpc-keyword tier">Tier 3</span>
+      </div>
+      <img src="figures/landing/compute.avif" alt="DTU Compute, Building 324, 2800 Kongens Lyngby, Denmark" loading="lazy" />
+    </div>
+    <div class="hpc-content">
+      <h2>General Purpose HPC</h2>
+      <p>
+        The <strong>P1 DTU HPC</strong> cluster is designed for general research workloads. It provides free compute and storage resources for P1 affiliated researchers, making it ideal for a wide range of academic and scientific projects. This cluster is not GDPR-compliant and is best suited for non-sensitive data and standard research tasks.
+      </p>
+      <div class="hpc-actions">
+        <a href="01_p1_dtu_hpc" class="hpc-btn hpc-btn-outline">Learn More</a>
+        <!-- <a href="/apply-dtu" class="hpc-btn hpc-btn-filled">Apply</a> -->
+      </div>
+    </div>
+  </div>
+
+  <div class="hpc-row hpc-row-reverse">
+    <div class="hpc-image">
+      <div class="hpc-keywords">
+        <span class="hpc-keyword tier">Tier 3</span>
+        <span class="hpc-keyword gdpr">GDPR</span>
+        <span class="hpc-keyword waiting">waiting list</span>
+      </div>
+      <img src="figures/landing/ngc.avif" alt="Danish National Genome Center (NGC)" loading="lazy" />
+    </div>
+    <div class="hpc-content">
+      <h2>Sensitive HPC</h2>
+      <p>
+        The <strong>P1 NGC HPC</strong> cluster provides a GDPR-compliant computing environment with free compute and storage resources for P1 affiliated researchers. It is specifically designed for projects that require handling of sensitive or personal data, ensuring compliance with data protection regulations while supporting advanced research needs.
+      </p>
+      <div class="hpc-actions">
+        <a href="02_p1_ngc_hpc" class="hpc-btn hpc-btn-outline">Learn More</a>
+        <!-- <a href="/apply-ngc" class="hpc-btn hpc-btn-filled">Apply</a> -->
+      </div>
+    </div>
+  </div>
+
+  <div class="hpc-row hpc-row-alt">
+    <div class="hpc-image">
+      <div class="hpc-keywords">
+        <span class="hpc-keyword tier">Tier 1/2</span>
+        <span class="hpc-keyword waiting">onboarding</span>
+        <span class="hpc-keyword notfree">not free</span>
+      </div>
+      <img src="figures/landing/gefion.avif" alt="AI supercomputer, Gefion" loading="lazy" />
+    </div>
+    <div class="hpc-content">
+      <h2>Large Scale HPC</h2>
+      <p>
+        The <strong>Gefion HPC</strong> is a partner facility offering pay-per-use compute and storage resources for larger scale projects. It is ideal for users with high computational demands that exceed the capacity of the standard P1 clusters. Access is subject to approval and specific terms.
+      </p>
+      <div class="hpc-actions">
+        <a href="03_p1_gefion_hpc" class="hpc-btn hpc-btn-outline">Learn More</a>
+        <!-- <a href="/apply-gefion" class="hpc-btn hpc-btn-filled">Apply</a> -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hpc-expect">
+  <ul class="hpc-expect__list">
+    <li class="hpc-expect__item">
+      <div class="hpc-expect__icon">
+        <span class="twemoji">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 4a4 4 0 0 1 4 4 4 4 0 0 1-4 4 4 4 0 0 1-4-4 4 4 0 0 1 4-4m0 10c4.42 0 8 1.79 8 4v2H4v-2c0-2.21 3.58-4 8-4"/></svg>
+        </span>
+      </div>
+      <div class="hpc-expect__description">
+        <h2>Intended Use</h2>
+        <p>Our compute clusters are primarily intended to support research projects. Commercial use is generally not permitted on the P1 DTU and NGC HPCs; however, Gefion may accommodate certain commercial research projects on a case-by-case basis.</p>
+      </div>
+    </li>
+    <li class="hpc-expect__item">
+      <div class="hpc-expect__icon">
+        <span class="twemoji">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12.67 13.67c-.47.46-1.04.83-1.67 1.06V23H8v-2H5v-3h3v-3.28c-1.74-.62-3-2.26-3-4.22C5 8 7 6 9.5 6h.1c-.47.95-.68 2-.57 3.08-.59.2-1.03.76-1.03 1.42 0 .83.67 1.5 1.5 1.5.23 0 .45-.06.65-.15.64.84 1.52 1.47 2.52 1.82m8.06 5.77-2.76 1.16-.78-1.84-2.76 1.17-1.17-2.77L16.03 16l-1.27-3c-1.85.08-3.65-.95-4.41-2.75-.96-2.29.12-4.93 2.41-5.9.24-.1.5-.17.74-.23C12.84 2.87 11.5 2 10 2 7.79 2 6 3.79 6 6v.24c-.3.26-.6.58-.85.91C5.06 6.78 5 6.4 5 6c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.42-.6 2.67-1.55 3.57.42.43 1.05.56 1.63.31.77-.32 1.12-1.2.8-1.96a1 1 0 0 0-.14-.26C15.9 7.13 16 6.58 16 6c0-.63-.1-1.24-.28-1.81 1.28.36 2.38 1.25 2.93 2.57.76 1.8.24 3.81-1.15 5.05zM13 8.6c.37-.41.65-.89.82-1.42-.54.27-.85.82-.82 1.42"/></svg>
+        </span>
+      </div>
+      <div class="hpc-expect__description">
+        <h2>Resource Policy</h2>
+        <p>Resources are limited and are primarily prioritized for P1 members at the PhD, postdoc, and faculty levels. We are committed to open access and strive to serve as many P1 members as possible. For very large-scale projects, we encourage you to reach out to discuss potential solutions.</p>
+      </div>
+    </li>
+    <li class="hpc-expect__item">
+      <div class="hpc-expect__icon">
+        <span class="twemoji">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 3v15h3V3zm3 2 4 13 3-1-4-13zM5 5v13h3V5zM3 19v2h18v-2z"/></svg>
+        </span>
+      </div>
+      <div class="hpc-expect__description">
+        <h2>Detailed Cluster Information</h2>
+        <p>Each cluster is hosted at a separate institution and managed by its own administrators. This site provides an overview and a starting point for accessing P1 compute resources. For the most up-to-date technical details, please refer to the respective cluster websites and support channels.</p>
+      </div>
+    </li>
+    <li class="hpc-expect__item">
+      <div class="hpc-expect__icon">
+        <span class="twemoji">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19.79 15.41c.95-2.17.95-4.66 0-6.82l-2.74 1.24c.6 1.38.6 2.95.01 4.34zm-4.37-11.2a8.54 8.54 0 0 0-6.83 0l1.24 2.73c1.39-.59 2.96-.59 4.35.01zM4.21 8.58a8.56 8.56 0 0 0 0 6.84l2.74-1.25c-.6-1.38-.6-2.96 0-4.35zm4.38 11.21a8.5 8.5 0 0 0 6.83-.01l-1.24-2.73a5.5 5.5 0 0 1-4.34.01zM12 2a10 10 0 0 1 10 10 10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2m0 6a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4"/></svg>
+        </span>
+      </div>
+      <div class="hpc-expect__description">
+        <h2>Citation</h2>
+        <p>If you have received support from DCC (the DTU HPC center administering our DTU cluster), please cite: <a href="https://doi.org/10.48714/DTU.HPC.0001" target="_blank">http://doi.org/10.48714/DTU.HPC.0001</a>. A great deal of effort goes into ensuring that compute resources are available and that the infrastructure runs smoothly. Your citation helps recognize and support this work.</p>
+      </div>
+    </li>
+  </ul>
+</section>
 
 
-  
-  
-
-
-<h1 id="welcome-to-the-p1s-hpc-documentation">Welcome to the P1's HPC documentation!</h1>
-<p>The <strong>Pioneer Centre for Artificial Intelligence</strong> (P1 for short) is a Danish cross-university research centre. This documentation provides a concise overview for P1 affiliates on using our own HPC facilities and relevant partners.</p>
-<table>
-<thead>
-<tr>
-<th>System</th>
-<th>Tier</th>
-<th>Price (compute)</th>
-<th>Price (storage)</th>
-<th>GDPR data</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>P1 DTU</td>
-<td>3</td>
-<td>Free to P1 users</td>
-<td>Free to P1 users</td>
-<td>No</td>
-</tr>
-<tr>
-<td>P1 NGC</td>
-<td>3</td>
-<td>Free to P1 users</td>
-<td>Free to P1 users</td>
-<td>Yes</td>
-</tr>
-<tr>
-<td>Gefion (Partner)</td>
-<td>1/2</td>
-<td>Pay-per-hour</td>
-<td>Pay-per-month</td>
-<td>No (not yet)</td>
-</tr>
-</tbody>
-</table>
-<p>For additional details on P1, visit the <a href="https://www.aicentre.dk/">P1 Homepage</a> and <a href="https://www.aicentre.dk/computing">P1 Computing</a>.</p>
-<p>The goal of the P1 HPCs is to enable research opportunities for P1 affiliates who are registered at partner universities, supporting projects of various scales. While we prioritize smaller projects as they represent the majority of research needs, we also support larger projects through our tiered compute resources, including the capability to train very large models and support European-level workloads on Tier 2/1 facilities.</p>
-<p>However, since resources are limited and we aim to serve as many P1 members as possible, very large scale projects might be better supported within their own funding. The compute clusters are primarily intended for research projects. While commercial use is generally not permitted on the P1 DTU and NGC HPCs, the Gefion HPC may accommodate certain commercial research projects on a case-by-case basis, subject to approval and specific terms.</p>
-<p>In this documentation, we cover only a broad overview of the available HPC facilities and basics for getting started. Since the clusters are installed at separate institutions, the documentation on the technical side of things differ by facility:</p>
-<ul>
-<li><a href="https://www.hpc.dtu.dk/?page_id=5028">P1 DTU HPC - Technical Documentation</a></li>
-<li><a href="https://www.hpc.dtu.dk">P1 DTU HPC - Support</a></li>
-</ul>
-<p>When having used support from DCC (the DTU HPC center administrating our DTU cluster) please cite the following reference:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>http://doi.org/10.48714/DTU.HPC.0001
-</span></code></pre></div>
-
-
-
-
-
-
-
-
-
-
-
-
-                
               </article>
             </div>
           
@@ -591,17 +647,19 @@
   
     
       
+        
+      
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
         
           
-          <a href="about/" class="md-footer__link md-footer__link--next" aria-label="Next: Available Compute Resources">
+          <a href="about/" class="md-footer__link md-footer__link--next" aria-label="Next: Introduction">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Available Compute Resources
+                Introduction
               </div>
             </div>
             <div class="md-footer__button md-icon">
