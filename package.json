@@ -1,0 +1,48 @@
+{
+  "name": "p1-compute-documentation",
+  "type": "module",
+  "version": "2025.6.16",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "format": "biome format --write .",
+    "lint": "biome lint --write ."
+  },
+  "dependencies": {
+    "@astrojs/react": "^4.3.0",
+    "@astrojs/starlight": "^0.34.3",
+    "@astrojs/starlight-tailwind": "^4.0.1",
+    "@radix-ui/react-avatar": "^1.1.10",
+    "@radix-ui/react-icons": "^1.3.2",
+    "@radix-ui/react-slot": "^1.2.3",
+    "@tailwindcss/vite": "^4.1.10",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "astro": "^5.6.1",
+    "astro-expressive-code": "^0.41.3",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "js-yaml": "^4.1.0",
+    "lucide-react": "^0.515.0",
+    "marked": "^15.0.12",
+    "motion": "^12.23.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-icons": "^5.5.0",
+    "sharp": "^0.32.5",
+    "starlight-theme-nova": "^0.8.1",
+    "tailwind-merge": "^3.3.1",
+    "tailwindcss": "^4.1.10",
+    "tailwindcss-animate": "^1.0.7"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.0.4",
+    "@types/node": "^22.15.32",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "typescript": "^5.8.3"
+  }
+}
