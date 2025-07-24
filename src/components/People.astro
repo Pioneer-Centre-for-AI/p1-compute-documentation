@@ -1,0 +1,73 @@
+---
+export interface Props {
+  heading?: string;
+  subheading?: string;
+  description?: string;
+  people: {
+    name: string;
+    role: string;
+    email: string;
+    institution: string;
+    profileUrl?: string;
+  }[];
+}
+
+const {
+  heading = "P1 HPC gouvernance board",
+  subheading = "Contact Information",
+  description = "Contact the member of the P1 HPC gouvernance board from your institution for questions about cluster access and compute resources.",
+  people
+} = Astro.props;
+---
+
+<section class="not-content py-8">
+  <div class="max-w-4xl mx-auto px-4">
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">
+        {heading}
+      </h2>
+      {description && description.trim() !== '' && (
+        <p class="text-slate-600 dark:text-slate-300">
+          {description}
+        </p>
+      )}
+    </div>
+
+    <!-- People Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {people.map((person) => (
+        <div class="bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-6 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:border-blue-300 dark:hover:border-blue-600">
+          <div class="text-center">
+            <h3 class="font-semibold text-slate-900 dark:text-slate-100 mb-2">
+              {person.profileUrl ? (
+                <a
+                  href={person.profileUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
+                >
+                  {person.name}
+                </a>
+              ) : (
+                person.name
+              )}
+            </h3>
+            <p class="text-sm font-medium text-blue-600 dark:text-blue-400 mb-1">
+              {person.role}
+            </p>
+            <p class="text-sm text-slate-600 dark:text-slate-400 mb-3">
+              {person.institution}
+            </p>
+            <a
+              href={`mailto:${person.email}`}
+              class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium no-underline hover:underline transition-colors duration-200"
+            >
+              {person.email}
+            </a>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,77 @@
+---
+title: P1 Compute Documentation
+description: Your overview guide to high-performance computing resources at the Pioneer Centre for AI in Denmark.
+template: splash
+banner:
+    content: |
+      The P1 Compute Documentation is not meant to be a comprehensive guide to all things compute. It is a starting point for P1 members to get an overview of the compute resources available to them. For specific details about the clusters, please refer to the respective cluster support sites.
+hero:
+  title: High-Performance Computing at P1
+  tagline: Your overview guide to high-performance computing resources at the Pioneer Centre for AI in Denmark
+  image:
+    alt: A logo of the Pioneer Centre for AI in Denmark
+    dark: /src/assets/logos/PCAI_Solo_White.svg
+    light: /src/assets/logos/PCAI_Solo_Rgb.svg
+  actions:
+    - text: Learn More
+      link: /about/
+      icon: right-arrow
+      variant: primary
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+import ClusterGrid from '../../components/ClusterGrid.astro';
+import ClusterCard from '../../components/ClusterCard.astro';
+import dtuImg from '../../assets/landing/DTU_324.avif';
+import ngcImg from '../../assets/landing/NGC.avif';
+import gefionImg from '../../assets/landing/DCAI_Gefion.avif';
+
+The compute landscape can be complex, and we know it’s not always easy for researchers to find the right resources. While Denmark offers a wide range of HPC options, we don’t aim to cover them all here. Instead, as part of the P1 consortium, we focus on collaborating with a select group of HPC facilities and operate our own systems in partnership with P1 partner universities - tailored specifically to support P1-affiliated research.
+
+We recommend starting by reaching out to your local institution to explore what’s available and whether it fits your needs. Before diving into the P1 compute resources, please take a moment to review our guides - they’ll help ensure your projects are set up for compatibility and held to a higher standard.
+
+<ClusterGrid>
+  <ClusterCard
+    title="General Purpose HPC"
+    image={dtuImg}
+    imageAlt="DTU Compute, Building 324, 2800 Kongens Lyngby, Denmark"
+    learnMoreLink="/clusters/dtu-hpc/"
+  >
+      The [P1 DTU HPC](https://www.hpc.dtu.dk/) cluster is designed for general research workloads. It provides free compute and storage resources for P1 affiliated researchers, making it ideal for a wide range of academic and scientific projects. This cluster is not GDPR-compliant and is best suited for non-sensitive data and standard research tasks.
+  </ClusterCard>
+  <ClusterCard
+    title="Sensitive HPC"
+    image={ngcImg}
+    imageAlt="Danish National Genome Center (NGC)"
+    learnMoreLink="/clusters/ngc-hpc/"
+    reverse
+  >
+      The [P1 NGC HPC](https://www.ngc.dk/infrastrukturen-for-personlig-medicin/supercomputer) provides a GDPR-compliant computing environment with free compute and storage resources for P1 affiliated researchers. It is specifically designed for projects that require handling of sensitive or personal data, ensuring compliance with data protection regulations while supporting advanced research needs.
+  </ClusterCard>
+  <ClusterCard
+    title="Large Scale HPC"
+    image={gefionImg}
+    imageAlt="AI supercomputer, Gefion"
+    learnMoreLink="/clusters/dcai-gefion/"
+  >
+      The [Gefion HPC](https://www.dcai.dk/gefion) is a partner facility offering pay-per-use compute and storage resources for larger scale projects. It is ideal for users with high computational demands that exceed the capacity of the other P1 clusters. Access is subject to approval and specific terms.
+  </ClusterCard>
+</ClusterGrid>
+
+<CardGrid>
+  <Card title="Intended Use" icon="approve-check">
+    <p>Our compute clusters are primarily for research projects. Commercial use is generally not permitted on the P1 DTU and NGC HPCs; however, Gefion may accommodate certain commercial research projects on a case-by-case basis.</p>
+  </Card>
+
+  <Card title="Resource Policy" icon="seti:license">
+    <p>Resources are limited and prioritized for P1 members at the PhD, postdoc, and faculty levels. We are committed to open access and strive to serve as many P1 members as possible. For very large-scale projects, we encourage you to reach out to discuss potential solutions.</p>
+  </Card>
+
+  <Card title="Detailed Cluster Information" icon="information">
+    <p>Each cluster is hosted at a separate institution and managed by its own administrators. This site provides an overview and a starting point for accessing P1 compute resources. For the most up-to-date technical details, please refer to the respective cluster websites and support channels.</p>
+  </Card>
+
+  <Card title="Citation" icon="seti:code-search">
+    <p>If you have received support from DCC (the DTU HPC center administering our DTU cluster), please cite: <a href="https://doi.org/10.48714/DTU.HPC.0001" target="_blank">https://doi.org/10.48714/DTU.HPC.0001</a>. Your citation helps recognize and support the significant effort that goes into maintaining and operating the compute infrastructure.</p>
+  </Card>
+</CardGrid>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="89.455627mm"
+   height="95.673332mm"
+   viewBox="0 0 89.455627 95.673332"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4 (e7c3feb1, 2024-10-09)"
+   sodipodi:docname="PCAI_Solo_White.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="0.89887065"
+     inkscape:cx="128.49457"
+     inkscape:cy="289.80811"
+     inkscape:window-width="1200"
+     inkscape:window-height="1186"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-70.908333,-71.702083)">
+    <g
+       id="g6"
+       transform="matrix(0.26458333,0,0,0.26458333,70.432083,71.702083)">
+		<polygon
+   class="st0"
+   points="339.8,149.6 308.6,142.1 291.1,178.3 300.9,198.5 339.9,207 "
+   id="polygon1"
+   style="fill:#ffffff" />
+
+		<polygon
+   class="st0"
+   points="31.4,0 55.1,18.6 39.1,53.4 1.8,61.8 1.8,6.6 "
+   id="polygon2"
+   style="fill:#ffffff" />
+
+		<polygon
+   class="st0"
+   points="339.7,295.1 279.8,309.7 298.9,347.8 339.9,356.3 "
+   id="polygon3"
+   style="fill:#ffffff" />
+
+		<polygon
+   class="st0"
+   points="190.9,289.7 191,334 156.5,361.6 156.2,297.7 "
+   id="polygon4"
+   style="fill:#ffffff" />
+
+		<polygon
+   class="st0"
+   points="190.9,61.4 131,15 190.8,0.4 "
+   id="polygon5"
+   style="fill:#ffffff" />
+
+		<path
+   class="st0"
+   d="m 49.4,173.9 c 0,5.7 -1.2,11.6 -3.9,17.1 -8,16.7 -26.4,25 -43.7,21.1 V 136 c 0,0.1 33.5,26.4 47.6,37.9 z"
+   id="path5"
+   style="fill:#ffffff" />
+
+		<path
+   class="st0"
+   d="m 157.2,139.4 33.6,7.5 0.1,61.7 c -17.6,4.2 -36.3,-4.2 -44.6,-21.1 -8.2,-16.9 -3.3,-36.8 10.9,-48.1 z"
+   id="path6"
+   style="fill:#ffffff" />
+
+	</g>
+  </g>
+</svg>

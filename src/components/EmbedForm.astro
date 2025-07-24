@@ -1,0 +1,67 @@
+---
+export interface Props {
+  /**
+   * The title displayed in the collapsible header
+   */
+  title: string;
+  /**
+   * The URL of the form to embed
+   */
+  src: string;
+  /**
+   * Height of the iframe (default: 800px)
+   */
+  height?: string;
+  /**
+   * Minimum height for the iframe (default: none)
+   */
+  minHeight?: string;
+  /**
+   * Whether the form should be initially expanded (default: false)
+   */
+  open?: boolean;
+  /**
+   * Additional CSS classes for the container
+   */
+  class?: string;
+}
+
+const {
+  title,
+  src,
+  height = "800px",
+  minHeight = "",
+  open = false,
+  class: className = ""
+} = Astro.props;
+
+// Build the iframe style
+const iframeStyle = `height: ${height};${minHeight ? ` min-height: ${minHeight};` : ''}`;
+---
+
+<div class={`my-6 ${className}`}>
+  <details class="group border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors" {open}>
+    <summary class="flex items-center justify-between p-4 cursor-pointer">
+      <span class="font-medium text-slate-900 dark:text-slate-100">
+        {title}
+      </span>
+    </summary>
+    <div class="p-4 border-t border-slate-200 dark:border-slate-700">
+      <div class="flex justify-center">
+        <iframe
+          src={src}
+          width="100%"
+          style={iframeStyle}
+          frameborder="0"
+          marginheight="0"
+          marginwidth="0"
+          allowfullscreen
+          class="border border-slate-200 dark:border-slate-700 rounded-lg shadow-sm max-w-6xl w-full mx-auto"
+          title={title}
+        >
+          Loading…
+        </iframe>
+      </div>
+    </div>
+  </details>
+</div>

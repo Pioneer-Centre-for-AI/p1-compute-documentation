@@ -1,0 +1,102 @@
+---
+title: Toolchain
+description: Learn how to keep a consistent toolchain across different machines.
+sidebar:
+  badge:
+    text: Experimental
+    variant: caution
+---
+
+import { Badge, Code } from '@astrojs/starlight/components';
+
+
+## How can I interact with my workload globally on the system?
+
+Creating wrapper scripts in your `PATH` makes it easier to interact with your project from anywhere on the system. For research and development, this often makes it easier to interact with your workload without having to navigate to specific directories or hardcoding paths in job scripts. This way you'll be able to interact with your project from anywhere with something like `@workload train --help` for example.
+
+### Creating Wrapper Scripts
+
+Store executable scripts in directories like `~/bin` or `~/.local/bin` that are in your `PATH`. Consider prefixing with `@` to indicate it's a wrapper script rather than an official package.
+
+export const wrapperScript = `#!/bin/bash
+
+# Wrapper script for project workload
+# Runs the specified entrypoint from your project directory
+
+uv run --directory \${HOME}/my-project workload "$@"`;
+
+<Code code={wrapperScript} lang="bash" title="~/bin/@workload" />
+
+The `"$@"` is used to pass all the arguments to the entrypoint, so you can run `@workload train --epochs 100 --batch-size 32` and those arguments will be forwarded to your training script.
+
+
+## How do I keep a consistent environment and toolchain configuration across different machines?
+
+Having a well-defined toolchain makes it alot easier to have a consistent experience across different machines which will make it more engaging and easier to use HPCs in general.
+
+A flexible and common way of managing dotfiles is to use a symlink farm/manager like `stow`. The idea is that you have a repo with all of your dotfiles and then you can use `stow` to symlink the files to the correct location.
+
+To get started initialize a new directory named `dotfiles` in your home directory and run `git init` to initialize the repo. Then begin copying the original dotfiles and/or directories such as `~/.bashrc`, `~/.ssh/config`, `~/.config/wandb` and so on.
+
+From here you can run `stow` to symlink the files to the correct location.
+
+```
+# From anywhere in the terminal
+stow -v <package> $HOME
+
+# From within the dotfiles repo
+cd ~/.dotfiles && stow .
+```
+
+## How do I access services on the remote machine? <Badge text="NOT RELEVANT FOR AIRGAPPED SYSTEMS" variant="caution" />
+
+To access services running on remote HPC nodes, create an SSH tunnel to forward the remote port to your local machine. One example could be running a Jupyter notebook server alongside an Ollama inference service, allowing you to interact with AI models directly from your notebook.
+
+### LSF Job Submission Script <Badge text="REMOTE" variant="note" />
+
+export const submitScript = `#!/bin/bash
+
+#BSUB -J services              # Job name
+#BSUB -n 4                     # Number of CPU cores
+#BSUB -W 7:00                  # Walltime (7 hours)
+#BSUB -q p1                    # Queue name
+#BSUB -R "rusage[mem=8GB]"     # Memory requirement
+#BSUB -R "span[hosts=1]"       # Ensure all cores on one host
+#BSUB -gpu "num=1"             # GPU requirement
+#BSUB -u your@email.com        # Email for notifications
+#BSUB -B                       # Send email at job begin
+#BSUB -N                       # Send email at job end
+#BSUB -o %J.out                # Standard output
+#BSUB -e %J.err                # Standard error
+
+./entrypoint.sh`;
+
+<Code code={submitScript} lang="bash" title="submit.sh" />
+
+export const entrypointScript = `#!/bin/bash
+
+# Start Ollama service
+OLLAMA_HOST=0.0.0.0 ollama serve &
+OLLAMA_PID=$!
+
+# Start Jupyter service
+jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser &
+JUPYTER_PID=$!
+
+# Wait for both services
+wait $OLLAMA_PID $JUPYTER_PID`;
+
+<Code code={entrypointScript} lang="bash" title="entrypoint.sh" />
+
+### SSH Tunnel <Badge text="LOCAL" variant="note" />
+
+Create the tunnel to access services locally:
+
+export const sshTunnelScript = `# Forward both ports (assumes SSH host 'p1-hpc' in ~/.ssh/config)
+ssh -L 11434:localhost:11434 -L 8888:localhost:8888 p1-hpc -N -f
+
+# Access services
+# Ollama: http://localhost:11434
+# Jupyter: http://localhost:8888`;
+
+<Code code={sshTunnelScript} lang="bash" title="ssh_tunnel.sh" />

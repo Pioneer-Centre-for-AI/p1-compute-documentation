@@ -1,0 +1,100 @@
+---
+title: P1 NGC HPC
+---
+
+import { Steps } from '@astrojs/starlight/components';
+import EmbedForm from '../../../components/EmbedForm.astro';
+
+:::caution[Waiting List]
+    We are currently in the process of tackling some requirements together with UCPH related to the setup of data processing agreements. We are not onboarding new users until this is in place. You can still sign up now to be placed on the waiting list, and we'll keep you updated on the progress.
+:::
+
+The P1 NGC HPC is hosted at the National Genome Centre and is designed for secure data processing with GDPR compliance. It provides a secure environment for handling sensitive data and research projects.
+
+## Getting Access
+
+Each project needs to bring a record (a signed Data Processing Agreement should do) that explicitly mentions NGC as a data processor and that the data is allowed to be stored there. If the project poses a high risk to individuals whose personal data is being processed a Data Protection Impact Assessment (DPIA) will be needed also.
+
+<Steps class="space-y-6">
+1. <EmbedForm title="P1 Affiliation Form" src="https://da.surveymonkey.com/r/P1Affiliation" minHeight="1200px" class="my-2" /> Before accessing the P1 NGC HPC, you must first [register to become a member of P1](https://www.aicentre.dk/affiliation).
+2. Complete and sign the [NGC user creation form](https://www.ngc.dk/Media/638139612542456428/Oprettelse%20af%20Ekstern%20Bruger%20p%C3%A5%20NGC%20Infrastruktur%200.4.pdf)
+and forward it to the [Compute Coordinator](mailto:bstja@dtu.dk) to request access.
+</Steps>
+
+You will be added to the NGC slack channel once you gain access.
+
+### Accessing the Cluster
+
+The P1 NGC HPC is an air-gapped system requiring:
+
+- Multi-factor authentication (MFA)
+- A client for accessing the remote VM entrypoint
+- Specific access instructions will will follow after registration. But you can expect to use SFTP for the transferring if data into the system.
+
+Once conneccted with the Omnissa Remote Desktop client you can access the login node using `ssh -X <your-username>@login`.
+
+```
+Important hosts:
+    - https://console.cld076.vmc/status # Internal Status page
+    - cld076-0004.cld076.vmc            # Internal (SFTP)
+    - sftp.spc.ngc.dk                   # External Ingress/Egress (SFTP)
+```
+
+## Transferring Sensitive & Large Data
+
+You can transfer sensitive and large data to the cluster using SFTP under the supervision of an admin. You will need to request access to the `/data/upload` directory as this acts as a data gateway.
+
+Then its recommended to set up a SSH entry in your `~/.ssh/config`.
+
+```
+Host ngc
+    HostName sftp.spc.ngc.dk
+    Port 6433
+    User <your-username>_sftp
+    HostKeyAlgorithms +ssh-rsa
+```
+
+From here you can connect with `sftp ngc` and then `put` to the `/data/upload` directory from the outside and use `get` from the inside. During the transfer period the data is only accessible to you and the admins.
+
+
+As an alternative to using SFTP you can use `scp` to transfer the data to the cluster which is arguably easier:
+```
+scp ~/datasets/ISLES-2022.zip ngc:/data/upload/
+```
+
+Then inside the cluster you can transfer the data to your home directory using:
+```
+scp <your-username>_sftp@cld076-0004.cld076.vmc:/data/upload/ISLES-2022.zip ~/datasets/
+```
+
+## Transffering Miscellaneous Data
+
+For miscellaneous and small data such as personal dotfiles or source code you can:
+
+- Transfer via SFTP (tedious and requires admin supervision)
+- Use the internal server running a simple GitHub proxy/tunnel for public repositories.
+- Mount a host directory using the Omnissa Remote Desktop client (must be enabled by an NGC admin)
+- SSH into the admin node (if you have access to it)
+
+You host clipboard works into the remote desktop client but not the other way around. You can take screenshots of the remote display during the session.
+
+## Support
+
+import Support from '../../../components/Support.astro';
+
+<Support
+  client:load
+  technicalSupportEmail="support@ngc.dk"
+  technicalSupportLabel="NGC HPC Support Team"
+  computeCoordinatorEmail="bstja@dtu.dk"
+  emailSubjectPrefix="P1 NGC HPC:"
+/>
+
+## Specification
+
+- Air-gapped system for secure data processing
+- GDPR compliant infrastructure
+- Secure storage solutions
+- Specific hardware details available upon access approval
+- Scheduling Environment: SLURM
+- Resource allocation details provided during onboarding

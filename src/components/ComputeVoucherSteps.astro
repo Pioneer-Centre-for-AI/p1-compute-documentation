@@ -1,0 +1,204 @@
+<script>
+  // Client-side script to handle tab switching
+  document.addEventListener('DOMContentLoaded', function() {
+    const tabs = document.querySelectorAll('[data-step-tab]');
+    const stepContents = document.querySelectorAll('[data-step-content]');
+
+    function showStep(stepIndex: number) {
+      // Hide all step contents
+      stepContents.forEach((content, index) => {
+        if (index === stepIndex) {
+          content.classList.remove('hidden');
+        } else {
+          content.classList.add('hidden');
+        }
+      });
+
+      // Update tab states
+      tabs.forEach((tab, index) => {
+        const numberSpan = tab.querySelector('[data-step-number]');
+        if (index === stepIndex) {
+          tab.classList.add('bg-white', 'dark:bg-slate-700', 'text-slate-900', 'dark:text-slate-100', 'border-slate-200', 'dark:border-slate-600', 'shadow-sm');
+          tab.classList.remove('bg-transparent', 'text-slate-600', 'dark:text-slate-400', 'border-transparent');
+          if (numberSpan) {
+            numberSpan.classList.add('bg-blue-500', 'text-white');
+            numberSpan.classList.remove('bg-slate-200', 'dark:bg-slate-600', 'text-slate-600', 'dark:text-slate-400');
+          }
+        } else {
+          tab.classList.remove('bg-white', 'dark:bg-slate-700', 'text-slate-900', 'dark:text-slate-100', 'border-slate-200', 'dark:border-slate-600', 'shadow-sm');
+          tab.classList.add('bg-transparent', 'text-slate-600', 'dark:text-slate-400', 'border-transparent');
+          if (numberSpan) {
+            numberSpan.classList.remove('bg-blue-500', 'text-white');
+            numberSpan.classList.add('bg-slate-200', 'dark:bg-slate-600', 'text-slate-600', 'dark:text-slate-400');
+          }
+        }
+      });
+    }
+
+    // Add click handlers to tabs
+    tabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => showStep(index));
+    });
+
+    // Initialize with first step
+    showStep(0);
+  });
+</script>
+
+<section class="not-content py-8">
+  <div class="mx-auto max-w-4xl">
+    <!-- Tabs -->
+    <div class="w-full mb-6">
+      <div class="inline-flex h-10 items-center justify-center rounded-md bg-slate-100 dark:bg-slate-800 p-1 w-full gap-0.5 border border-slate-200 dark:border-slate-700">
+        <button
+          data-step-tab
+          class="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium transition-all flex-1 relative border bg-transparent text-slate-600 dark:text-slate-400 border-transparent hover:bg-slate-50 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+        >
+          <span data-step-number class="inline-flex items-center justify-center w-5 h-5 rounded-full text-xs font-bold mr-2 transition-all bg-slate-200 dark:bg-slate-600 text-slate-600 dark:text-slate-400">
+            1
+          </span>
+          Submit Proposal
+        </button>
+        <button
+          data-step-tab
+          class="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium transition-all flex-1 relative border bg-transparent text-slate-600 dark:text-slate-400 border-transparent hover:bg-slate-50 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+        >
+          <span data-step-number class="inline-flex items-center justify-center w-5 h-5 rounded-full text-xs font-bold mr-2 transition-all bg-slate-200 dark:bg-slate-600 text-slate-600 dark:text-slate-400">
+            2
+          </span>
+          Await Review
+        </button>
+        <button
+          data-step-tab
+          class="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium transition-all flex-1 relative border bg-transparent text-slate-600 dark:text-slate-400 border-transparent hover:bg-slate-50 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+        >
+          <span data-step-number class="inline-flex items-center justify-center w-5 h-5 rounded-full text-xs font-bold mr-2 transition-all bg-slate-200 dark:bg-slate-600 text-slate-600 dark:text-slate-400">
+            3
+          </span>
+          Begin Onboarding
+        </button>
+      </div>
+    </div>
+
+    <!-- Step Content -->
+    <div class="rounded-lg p-6 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700">
+      <!-- Step 1: Submit Project Proposal -->
+      <div data-step-content class="flex items-start gap-4">
+        <div class="flex items-center justify-center w-12 h-12 rounded-lg flex-shrink-0 bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+        </div>
+
+        <div class="flex-1 min-w-0">
+          <div class="flex items-start gap-3 mb-3">
+            <h3 class="text-xl font-semibold leading-tight text-slate-900 dark:text-slate-100">
+              Submit Project Proposal
+            </h3>
+          </div>
+
+          <p class="mb-4 text-slate-600 dark:text-slate-400">
+            Forward a copy of your project proposal for a quick assessment.
+          </p>
+
+          <ul class="space-y-2 list-disc list-inside">
+            <li class="text-sm ml-2 leading-relaxed text-slate-700 dark:text-slate-300">
+              Briefly describe your project, data and workload with clear objectives and scope
+            </li>
+            <li class="text-sm ml-2 leading-relaxed text-slate-700 dark:text-slate-300">
+              Include specific compute requirements and estimated timeline
+            </li>
+            <li class="text-sm ml-2 leading-relaxed text-slate-700 dark:text-slate-300">
+              Have you applied for or received NNF credits or similar?
+            </li>
+            <li class="text-sm ml-2 leading-relaxed text-slate-700 dark:text-slate-300">
+              Would you be willing to share a link to your project repository? While completely optional, this helps us provide more personalized guidance and tailored support for your specific use case
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Step 2: Wait for Review -->
+      <div data-step-content class="hidden flex items-start gap-4">
+        <div class="flex items-center justify-center w-12 h-12 rounded-lg flex-shrink-0 bg-yellow-100 text-yellow-600 dark:bg-yellow-900/30 dark:text-yellow-400">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+
+        <div class="flex-1 min-w-0">
+          <div class="flex items-start gap-3 mb-3">
+            <h3 class="text-xl font-semibold leading-tight text-slate-900 dark:text-slate-100">
+              Wait for Review
+            </h3>
+          </div>
+
+          <p class="mb-4 text-slate-600 dark:text-slate-400">
+            We'll assess your proposal and project requirements.
+          </p>
+
+          <ul class="space-y-2 list-disc list-inside">
+            <li class="text-sm ml-2 leading-relaxed text-slate-700 dark:text-slate-300">
+              Assessment of alignment with P1 research priorities
+            </li>
+            <li class="text-sm ml-2 leading-relaxed text-slate-700 dark:text-slate-300">
+              If we have access to your project we can gain more detailed insights into how to best support your when onboarding Gefion
+            </li>
+            <li class="text-sm ml-2 leading-relaxed text-slate-700 dark:text-slate-300">
+              Contacting Gefion if approved to initiate the onboarding process
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Step 3: Start Onboarding -->
+      <div data-step-content class="hidden flex items-start gap-4">
+        <div class="flex items-center justify-center w-12 h-12 rounded-lg flex-shrink-0 bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+
+        <div class="flex-1 min-w-0">
+          <div class="flex items-start gap-3 mb-3">
+            <h3 class="text-xl font-semibold leading-tight text-slate-900 dark:text-slate-100">
+              Start Onboarding
+            </h3>
+          </div>
+
+          <p class="mb-4 text-slate-600 dark:text-slate-400">
+            Once approved, you'll receive access credentials and onboarding instructions to begin using Gefion.
+          </p>
+
+          <ul class="space-y-2 list-disc list-inside">
+            <li class="text-sm ml-2 leading-relaxed text-slate-700 dark:text-slate-300">
+              Receive access credentials and login instructions
+            </li>
+            <li class="text-sm ml-2 leading-relaxed text-slate-700 dark:text-slate-300">
+              Complete technical onboarding with Gefion team
+            </li>
+            <li class="text-sm ml-2 leading-relaxed text-slate-700 dark:text-slate-300">
+              Set up your development environment
+            </li>
+            <li class="text-sm ml-2 leading-relaxed text-slate-700 dark:text-slate-300">
+              Begin testing your code with compute voucher credits
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Button -->
+    <div class="mt-6">
+      <a
+        href="mailto:bstja@dtu.dk?subject=P1%20Gefion%20Voucher%3A%20"
+        class="inline-flex items-center px-6 py-3 text-sm font-medium rounded-md bg-blue-600 hover:bg-blue-700 text-white border border-blue-600 hover:border-blue-700 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 no-underline hover:no-underline"
+      >
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        </svg>
+        Start Applying
+      </a>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,37 @@
+---
+title: Gefion HPC (Partner)
+---
+
+import { Badge } from '@astrojs/starlight/components';
+import ComputeVoucherSteps from '../../../components/ComputeVoucherSteps.astro';
+import Support from '../../../components/Support.astro';
+
+The Gefion HPC is a national-level facility that can support both Tier 2 and some Tier 1 workloads. It is particularly suitable for large-scale model training and distributed computing tasks.
+
+## Playground Compute Vouchers <Badge text="WIP" variant="caution" />
+
+P1 has allocated a portion of its compute budget to support researchers through "Gefion Playground" vouchers. These vouchers enable researchers to test their compatibility with the Gefion HPC system and explore the possibilities of large-scale computing.
+
+:::note[Important]
+These vouchers are **not intended for full-scale experiments** - they are for trial usage, compatibility testing, and exploring large-scale computing capabilities. Once you've confirmed your setup works and evaluated the potential, you'll need to secure your own project funding for production workloads.
+:::
+
+<ComputeVoucherSteps />
+
+## Support
+
+<Support
+  client:load
+  technicalSupportEmail="hello@dcai.dk"
+  technicalSupportLabel="DCAI Support Team"
+  computeCoordinatorEmail="bstja@dtu.dk"
+  emailSubjectPrefix="P1 Gefion HPC:"
+/>
+
+## Specification
+
+- NVIDIA DGX SuperPOD
+- Multiple DGX nodes (8 x H100s) with high-performance interconnects
+- Large-scale GPU resources for distributed training
+- High-bandwidth storage solutions
+- Scheduling Environment: SLURM

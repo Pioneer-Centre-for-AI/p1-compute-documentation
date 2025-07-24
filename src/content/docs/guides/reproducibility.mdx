@@ -1,0 +1,100 @@
+---
+title: Reproducibility
+description: Learn how to make your workloads more reproducible.
+sidebar:
+  badge:
+    text: Experimental
+    variant: caution
+---
+
+
+## How do I define a common entrypoint for my workload?
+
+What is the main entrypoint to your project? Is it a bash script, a notebook, a Python file, or something else? A clearly defined entrypoint gives users and collaborators a quick way to understand and run your project - often more effectively than reading a potentially outdated README since focusing on an entrypoint you use yourself is more likely to stay up to date.
+
+With the release of [PEP 621](https://packaging.python.org/en/latest/specifications/pyproject-toml/#pyproject-toml-specification), it became customary to define common entrypoints in the `pyproject.toml` file under the `[project.scripts]` section.
+
+import { Code } from '@astrojs/starlight/components';
+
+export const examplePyprojectScripts = `
+[project.scripts]
+# Single Entrypoint
+workload = "workload.main" # $ workload --help to see available subcommands
+
+# Multiple Scripts/Entrypoints (module:function)
+train = "workload.main:train"
+download = "workload.main:download"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+`;
+export const fileName = 'pyproject.toml';
+
+<Code code={examplePyprojectScripts} lang="toml" title={fileName} />
+
+**Note:** We must include the `[build-system]` section to specify how the project should be built, ensuring that tools know how to process its metadata and source files.
+
+### Namespace Organization
+
+Consider building your workload as a package with a CLI entrypoint to signal intent and have a common entrypoint for easier collaboration. As an additional step, you can organize your workload commands under a single namespace with subcommands:
+
+export const namespaceExample = `# Single namespace with subcommands
+workload download      # Download the data
+workload preprocess    # Preprocess the data
+workload train         # Train the model
+
+# Alternative: Multiple separate scripts
+workload_download
+workload_preprocess
+workload_train`;
+
+<Code code={namespaceExample} lang="bash" title="Command organization" />
+
+Using subcommands often avoids redundant boilerplate code and makes it easier to maintain and collaborate on.
+
+## How do I manage complex configurations?
+
+In research and experimental codebases, it's common to manage a large number of parameters. To keep things organized, it's helpful to separate configuration into two broad categories:
+
+- **Application Configuration:** Static settings that define the overall behavior of the project. These are often tied to the environment (e.g., file paths, hardware options, logging preferences) and typically don't change between runs. Consider taking a look at `pydantic-settings` for this.
+- **Task Configuration:** Dynamic settings that are specific to a single experiment or run - such as model architecture, training hyperparameters, or evaluation strategies. Another useful package for this is `hydra`.
+
+### Application Configuration
+
+When loading application configuration, it's useful to establish a clear order of precedence and load configuration consistently:
+
+1. `~/.config/project_name/config.toml`
+2. `${PWD}/.project_name/config.toml`
+3. Environment variables (prefixed overrides with `PROJECT_`)
+
+This order of precedence is very common and you can define it in a simple `settings.py` or `config.py` module that can be imported across your codebase. Make sure to assign reasonable defaults to your configuration to illustrate how to override them.
+
+This approach is also directly compatible with the use of `.env` files where you assign a namespace for the project using a prefix like `PROJECT_*`.
+
+When you then source the `.env` file, you can easily override the configuration as part of your shell augmentation.
+
+export const dotEnvDirExample = `
+# Directory Structure
+PROJECT_CONFIG_DIR=\${XDG_CONFIG_HOME:-$HOME/.config}/\${PROJECT}     # Configuration files
+PROJECT_CACHE_DIR=\${XDG_CACHE_HOME:-$HOME/.cache}/\${PROJECT}        # Temporary files, useful to avoid filling home directories with limited capacity on HPC systems
+PROJECT_STATE_DIR=\${XDG_STATE_HOME:-$HOME/.local/state}/\${PROJECT}  # Model checkpoints, intermediate processing, etc.
+PROJECT_DATA_DIR=\${XDG_DATA_HOME:-$HOME/.local/share}/\${PROJECT}    # On HPC systems, this often points to shared storage or some fast storage
+
+# Feature Flags
+PROJECT_LOG_LEVEL=INFO            # DEBUG, INFO, WARNING, ERROR, CRITICAL
+PROJECT_EXPERIMENT_TRACKER=mlflow # csv, wandb, etc.
+PROJECT_MULTITHREADING=true
+PROJECT_MULTIPROCESSING=true
+
+`;
+
+<Code code={dotEnvDirExample} lang="bash" title=".env" />
+
+**Note:** Here we illustrate the use of the XDG Base Directory Specification as fallback to make your project more portable across operating systems. However, be aware that HPC environments may not set these variables by default or may change them during job submission unpredictably, so it's okay to fall back to standard paths.
+
+### Task Configuration
+
+For constructs with many variable parameters - like PyTorch modules, data loaders, or training loops - it's better to treat these as task-specific configuration. These values often change per experiment.
+
+Here, command-line configuration tools like `hydra` shine, letting you override settings dynamically while keeping defaults in version-controlled YAML files to be shared with the team.
