@@ -56,31 +56,38 @@ To access services running on remote HPC nodes, create an SSH tunnel to forward 
 
 export const submitScript = `#!/bin/bash
 
-#BSUB -J services              # Job name
-#BSUB -n 4                     # Number of CPU cores
-#BSUB -W 7:00                  # Walltime (7 hours)
-#BSUB -q p1                    # Queue name
-#BSUB -R "rusage[mem=8GB]"     # Memory requirement
-#BSUB -R "span[hosts=1]"       # Ensure all cores on one host
-#BSUB -gpu "num=1"             # GPU requirement
-#BSUB -u your@email.com        # Email for notifications
-#BSUB -B                       # Send email at job begin
-#BSUB -N                       # Send email at job end
-#BSUB -o %J.out                # Standard output
-#BSUB -e %J.err                # Standard error
+#BSUB -J services                 # Job name
+#BSUB -n 4                        # Number of CPU cores
+#BSUB -W 7:00                     # Walltime (7 hours)
+#BSUB -q p1                       # Queue name
+#BSUB -R "rusage[mem=8GB]"        # Memory requirement
+#BSUB -R "span[hosts=1]"          # Ensure all cores on one host
+#BSUB -gpu "num=1:mode=exclusive" # GPU requirement
+#BSUB -u your@email.com           # Email for notifications
+#BSUB -B                          # Send email at job begin
+#BSUB -N                          # Send email at job end
+#BSUB -o %J.out                   # Standard output
+#BSUB -e %J.err                   # Standard error
 
 ./entrypoint.sh`;
 
 <Code code={submitScript} lang="bash" title="submit.sh" />
 
-export const entrypointScript = `#!/bin/bash
+export const entrypointScript = `
+#!/usr/bin/env bash
+set -euo pipefail
+
+: "\${OLLAMA_HOST:=0.0.0.0:11434}"
+: "\${NOTEBOOK_APP_IP:=0.0.0.0}"
+: "\${NOTEBOOK_APP_PORT:=8888}"
+: "\${NOTEBOOK_APP_OPEN_BROWSER:=False}"
 
 # Start Ollama service
-OLLAMA_HOST=0.0.0.0 ollama serve &
+ollama serve &
 OLLAMA_PID=$!
 
 # Start Jupyter service
-jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser &
+jupyter notebook --ip="$NOTEBOOK_APP_IP" --port="$NOTEBOOK_APP_PORT" --no-browser="$NOTEBOOK_APP_OPEN_BROWSER" &
 JUPYTER_PID=$!
 
 # Wait for both services
