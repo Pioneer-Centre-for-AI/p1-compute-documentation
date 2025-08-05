@@ -57,41 +57,65 @@ Using subcommands often avoids redundant boilerplate code and makes it easier to
 
 In research and experimental codebases, it's common to manage a large number of parameters. To keep things organized, it's helpful to separate configuration into two broad categories:
 
-- **Application Configuration:** Static settings that define the overall behavior of the project. These are often tied to the environment (e.g., file paths, hardware options, logging preferences) and typically don't change between runs. Consider taking a look at `pydantic-settings` for this.
-- **Task Configuration:** Dynamic settings that are specific to a single experiment or run - such as model architecture, training hyperparameters, or evaluation strategies. Another useful package for this is `hydra`.
+- **Application Configuration:** Static settings that define the overall behavior of the project. These are often tied to the environment (e.g., file paths, hardware options, logging preferences) and typically don't change between runs.
+- **Task Configuration:** Dynamic settings that are specific to a single experiment or run - such as model architecture, training hyperparameters, or evaluation strategies. A popular and useful package for this is `hydra`.
 
 ### Application Configuration
 
 When loading application configuration, it's useful to establish a clear order of precedence and load configuration consistently:
 
-1. `~/.config/project_name/config.toml`
-2. `${PWD}/.project_name/config.toml`
-3. Environment variables (prefixed overrides with `PROJECT_`)
+1. Environment variables with a prefix `WORKLOAD_`
+2. Command-line arguments
 
-This order of precedence is very common and you can define it in a simple `settings.py` or `config.py` module that can be imported across your codebase. Make sure to assign reasonable defaults to your configuration to illustrate how to override them.
+This order of precedence is very common and you can define it in a simple `settings.py` or `config.py` module that can be imported across your codebase.
+Make sure to assign reasonable defaults to your configuration to illustrate how to override them.
+
+export const settingsExample = `
+import os
+
+from pathlib import Path
+from typing import List, Literal, Optional, Union
+
+XDG_CONFIG_HOME = os.getenv("XDG_CONFIG_HOME", str(Path.home() / ".config"))
+XDG_CACHE_HOME = os.getenv("XDG_CACHE_HOME", str(Path.home() / ".cache"))
+XDG_DATA_HOME = os.getenv("XDG_DATA_HOME", str(Path.home() / ".local/share"))
+XDG_STATE_HOME = os.getenv("XDG_STATE_HOME", str(Path.home() / ".local/state"))
+
+WORKLOAD_CONFIG_DIR = os.getenv("WORKLOAD_CONFIG_DIR", str(Path(XDG_CONFIG_HOME) / "workload_name"))
+WORKLOAD_CACHE_DIR = os.getenv("WORKLOAD_CACHE_DIR", str(Path(XDG_CACHE_HOME) / "workload_name"))
+WORKLOAD_STATE_DIR = os.getenv("WORKLOAD_STATE_DIR", str(Path(XDG_STATE_HOME) / "workload_name"))
+WORKLOAD_DATA_DIR = os.getenv("WORKLOAD_DATA_DIR", str(Path(XDG_DATA_HOME) / "workload_name"))
+
+WORKLOAD_LOG_LEVEL = os.getenv("WORKLOAD_LOG_LEVEL", "INFO")
+WORKLOAD_EXPERIMENT_TRACKER = os.getenv("WORKLOAD_EXPERIMENT_TRACKER", "csv")
+WORKLOAD_MULTITHREADING = os.getenv("WORKLOAD_MULTITHREADING", "true")
+WORKLOAD_MULTIPROCESSING = os.getenv("WORKLOAD_MULTIPROCESSING", "true")
+`;
+
+<Code code={settingsExample} lang="python" title="settings.py" />
+
+**Note:** Here we illustrate the use of the XDG Base Directory Specification as fallback to make your project more portable across operating systems. However, be aware that HPC environments may not set these variables by default or may change them during job submission unpredictably, so it's okay to fall back to standard paths.
 
 This approach is also directly compatible with the use of `.env` files where you assign a namespace for the project using a prefix like `PROJECT_*`.
 
-When you then source the `.env` file, you can easily override the configuration as part of your shell augmentation.
+When you then source the `.env` file, you can easily override the configuration as part of your shell augmentation which is especially useful on HPC systems where you may tell the application to store large files in another location.
 
 export const dotEnvDirExample = `
 # Directory Structure
-PROJECT_CONFIG_DIR=\${XDG_CONFIG_HOME:-$HOME/.config}/\${PROJECT}     # Configuration files
-PROJECT_CACHE_DIR=\${XDG_CACHE_HOME:-$HOME/.cache}/\${PROJECT}        # Temporary files, useful to avoid filling home directories with limited capacity on HPC systems
-PROJECT_STATE_DIR=\${XDG_STATE_HOME:-$HOME/.local/state}/\${PROJECT}  # Model checkpoints, intermediate processing, etc.
-PROJECT_DATA_DIR=\${XDG_DATA_HOME:-$HOME/.local/share}/\${PROJECT}    # On HPC systems, this often points to shared storage or some fast storage
+WORKLOAD_CONFIG_DIR=/dtu/p1/\${USER}/workload_name/config     # Configuration files
+WORKLOAD_CACHE_DIR=/dtu/p1/\${USER}/workload_name/cache       # Temporary files, useful to avoid filling home directories with limited capacity on HPC systems
+WORKLOAD_STATE_DIR=/dtu/p1/\${USER}/workload_name/state       # Model checkpoints, intermediate processing, etc.
+WORKLOAD_DATA_DIR=/dtu/p1/\${USER}/workload_name/data         # On HPC systems, this often points to shared storage or some fast storage
 
 # Feature Flags
-PROJECT_LOG_LEVEL=INFO            # DEBUG, INFO, WARNING, ERROR, CRITICAL
-PROJECT_EXPERIMENT_TRACKER=mlflow # csv, wandb, etc.
-PROJECT_MULTITHREADING=true
-PROJECT_MULTIPROCESSING=true
+WORKLOAD_LOG_LEVEL=INFO            # DEBUG, INFO, WARNING, ERROR, CRITICAL
+WORKLOAD_EXPERIMENT_TRACKER=mlflow # csv, wandb, etc.
+WORKLOAD_MULTITHREADING=true
+WORKLOAD_MULTIPROCESSING=true
 
 `;
 
 <Code code={dotEnvDirExample} lang="bash" title=".env" />
-
-**Note:** Here we illustrate the use of the XDG Base Directory Specification as fallback to make your project more portable across operating systems. However, be aware that HPC environments may not set these variables by default or may change them during job submission unpredictably, so it's okay to fall back to standard paths.
 
 ### Task Configuration
 

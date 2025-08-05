@@ -8,7 +8,10 @@ import { Aside } from '@astrojs/starlight/components';
 
 The P1 DTU HPC is hosted at DTU and provides high-performance computing resources for P1 members (PhD and above). It is particularly suitable for medium to large-scale machine learning experiments and research projects.
 
+
 ## Getting Access
+
+**Requirements:** PhD or higher (exceptions may apply), valid Danish university email, and registered P1 affiliation.
 
 <Steps class="space-y-6">
 1. <EmbedForm title="P1 Affiliation Form" src="https://da.surveymonkey.com/r/P1Affiliation" minHeight="1200px" class="my-2" /> Before accessing the P1 DTU HPC, you must first [register to become a member of P1](https://www.aicentre.dk/affiliation).
@@ -73,7 +76,6 @@ TIP: Consider setting up a SSH host alias for `login9.hpc.dtu.dk` in your `~/.ss
 import Support from '../../../components/Support.astro';
 
 <Support
-  client:load
   technicalSupportEmail="support@hpc.dtu.dk"
   technicalSupportLabel="DTU HPC Support Team"
   computeCoordinatorEmail="bstja@dtu.dk"
