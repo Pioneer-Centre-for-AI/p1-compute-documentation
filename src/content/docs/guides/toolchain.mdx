@@ -29,7 +29,6 @@ uv run --directory \${HOME}/my-project workload "$@"`;
 
 The `"$@"` is used to pass all the arguments to the entrypoint, so you can run `@workload train --epochs 100 --batch-size 32` and those arguments will be forwarded to your training script.
 
-
 ## How do I keep a consistent environment and toolchain configuration across different machines?
 
 Having a well-defined toolchain makes it alot easier to have a consistent experience across different machines which will make it more engaging and easier to use HPCs in general.
@@ -48,11 +47,11 @@ stow -v <package> $HOME
 cd ~/.dotfiles && stow .
 ```
 
-## How do I access services on the remote machine? <Badge text="NOT RELEVANT FOR AIRGAPPED SYSTEMS" variant="caution" />
+## How do I access services on the remote machine?
 
 To access services running on remote HPC nodes, create an SSH tunnel to forward the remote port to your local machine. One example could be running a Jupyter notebook server alongside an Ollama inference service, allowing you to interact with AI models directly from your notebook.
 
-### LSF Job Submission Script <Badge text="REMOTE" variant="note" />
+### LSF Job Submission Script
 
 export const submitScript = `#!/bin/bash
 
@@ -77,33 +76,35 @@ export const entrypointScript = `
 #!/usr/bin/env bash
 set -euo pipefail
 
-: "\${OLLAMA_HOST:=0.0.0.0:11434}"
 : "\${NOTEBOOK_APP_IP:=0.0.0.0}"
 : "\${NOTEBOOK_APP_PORT:=8888}"
 : "\${NOTEBOOK_APP_OPEN_BROWSER:=False}"
-
-# Start Ollama service
-ollama serve &
-OLLAMA_PID=$!
 
 # Start Jupyter service
 jupyter notebook --ip="$NOTEBOOK_APP_IP" --port="$NOTEBOOK_APP_PORT" --no-browser="$NOTEBOOK_APP_OPEN_BROWSER" &
 JUPYTER_PID=$!
 
-# Wait for both services
-wait $OLLAMA_PID $JUPYTER_PID`;
+wait $JUPYTER_PID
+`;
 
 <Code code={entrypointScript} lang="bash" title="entrypoint.sh" />
 
-### SSH Tunnel <Badge text="LOCAL" variant="note" />
+### SSH Tunnel
 
 Create the tunnel to access services locally:
 
 export const sshTunnelScript = `# Forward both ports (assumes SSH host 'p1-hpc' in ~/.ssh/config)
-ssh -L 11434:localhost:11434 -L 8888:localhost:8888 p1-hpc -N -f
+ssh -L 8888:localhost:8888 p1-hpc -N -f
 
-# Access services
-# Ollama: http://localhost:11434
+# Access service
 # Jupyter: http://localhost:8888`;
 
 <Code code={sshTunnelScript} lang="bash" title="ssh_tunnel.sh" />
+
+Or add the following to your `~/.ssh/config`:
+
+export const sshConfig = `Host p1-hpc
+  # ...
+  LocalForward 8888 localhost:8888`;
+
+<Code code={sshConfig} lang="bash" title="~/.ssh/config" />
