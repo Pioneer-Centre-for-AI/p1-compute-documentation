@@ -96,7 +96,7 @@ WORKLOAD_MULTIPROCESSING = os.getenv("WORKLOAD_MULTIPROCESSING", "true")
 
 **Note:** Here we illustrate the use of the XDG Base Directory Specification as fallback to make your project more portable across operating systems. However, be aware that HPC environments may not set these variables by default or may change them during job submission unpredictably, so it's okay to fall back to standard paths.
 
-This approach is also directly compatible with the use of `.env` files where you assign a namespace for the project using a prefix like `PROJECT_*`.
+This approach is also directly compatible with the use of `.env` files where you assign a namespace for the project using a prefix like `WORKLOAD_*`.
 
 When you then source the `.env` file, you can easily override the configuration as part of your shell augmentation which is especially useful on HPC systems where you may tell the application to store large files in another location.
 
@@ -119,6 +119,80 @@ WORKLOAD_MULTIPROCESSING=true
 
 ### Task Configuration
 
-For constructs with many variable parameters - like PyTorch modules, data loaders, or training loops - it's better to treat these as task-specific configuration. These values often change per experiment.
+For constructs with many variable parameters - like PyTorch modules, data loaders, training loops or when wrapping the scheduler - it's better to treat these as task-specific configuration. These values often change per experiment.
 
 Here, command-line configuration tools like `hydra` shine, letting you override settings dynamically while keeping defaults in version-controlled YAML files to be shared with the team.
+
+#### Example: Wrapping the scheduler
+
+Batch job scripts with embedded scheduler directives (e.g., `#BSUB`) are the standard way to submit workloads.
+While this approach works well for fixed, repeatable jobs, it tends to be rigid: any change in resources or runtime configuration often requires editing the script directly. This can lead to a mismatch between the scheduler’s resource requests and the parameters used in the execution script.
+
+A more maintainable and flexible approach is to wrap the scheduler submission logic in a reusable interface.
+Instead of hardcoding directives, you can encapsulate the scheduler command (e.g., `bsub` for LSF) and its arguments inside a small Python utility. Which will help ensure more consistent settings.
+
+Here's an example on how to map the scheduler options with sensible defaults with a lightweight wrapper for LSF submissions.
+
+export const parametersExample = `
+import os
+from dataclasses import dataclass, field
+
+@dataclass
+class SchedulerOptions:
+    id: str = field(default_factory=lambda: os.getenv("SCHEDULER_ID", "workload_name"))
+    cores: int = field(default_factory=lambda: int(os.getenv("SCHEDULER_CORES", "4")))
+    walltime: str = field(default_factory=lambda: os.getenv("SCHEDULER_WALLTIME", "7:00"))
+    queue: str = field(default_factory=lambda: os.getenv("SCHEDULER_QUEUE", "p1"))
+    memory: str = field(default_factory=lambda: os.getenv("SCHEDULER_MEM", "16GB"))
+    gpus: int = field(default_factory=lambda: int(os.getenv("SCHEDULER_GPUS", "2")))
+    email: str = field(default_factory=lambda: os.getenv("SCHEDULER_EMAIL", "username@institution.dk"))
+`;
+
+<Code code={parametersExample} lang="python" title="parameters.py" />
+
+Here we allow overrides via environment variables, while also providing default fallback values.
+
+export const schedulerWrapper = `
+import subprocess
+
+from datetime import datetime
+from pathlib import Path
+from typing import Optional
+
+class LSFScheduler:
+
+  def __init__(self, options: Optional[SchedulerOptions] = None):
+    self.options = options or SchedulerOptions()
+
+  def submit(self, cmd: list[str], logs_dir: Optional[Path] = None) -> subprocess.CompletedProcess:
+    if subprocess.run(["command", "-v", "bsub"], capture_output=True, check=False).returncode != 0:
+        raise RuntimeError("bsub command not found. LSF scheduler is not available.")
+
+    logs_dir.mkdir(parents=True, exist_ok=True)
+
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    job_id = f"{self.options.id.replace(' ', '_')}_{timestamp}"
+
+    bsub_cmd = [
+        "bsub",
+        "-J", self.options.id,
+        "-n", str(self.options.cores),
+        "-W", self.options.walltime,
+        "-q", self.options.queue,
+        "-R", f"rusage[mem={self.options.memory}]",
+        "-R", "span[hosts=1]",
+        "-gpu", f"num={self.options.gpus}:mode=exclusive_process",
+        "-u", self.options.email,
+        "-B", "-N",
+        "-o", str(logs_dir / "%J.out"),
+        "-e", str(logs_dir / "%J.err"),
+    ]
+
+    bsub_cmd.extend(cmd)
+    return subprocess.run(bsub_cmd, capture_output=True, text=True, check=False)
+
+`;
+
+<Code code={schedulerWrapper} lang="python" title="scheduler.py" />
+
+With a simple conditional check, you can add a CLI flag like: `workload train --submit` to trigger job submission through the wrapper and if you use `hydra` we can compose the scheduler structured config like so: `workload train --submit scheduler.cores=8 scheduler.gpus=1`.
