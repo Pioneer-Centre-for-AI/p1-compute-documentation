@@ -31,9 +31,9 @@ The P1 NGC HPC is an air-gapped system requiring:
 
 - Multi-factor authentication (MFA)
 - A client for accessing the remote VM entrypoint
-- Specific access instructions will will follow after registration. But you can expect to use SFTP for the transferring if data into the system.
+- Specific access instructions will follow after registration. But you can expect to use SFTP for transferring data into the system.
 
-Once conneccted with the Omnissa Remote Desktop client you can access the login node using `ssh -X <your-username>@login`.
+Once connected with the Omnissa Remote Desktop client you can access the login node using `ssh -X <your-username>@login`.
 
 ```
 Important hosts:
@@ -46,7 +46,7 @@ Important hosts:
 
 You can transfer sensitive and large data to the cluster using SFTP under the supervision of an admin. You will need to request access to the `/data/upload` directory as this acts as a data gateway.
 
-Then its recommended to set up a SSH entry in your `~/.ssh/config`.
+Then it's recommended to set up a SSH entry in your `~/.ssh/config`.
 
 ```
 Host ngc
@@ -69,7 +69,7 @@ Then inside the cluster you can transfer the data to your home directory using:
 scp <your-username>_sftp@cld076-0004.cld076.vmc:/data/upload/ISLES-2022.zip ~/datasets/
 ```
 
-## Transffering Miscellaneous Data
+## Transferring Miscellaneous Data
 
 For miscellaneous and small data such as personal dotfiles or source code you can:
 
@@ -78,7 +78,7 @@ For miscellaneous and small data such as personal dotfiles or source code you ca
 - Mount a host directory using the Omnissa Remote Desktop client (must be enabled by an NGC admin)
 - SSH into the admin node (if you have access to it)
 
-You host clipboard works into the remote desktop client but not the other way around. You can take screenshots of the remote display during the session.
+Your host clipboard works into the remote desktop client but not the other way around. You can take screenshots of the remote display during the session.
 
 ## Support
 

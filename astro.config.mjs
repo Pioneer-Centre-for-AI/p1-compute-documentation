@@ -52,7 +52,7 @@ export default defineConfig({
                     items: [
                         { label: 'DTU HPC', slug: 'clusters/dtu-hpc' },
                         { label: 'NGC HPC', slug: 'clusters/ngc-hpc', badge: { text: 'WAITING LIST', variant: 'caution' } },
-                        { label: 'DCAI Gefion', slug: 'clusters/dcai-gefion' },
+                        { label: 'DCAI Gefion', slug: 'clusters/dcai-gefion', badge: { text: 'INTEREST LIST', variant: 'caution' } },
                     ],
                 },
                 {

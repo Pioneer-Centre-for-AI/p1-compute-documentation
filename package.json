@@ -12,8 +12,8 @@
     "lint": "biome lint --write ."
   },
   "dependencies": {
-    "@astrojs/react": "^4.3.0",
-    "@astrojs/starlight": "^0.35.2",
+    "@astrojs/react": "^4.4.0",
+    "@astrojs/starlight": "^0.36.0",
     "@astrojs/starlight-tailwind": "^4.0.1",
     "@radix-ui/react-avatar": "^1.1.10",
     "@radix-ui/react-icons": "^1.3.2",
@@ -21,7 +21,7 @@
     "@tailwindcss/vite": "^4.1.10",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
-    "astro": "^5.12.8",
+    "astro": "^5.14.1",
     "astro-expressive-code": "^0.41.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
