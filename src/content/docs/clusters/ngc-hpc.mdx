@@ -42,7 +42,29 @@ Important hosts:
     - sftp.spc.ngc.dk                   # External Ingress/Egress (SFTP)
 ```
 
-## Transferring Sensitive & Large Data
+## Support
+
+import Support from '../../../components/Support.astro';
+
+<Support
+  technicalSupportEmail="support@ngc.dk"
+  technicalSupportLabel="NGC HPC Support Team"
+  computeCoordinatorEmail="bstja@dtu.dk"
+  emailSubjectPrefix="P1 NGC HPC:"
+/>
+
+## Specification
+
+- Air-gapped system for secure data processing
+- GDPR compliant infrastructure
+- Secure storage solutions
+- Specific hardware details available upon access approval
+- Scheduling Environment: SLURM
+- Resource allocation details provided during onboarding
+
+## FAQ (How-To)
+
+### How to transfer Sensitive & Large Data?
 
 You can transfer sensitive and large data to the cluster using SFTP under the supervision of an admin. You will need to request access to the `/data/upload` directory as this acts as a data gateway.
 
@@ -69,7 +91,7 @@ Then inside the cluster you can transfer the data to your home directory using:
 scp <your-username>_sftp@cld076-0004.cld076.vmc:/data/upload/ISLES-2022.zip ~/datasets/
 ```
 
-## Transferring Miscellaneous Data
+### How to transfer Miscellaneous Data?
 
 For miscellaneous and small data such as personal dotfiles or source code you can:
 
@@ -80,22 +102,127 @@ For miscellaneous and small data such as personal dotfiles or source code you ca
 
 Your host clipboard works into the remote desktop client but not the other way around. You can take screenshots of the remote display during the session.
 
-## Support
 
-import Support from '../../../components/Support.astro';
+### How to download git repos?
 
-<Support
-  technicalSupportEmail="support@ngc.dk"
-  technicalSupportLabel="NGC HPC Support Team"
-  computeCoordinatorEmail="bstja@dtu.dk"
-  emailSubjectPrefix="P1 NGC HPC:"
-/>
+Navigate to https://cld076-0006.cld076.vmc on the internal network.
 
-## Specification
+### How to link internal Conda channel?
 
-- Air-gapped system for secure data processing
-- GDPR compliant infrastructure
-- Secure storage solutions
-- Specific hardware details available upon access approval
-- Scheduling Environment: SLURM
-- Resource allocation details provided during onboarding
+```bash
+conda config --add channels https://vmc-nexus-01.ngc.vmc/repository/ngc-cloud-conda/main
+conda config --remove channels defaults
+conda config --set ssl_verify /etc/pki/ca-trust/source/anchors/ngc-cloud-root-ca.pem
+```
+
+### How to link internal Poetry channel?
+
+```bash
+export VENV_PATH=MYPATH
+python3 -m venv $VENV_PATH
+
+$VENV_PATH/bin/pip install -U pip setuptools
+$VENV_PATH/bin/pip install poetry
+
+$VENV_PATH/bin/poetry source add –priority=primary NGC https://vmc-nexus-01-ngc.vmc/repository/ngc-coud-pypi/simple
+$VENV_PATH/bin/poetry config certificates.NGC.cert false
+```
+
+### How to start an interactive session?
+
+In MobaXterm you can start an interactive session by using `iqsub`.
+
+```bash
+# Quick'n dirty interactive session
+iqsub
+
+# example: interactive session for a user in group named ngc-bio, 1 node and 4
+# CPUs, 20 GB memory and running for 2 hours
+qsub -I -X -W group_list=ngc-bio -A ngc-bio -l nodes=1:ppn=4,mem=20gb,walltime=02:00:00
+```
+
+### How to see my user information?
+
+To see info about your user, including the department/group(s) you belong to.
+
+```bash
+id
+```
+
+### How to see available nodes?
+
+```bash
+# List info about available nodes
+pbsnodes
+```
+
+### How to search for free resources?
+
+```bash
+# fat nodes
+showbf -f fatnode
+# thin nodes
+showbf -f thinnode
+```
+
+### How to check resources used by a job?
+
+```bash
+# Get all jobs
+qstat -a
+
+# Get extended status of a specific job
+qstat -f <jobid>
+
+# Using a helper script
+checkjob -v <jobid>
+```
+
+### How to PBS?
+
+```bash
+# get the status of your submitted jobs (Q: in queue but not yet running; R:
+running, C: complete)
+qstat
+Submitting jobs to the queue system
+11 / 21
+# get extended status of your submitted jobs like requested resources and elapsed
+time
+qstat -a
+# see the nodes allocated to each run
+qstat -n
+# get the status of a specific job
+qstat <jobid>
+# note: jobid is the value in the first column of output from qstat
+# more info about a specific job
+qstat -f <jobid>
+# with this option you can check used time and memory of a completed job (see
+resources_used.walltime and resources_used.mem)
+# to get more options, check the manual
+man qstat
+# view the qsub queue, including qstat all users
+showq
+# view running jobs (+ give additional info, including an estimate on how
+efficiently they are using the CPUs)
+showq -r
+# this will give you more information about your eligible jobs
+showq -i
+# for more options with the showq command:
+showq -h
+# if you want to check the status of a particular jobid
+checkjob <jobid>
+# add the -v flag to increase the verbosity
+checkjob -v <jobid>
+# check when a job will run
+showstart <jobid>
+# check resource usage of completed job (privileged command)
+tracejob -v <jobid>
+# to cancel a job, first find the job-id using qstat, then type:
+qdel <jobid>
+Submitting jobs to the queue system
+12 / 21
+# for more options with the qdel command:
+man qdel
+# to cancel a job using mjobclt, first find the job-id using qstat, then type:
+mjobctl -c <jobid>
+```

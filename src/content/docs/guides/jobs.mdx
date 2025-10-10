@@ -1,0 +1,66 @@
+---
+title: Job Submission
+description: Learn how to submit jobs to the P1 clusters.
+sidebar:
+  badge:
+    text: Experimental
+    variant: caution
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Code } from '@astrojs/starlight/components';
+import DTUStaticTemplate from '../../../assets/templates/dtu/static.sh?raw';
+import DTUDynamicTemplate from '../../../assets/templates/dtu/dynamic.sh?raw';
+import NGCStaticTemplate from '../../../assets/templates/ngc/static.job?raw';
+
+## How do I submit a job to the P1 DTU Cluster?
+
+This cluster uses the IBM Platform LSF (Load Sharing Facility) as its workload management platform and job scheduler.
+
+export const staticFileNameDTU = 'static.sh';
+
+export const dynamicFileNameDTU = 'dynamic.sh';
+
+
+<Tabs>
+  <TabItem label="Static">
+    <Code code={DTUStaticTemplate} lang="sh" title={staticFileNameDTU} />
+    ```sh
+    bsub < static.sh
+    ```
+  </TabItem>
+  <TabItem label="Dynamic">
+    <Code code={DTUDynamicTemplate} lang="sh" title={dynamicFileNameDTU} />
+    ```sh
+    # Make the script executable
+    chmod +x dynamic.sh
+
+    # Source the .env file (optional)
+    source .env
+
+    # Or override explicitly
+    export SCHEDULER_JOB_NAME="my_job_name"
+    export SCHEDULER_CORES=8
+    export SCHEDULER_MEMORY=8GB
+    export SCHEDULER_GPUS=2
+    export SCHEDULER_WALLTIME=02:00
+    export SCHEDULER_QUEUE=p1
+    
+    # Execute the script
+    ./dynamic.sh
+    ```
+  </TabItem>
+</Tabs>
+
+
+## How do I submit a job to the P1 NGC Cluster?
+
+This cluster uses the PBS (Portable Batch System) as its workload management platform and job scheduler.
+
+export const staticFileNameNGC = 'static.job';
+
+<Code code={NGCStaticTemplate} lang="sh" title={staticFileNameNGC} />
+
+```bash
+sbatch < static.job
+```

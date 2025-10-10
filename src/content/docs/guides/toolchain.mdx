@@ -74,7 +74,7 @@ export const submitScript = `#!/bin/bash
 
 export const entrypointScript = `
 #!/usr/bin/env bash
-set -euo pipefail
+set -aeuo pipefail # auto-export variables and fail on error
 
 : "\${NOTEBOOK_APP_IP:=0.0.0.0}"
 : "\${NOTEBOOK_APP_PORT:=8888}"

@@ -13,6 +13,9 @@ import expressiveCode from 'astro-expressive-code';
 export default defineConfig({
     site: 'https://hpc.aicentre.dk',
     base: '/',
+    redirects: {
+        '/01_p1_dtu_hpc/': '/clusters/dtu-hpc/',
+    },
     integrations: [
         expressiveCode(),
         starlight({
