@@ -1,0 +1,51 @@
+---
+interface Props {
+  doi?: string;
+}
+
+const { doi = "https://doi.org/10.48714/DTU.HPC.0001" } = Astro.props;
+const displayDoi = doi.replace("https://doi.org/", "");
+---
+
+<button
+  class="doi-btn inline-flex items-center justify-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 dark:bg-slate-700 dark:hover:bg-slate-600 text-white rounded-lg font-medium text-sm transition-all cursor-pointer border-none shadow-md hover:shadow-lg"
+  data-doi={doi}
+  aria-label="Copy DOI to clipboard"
+>
+  <span class="doi-content inline-flex items-center gap-2">
+    <span class="px-2 py-0.5 bg-white/20 rounded text-xs font-bold tracking-wide">DOI</span>
+    <span class="font-mono text-slate-200">{displayDoi}</span>
+    <svg class="w-4 h-4 opacity-70" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+    </svg>
+  </span>
+  <span class="doi-copied hidden text-white font-medium">✓ Copied</span>
+</button>
+
+<script>
+  document.querySelectorAll('.doi-btn').forEach((btn) => {
+    const content = btn.querySelector('.doi-content') as HTMLElement;
+    const copied = btn.querySelector('.doi-copied') as HTMLElement;
+    
+    // Set fixed width based on initial size
+    const width = btn.offsetWidth;
+    btn.style.minWidth = `${width}px`;
+    
+    btn.addEventListener('click', async () => {
+      const doi = btn.getAttribute('data-doi');
+      if (doi) {
+        await navigator.clipboard.writeText(doi);
+        content.classList.add('hidden');
+        copied.classList.remove('hidden');
+        btn.classList.add('!bg-green-600');
+        
+        setTimeout(() => {
+          content.classList.remove('hidden');
+          copied.classList.add('hidden');
+          btn.classList.remove('!bg-green-600');
+        }, 1500);
+      }
+    });
+  });
+</script>
