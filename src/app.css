@@ -1,0 +1,101 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-brand: #0f62fe;
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Inter, 'Helvetica Neue', Arial,
+    sans-serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
+    monospace;
+}
+
+html {
+  font-family: var(--font-sans);
+  background: white;
+  color: #0f172a;
+}
+
+html.dark {
+  background: #0b1020;
+  color: #e2e8f0;
+}
+
+a {
+  color: var(--color-brand);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* shiki dual-theme: flip variables on .dark */
+.shiki,
+.shiki span {
+  color: var(--shiki-light);
+  background-color: var(--shiki-light-bg);
+}
+
+html.dark .shiki,
+html.dark .shiki span {
+  color: var(--shiki-dark);
+  background-color: var(--shiki-dark-bg);
+}
+
+/* Compact prose styling for content pages */
+.prose h1 {
+  @apply text-4xl font-bold mb-6 mt-2;
+}
+.prose h2 {
+  @apply text-2xl font-semibold mt-10 mb-4 border-b border-slate-200 pb-2;
+}
+html.dark .prose h2 {
+  @apply border-slate-700;
+}
+.prose h3 {
+  @apply text-xl font-semibold mt-8 mb-3;
+}
+.prose p {
+  @apply leading-relaxed my-4;
+}
+.prose ul {
+  @apply list-disc pl-6 my-4 space-y-1;
+}
+.prose ol {
+  @apply list-decimal pl-6 my-4 space-y-1;
+}
+.prose blockquote {
+  @apply border-l-4 border-slate-300 pl-4 italic my-4 text-slate-600;
+}
+html.dark .prose blockquote {
+  @apply border-slate-600 text-slate-300;
+}
+.prose table {
+  @apply w-full text-sm my-6 border-collapse;
+}
+.prose th,
+.prose td {
+  @apply border border-slate-200 px-3 py-2 text-left align-top;
+}
+html.dark .prose th,
+html.dark .prose td {
+  @apply border-slate-700;
+}
+.prose th {
+  @apply bg-slate-100 font-semibold;
+}
+html.dark .prose th {
+  @apply bg-slate-800;
+}
+.prose code:not(pre code) {
+  @apply rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[0.85em];
+}
+html.dark .prose code:not(pre code) {
+  @apply bg-slate-800;
+}
+.prose pre {
+  @apply rounded-lg p-4 overflow-x-auto my-4 text-sm;
+}

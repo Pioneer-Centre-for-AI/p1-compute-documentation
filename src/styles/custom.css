@@ -1,5 +1,0 @@
-@layer my-reset, starlight, nova, my-overrides;
-
-@layer my-overrides {
-  /* Add any custom overrides here if needed */
-}

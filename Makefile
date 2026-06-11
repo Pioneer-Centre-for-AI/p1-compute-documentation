@@ -1,5 +1,13 @@
+.PHONY: dev build preview clean
+
+dev:
+	bun run dev
+
 build:
-	npm run build
+	bun run build
+
+preview:
+	bun run preview
 
 clean:
-	rm -rf dist/
+	rm -rf build .svelte-kit
