@@ -18,7 +18,6 @@ hardware:
 ---
 
 <script>
-  import AffiliateButton from '$lib/components/AffiliateButton.svelte';
   import Support from '$lib/components/Support.svelte';
 </script>
 
@@ -31,11 +30,10 @@ projects. For details on the underlying infrastructure, see
 
 ### Sign-up Form
 
-Before accessing the P1 NGC HPC, you must be a P1 affiliate. Sign in to your profile, update your
-details, and submit a request to become an affiliate member — a P1 staff member will review and
-approve.
-
-<AffiliateButton />
+Before accessing the P1 NGC HPC, you must be a P1 affiliate. Sign in to
+[your P1 profile](https://www.aicentre.dk/p1adb) (also reachable via **Update Profile** in the
+header), update your details, and submit a request to become an affiliate member — a P1 staff
+member will review and approve.
 
 Once your affiliation is approved, complete and sign the
 [NGC user creation form](https://www.ngc.dk/Media/638139612542456428/Oprettelse%20af%20Ekstern%20Bruger%20p%C3%A5%20NGC%20Infrastruktur%200.4.pdf)

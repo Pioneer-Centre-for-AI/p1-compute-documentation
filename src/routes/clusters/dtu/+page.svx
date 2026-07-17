@@ -24,7 +24,6 @@ hardware:
 ---
 
 <script>
-  import AffiliateButton from '$lib/components/AffiliateButton.svelte';
   import Aside from '$lib/components/Aside.svelte';
   import EmbedForm from '$lib/components/EmbedForm.svelte';
   import Support from '$lib/components/Support.svelte';
@@ -41,11 +40,10 @@ experiments and research projects. For up-to-date technical details, see the
 
 Two forms get you onto the cluster — start with P1 affiliation, then request a DTU account.
 
-Before accessing the P1 DTU HPC, you must be a P1 affiliate. Sign in to your profile, update your
-details, and submit a request to become an affiliate member — a P1 staff member will review and
-approve.
-
-<AffiliateButton />
+Before accessing the P1 DTU HPC, you must be a P1 affiliate. Sign in to
+[your P1 profile](https://www.aicentre.dk/p1adb) (also reachable via **Update Profile** in the
+header), update your details, and submit a request to become an affiliate member — a P1 staff
+member will review and approve.
 
 Once your affiliation is approved, fill out the DTU account request form. Only signups using an
 official university email address are accepted. The form is processed by Henning Christiansen

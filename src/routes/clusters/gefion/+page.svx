@@ -21,7 +21,6 @@ hardware:
 ---
 
 <script>
-  import AffiliateButton from '$lib/components/AffiliateButton.svelte';
   import Aside from '$lib/components/Aside.svelte';
   import EmbedForm from '$lib/components/EmbedForm.svelte';
   import Support from '$lib/components/Support.svelte';
@@ -41,11 +40,10 @@ in depth yet).
 
 ### Sign-up Form
 
-Before accessing the P1 Gefion sandbox, you must be a P1 affiliate. Sign in to your profile,
-update your details, and submit a request to become an affiliate member — a P1 staff member will
-review and approve.
-
-<AffiliateButton />
+Before accessing the P1 Gefion sandbox, you must be a P1 affiliate. Sign in to
+[your P1 profile](https://www.aicentre.dk/p1adb) (also reachable via **Update Profile** in the
+header), update your details, and submit a request to become an affiliate member — a P1 staff
+member will review and approve.
 
 Once your affiliation is approved, fill in the sandbox sign-up form below. A DCAI team member will
 then contact you to get you set up with a DCAI username and initial-setup-password.

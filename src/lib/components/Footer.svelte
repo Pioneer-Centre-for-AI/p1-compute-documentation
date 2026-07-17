@@ -67,6 +67,16 @@
             aicentre.dk ↗
           </a>
         </li>
+        <li>
+          <a
+            href="https://www.aicentre.dk/p1adb"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-slate-600 no-underline hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
+          >
+            Update your P1 profile ↗
+          </a>
+        </li>
       </ul>
     </div>
   </div>

@@ -34,6 +34,14 @@
   </div>
   <div class="flex items-center gap-2">
     <a
+      href="https://www.aicentre.dk/p1adb"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="hidden h-9 items-center rounded-md bg-[var(--color-coral-strong)] px-3 text-sm font-semibold text-white no-underline transition-colors hover:bg-[#b92238] sm:inline-flex dark:bg-[var(--color-coral)] dark:text-slate-950 dark:hover:bg-[#ff6b7a]"
+    >
+      Update Profile
+    </a>
+    <a
       href="https://github.com/Pioneer-Centre-for-AI/p1-compute-documentation"
       target="_blank"
       rel="noopener noreferrer"
