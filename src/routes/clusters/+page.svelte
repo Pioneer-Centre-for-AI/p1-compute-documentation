@@ -52,6 +52,20 @@
     </table>
   </div>
 
+  <div class="mb-8 rounded-xl border border-slate-200 bg-slate-50 p-5 dark:border-slate-700 dark:bg-slate-800/40">
+    <p class="eyebrow mb-2">Guidance</p>
+    <p class="text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+      Unsure which fits, or ready to onboard? Start with the compute coordinator —
+      <a
+        href="https://survey.starostka.io/compute"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="font-semibold text-[var(--color-brand)] no-underline hover:underline"
+      >tell us about your workload →</a>
+      and we'll help you find and use the right resource.
+    </p>
+  </div>
+
   <p class="mb-8 text-sm text-slate-600 dark:text-slate-400">
     Open to researchers at any Danish university. Looking beyond P1? See the wider
     <a href="/ecosystem/" class="text-[var(--color-brand)] hover:underline">compute ecosystem</a>.

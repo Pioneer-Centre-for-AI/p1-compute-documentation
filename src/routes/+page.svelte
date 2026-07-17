@@ -174,10 +174,36 @@
     </div>
   </section>
 
+  <!-- Guidance -->
+  <section class="border-t border-slate-200 py-20 dark:border-slate-800">
+    <div class="flex max-w-2xl flex-col items-start gap-4">
+      <span class="eyebrow">03 · Guidance</span>
+      <h2 class="text-2xl font-semibold text-slate-900 md:text-3xl dark:text-slate-50">
+        Start with a conversation.
+      </h2>
+      <p class="leading-relaxed text-slate-500 dark:text-slate-400">
+        Onboarding goes through the P1 compute coordinator. Tell us about your workload, needs,
+        and expectations — it helps us point you to the right resource and lift your ability to
+        use it well.
+      </p>
+      <Button
+        href="https://survey.starostka.io/compute"
+        variant="primary"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {#snippet children()}
+          Tell us about your workload
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M10 14L21 3M21 14v7H3V3h7" /></svg>
+        {/snippet}
+      </Button>
+    </div>
+  </section>
+
   <!-- Citation -->
   <section class="border-t border-slate-200 py-16 dark:border-slate-800">
     <div class="flex flex-col items-start gap-4">
-      <span class="eyebrow">03 · Cite us</span>
+      <span class="eyebrow">04 · Cite us</span>
       <p class="max-w-2xl text-sm leading-relaxed text-slate-500 dark:text-slate-400">
         If you've received support from the DTU HPC centre administering our DTU cluster, please
         cite:

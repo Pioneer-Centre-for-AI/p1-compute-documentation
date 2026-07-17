@@ -101,14 +101,26 @@
       </div>
       <div>
         <dt class="font-semibold text-slate-900 dark:text-slate-100">Compute Coordinator</dt>
-        <dd class="text-sm text-slate-600 dark:text-slate-400">General or technical compute-related questions</dd>
+        <dd class="text-sm text-slate-600 dark:text-slate-400">
+          Onboarding, workload guidance, general questions — start here
+        </dd>
       </div>
-      <a
-        href={mailto(computeCoordinatorEmail, 'General Inquiry')}
-        class="col-span-2 font-mono text-sm text-slate-900 hover:underline dark:text-slate-200 sm:col-span-1"
-      >
-        {computeCoordinatorEmail}
-      </a>
+      <div class="col-span-2 flex flex-wrap items-center gap-2 text-sm sm:col-span-1 sm:justify-end">
+        <a
+          href="https://survey.starostka.io/compute"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="rounded bg-[var(--color-coral-strong)] px-2 py-0.5 font-mono text-white no-underline hover:bg-[#b92238] dark:bg-[var(--color-coral)] dark:text-slate-950 dark:hover:bg-[#ff6b7a]"
+        >
+          workload survey
+        </a>
+        <a
+          href={mailto(computeCoordinatorEmail, 'General Inquiry')}
+          class="font-mono text-slate-900 hover:underline dark:text-slate-200"
+        >
+          {computeCoordinatorEmail}
+        </a>
+      </div>
     </div>
   {/if}
 </dl>

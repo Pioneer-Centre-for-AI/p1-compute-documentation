@@ -38,6 +38,13 @@ in depth yet).
 
 ## Getting Access
 
+### Talk to the compute coordinator
+
+Onboarding starts with a short conversation. Fill in the
+[workload survey](https://survey.starostka.io/compute) to tell the P1 compute coordinator about
+your needs, expectations, and workload — for the sandbox this also helps us plan the step up to
+full production nodes if your project scales.
+
 ### Sign-up Form
 
 Before accessing the P1 Gefion sandbox, you must be a P1 affiliate. Sign in to

@@ -28,6 +28,13 @@ projects. For details on the underlying infrastructure, see
 
 ## Getting Access
 
+### Talk to the compute coordinator
+
+Onboarding starts with a short conversation. Fill in the
+[workload survey](https://survey.starostka.io/compute) to tell the P1 compute coordinator about
+your needs, expectations, and workload — for NGC this matters doubly, since GDPR projects need
+their data-processing paperwork lined up early.
+
 ### Sign-up Form
 
 Before accessing the P1 NGC HPC, you must be a P1 affiliate. Sign in to

@@ -36,6 +36,13 @@ experiments and research projects. For up-to-date technical details, see the
 
 ## Getting Access
 
+### Talk to the compute coordinator
+
+Onboarding starts with a short conversation. Fill in the
+[workload survey](https://survey.starostka.io/compute) to tell the P1 compute coordinator about
+your needs, expectations, and workload — we use it to point you to the right resource and to help
+you get the most out of it.
+
 ### Sign-up Form
 
 Two forms get you onto the cluster — start with P1 affiliation, then request a DTU account.

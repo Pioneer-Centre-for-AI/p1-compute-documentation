@@ -49,6 +49,16 @@
         </li>
         <li>
           <a
+            href="https://survey.starostka.io/compute"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-slate-600 no-underline hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
+          >
+            Tell us about your workload ↗
+          </a>
+        </li>
+        <li>
+          <a
             href="https://github.com/Pioneer-Centre-for-AI/p1-compute-documentation"
             target="_blank"
             rel="noopener noreferrer"
