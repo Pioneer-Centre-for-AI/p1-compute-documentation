@@ -76,7 +76,7 @@
           href={SURVEY_URL}
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-flex h-9 items-center justify-center rounded-md bg-[var(--color-coral-strong)] px-3 text-sm font-semibold text-white no-underline transition-colors hover:bg-[#b92238] dark:bg-[var(--color-coral)] dark:text-slate-950 dark:hover:bg-[#ff6b7a]"
+          class="inline-flex h-9 items-center justify-center rounded-full bg-slate-800 px-4 text-sm font-medium text-white no-underline transition-colors hover:bg-slate-700 dark:bg-slate-200 dark:text-slate-900 dark:hover:bg-slate-300"
         >
           Update Needs
         </a>
@@ -84,7 +84,7 @@
           href={PROFILE_URL}
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-flex h-9 items-center justify-center rounded-md border border-slate-300 px-3 text-sm font-semibold text-slate-700 no-underline transition-colors hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
+          class="inline-flex h-9 items-center justify-center rounded-full border border-slate-400 px-4 text-sm font-medium text-slate-700 no-underline transition-colors hover:bg-slate-100 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-800"
         >
           Update Profile
         </a>

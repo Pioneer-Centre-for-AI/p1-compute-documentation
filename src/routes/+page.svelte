@@ -39,7 +39,7 @@
     <div class="hero-reveal flex flex-col items-start gap-6">
       <p class="eyebrow">Pioneer Centre for AI · Compute</p>
       <h1 class="text-balance text-5xl font-extrabold leading-[1.05] tracking-tight text-slate-900 md:text-7xl dark:text-slate-50">
-        Compute that fits your research.
+        Compute that <mark>fits</mark> your research.
       </h1>
       <p class="max-w-xl text-lg leading-relaxed text-slate-500 dark:text-slate-400">
         Three HPC clusters, three research profiles — free for P1-affiliated researchers at Danish
