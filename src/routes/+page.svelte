@@ -37,8 +37,8 @@
   <section class="grid items-center gap-12 pb-20 pt-32 md:pt-40 lg:grid-cols-[1.2fr_1fr] lg:gap-8">
     <div class="hero-reveal flex flex-col items-start gap-6">
       <p class="eyebrow">Pioneer Centre for AI · Compute</p>
-      <h1 class="text-5xl font-extrabold leading-[1.05] tracking-tight text-slate-900 md:text-7xl dark:text-slate-50">
-        Compute that fits your&nbsp;research.
+      <h1 class="text-balance text-5xl font-extrabold leading-[1.05] tracking-tight text-slate-900 md:text-7xl dark:text-slate-50">
+        Compute that fits your research.
       </h1>
       <p class="max-w-xl text-lg leading-relaxed text-slate-500 dark:text-slate-400">
         Three HPC clusters, three research profiles — free for P1-affiliated researchers at Danish
@@ -66,7 +66,7 @@
       class="hero-reveal mx-auto w-full max-w-sm lg:max-w-none"
       style="animation-delay: 0.15s"
     >
-      <g stroke="currentColor" stroke-width="1.25" class="text-slate-300 dark:text-slate-700">
+      <g stroke="currentColor" stroke-width="1.25" class="text-slate-300 dark:text-slate-600">
         <line x1="200" y1="185" x2="200" y2="52" />
         <line x1="200" y1="185" x2="72" y2="278" />
         <line x1="200" y1="185" x2="328" y2="278" />

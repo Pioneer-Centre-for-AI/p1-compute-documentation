@@ -91,11 +91,11 @@ html.dark .shiki span {
 
 /* Prose styling — only inline prose links get the brand colour.
    Nav, sidebar, ToC, buttons control their own colour via Tailwind utilities. */
-.prose a:not(.heading-anchor) {
+.prose a:not(.heading-anchor):not(.not-prose *) {
   color: var(--color-brand);
   text-decoration: none;
 }
-.prose a:not(.heading-anchor):hover {
+.prose a:not(.heading-anchor):not(.not-prose *):hover {
   text-decoration: underline;
 }
 
