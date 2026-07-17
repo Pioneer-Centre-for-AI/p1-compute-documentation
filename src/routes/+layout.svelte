@@ -3,11 +3,13 @@
   import { onMount } from 'svelte';
   import { page } from '$app/stores';
   import Header from '$lib/components/Header.svelte';
-  import Sidebar from '$lib/components/Sidebar.svelte';
-  import ThemeToggle from '$lib/components/ThemeToggle.svelte';
+  import NavList from '$lib/components/NavList.svelte';
+  import NavDrawer from '$lib/components/NavDrawer.svelte';
+  import Footer from '$lib/components/Footer.svelte';
 
   let { children } = $props();
   let isLanding = $derived($page.url.pathname === '/');
+  let mobileNavOpen = $state(false);
 
   onMount(() => {
     const mq = window.matchMedia('(prefers-color-scheme: dark)');
@@ -22,18 +24,19 @@
   });
 </script>
 
-<div class="min-h-screen bg-white text-slate-700 dark:bg-slate-900 dark:text-slate-200">
+<div class="flex min-h-screen flex-col bg-white text-slate-700 dark:bg-slate-900 dark:text-slate-200">
+  <Header variant={isLanding ? 'landing' : 'solid'} onMenuClick={() => (mobileNavOpen = true)} />
+  <NavDrawer bind:open={mobileNavOpen} />
+
   {#if isLanding}
-    <div class="fixed right-4 top-4 z-30">
-      <ThemeToggle />
+    <div class="flex-1">
+      {@render children()}
     </div>
-    {@render children()}
   {:else}
-    <Header />
-    <div class="mx-auto flex max-w-7xl gap-8 px-4 py-8 md:px-6">
+    <div class="mx-auto flex w-full max-w-7xl flex-1 gap-8 px-4 py-8 md:px-6">
       <aside class="hidden w-60 shrink-0 md:block">
         <div class="sticky top-20">
-          <Sidebar />
+          <NavList />
         </div>
       </aside>
       <div class="min-w-0 flex-1">
@@ -41,4 +44,6 @@
       </div>
     </div>
   {/if}
+
+  <Footer />
 </div>

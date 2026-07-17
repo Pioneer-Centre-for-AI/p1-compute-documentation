@@ -1,17 +1,37 @@
 <script lang="ts">
   import ThemeToggle from './ThemeToggle.svelte';
+
+  type Props = { variant?: 'solid' | 'landing'; onMenuClick: () => void };
+  let { variant = 'solid', onMenuClick }: Props = $props();
+
+  const shell = $derived(
+    variant === 'landing'
+      ? 'absolute inset-x-0 top-0 z-30 border-b border-transparent bg-transparent'
+      : 'sticky top-0 z-30 border-b border-slate-200 bg-white/80 backdrop-blur dark:border-slate-700 dark:bg-slate-900/80'
+  );
 </script>
 
-<header
-  class="sticky top-0 z-30 flex items-center justify-between border-b border-slate-200 bg-white/80 px-4 py-3 backdrop-blur md:px-6 dark:border-slate-700 dark:bg-slate-900/80"
->
-  <a href="/" class="flex items-center gap-3 no-underline">
-    <img src="/assets/logos/PCAI_Solo_RGB.svg" alt="" class="block h-8 w-8 dark:hidden" />
-    <img src="/assets/logos/PCAI_Solo_White.svg" alt="" class="hidden h-8 w-8 dark:block" />
-    <span class="text-sm font-semibold text-slate-900 sm:text-base dark:text-slate-100">
-      P1 HPC Documentation
-    </span>
-  </a>
+<header class="{shell} flex items-center justify-between px-4 py-3 md:px-6">
+  <div class="flex items-center gap-2">
+    <button
+      aria-label="Open navigation"
+      onclick={onMenuClick}
+      class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-slate-200 text-slate-700 hover:bg-slate-100 md:hidden dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
+    >
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <line x1="4" y1="7" x2="20" y2="7" />
+        <line x1="4" y1="12" x2="20" y2="12" />
+        <line x1="4" y1="17" x2="20" y2="17" />
+      </svg>
+    </button>
+    <a href="/" class="flex items-center gap-3 no-underline">
+      <img src="/assets/logos/PCAI_Solo_RGB.svg" alt="" class="block h-8 w-8 dark:hidden" />
+      <img src="/assets/logos/PCAI_Solo_White.svg" alt="" class="hidden h-8 w-8 dark:block" />
+      <span class="text-sm font-semibold text-slate-900 sm:text-base dark:text-slate-100">
+        P1 HPC Documentation
+      </span>
+    </a>
+  </div>
   <div class="flex items-center gap-2">
     <a
       href="https://github.com/Pioneer-Centre-for-AI/p1-compute-documentation"
