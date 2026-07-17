@@ -1,29 +1,71 @@
 @import 'tailwindcss';
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/jetbrains-mono';
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --color-brand: #2563eb;
+  /* P1 ink-derived neutral ramp. Deliberately overrides Tailwind's slate scale
+     so every existing slate-* utility picks up the brand tone — do not "fix"
+     these back to stock slate. */
+  --color-slate-50: #f7f7fa;
+  --color-slate-100: #eef0f4;
+  --color-slate-200: #dfe1e9;
+  --color-slate-300: #c5c8d5;
+  --color-slate-400: #999eb2;
+  --color-slate-500: #6d7288; /* muted text — 4.9:1 on white */
+  --color-slate-600: #565a70;
+  --color-slate-700: #4b4f63; /* P1 ink, primary text — 7.5:1 on white */
+  --color-slate-800: #2a2e40;
+  --color-slate-900: #1d2030; /* dark-mode page background */
+  --color-slate-950: #14161f;
+
+  /* P1 accents. Raw coral is 3.2:1 on white — decorative / large text only in
+     light mode; coral-strong is the light-mode text-safe variant. */
+  --color-coral: #fd5061;
+  --color-coral-strong: #d22c42;
+  --color-plum: #822684;
+  --color-plum-bright: #c98fd6;
+
+  /* Per-cluster accents */
   --color-brand-dtu: #990000;
   --color-brand-ngc: #2f5891;
   --color-brand-gefion: #e9b83f;
-  --font-sans:
-    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Inter, 'Helvetica Neue', Arial,
-    sans-serif;
-  --font-mono:
-    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
-    monospace;
+
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+/* Semantic accent — flips with theme so prose links and CTA text stay AA. */
+:root {
+  --color-brand: var(--color-coral-strong);
+}
+html.dark {
+  --color-brand: var(--color-coral);
+}
+
+/* Mono uppercase micro-label — the P1 "eyebrow" signature. */
+@utility eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-slate-500);
+}
+.dark .eyebrow {
+  color: var(--color-slate-400);
 }
 
 html {
   font-family: var(--font-sans);
   background: white;
-  color: #0f172a;
+  color: var(--color-slate-700);
 }
 
 html.dark {
-  background: #0b1020;
-  color: #e2e8f0;
+  background: var(--color-slate-900);
+  color: var(--color-slate-200);
 }
 
 /* shiki dual-theme: flip variables on .dark */
