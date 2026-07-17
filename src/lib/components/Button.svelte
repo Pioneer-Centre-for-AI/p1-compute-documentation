@@ -13,10 +13,10 @@
   let { variant = 'primary', href, children, ...rest }: Props = $props();
 
   const base =
-    'inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-semibold no-underline transition-colors disabled:opacity-50 disabled:cursor-not-allowed';
+    'inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-semibold no-underline transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-coral)] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900';
   const variants: Record<Variant, string> = {
     primary:
-      'bg-slate-800 text-white hover:bg-slate-700 dark:bg-slate-700 dark:text-white dark:hover:bg-slate-600',
+      'bg-[var(--color-coral-strong)] text-white hover:bg-[#b92238] dark:bg-[var(--color-coral)] dark:text-slate-950 dark:hover:bg-[#ff6b7a]',
     secondary:
       'bg-slate-100 text-slate-900 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700',
     ghost:

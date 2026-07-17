@@ -12,6 +12,8 @@
 
 <article class="prose mx-auto w-full max-w-3xl" use:headingAnchors>
 
+<p class="eyebrow not-prose">Beyond P1</p>
+
 # Compute Ecosystem
 
 P1 runs its own clusters, and we point the way to the rest. The Danish compute landscape is

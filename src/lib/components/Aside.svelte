@@ -9,9 +9,9 @@
 
   const styles: Record<Variant, { border: string; bg: string; text: string; label: string }> = {
     note: {
-      border: 'border-blue-400',
-      bg: 'bg-blue-50 dark:bg-blue-950/30',
-      text: 'text-blue-900 dark:text-blue-100',
+      border: 'border-[var(--color-plum)]',
+      bg: 'bg-purple-50 dark:bg-purple-950/30',
+      text: 'text-purple-950 dark:text-purple-100',
       label: 'Note'
     },
     tip: {
@@ -38,7 +38,7 @@
 </script>
 
 <aside class="my-6 rounded-md border-l-4 {s.border} {s.bg} {s.text} px-4 py-3">
-  <div class="mb-1 text-sm font-semibold uppercase tracking-wide">
+  <div class="mb-1 font-mono text-xs font-medium uppercase tracking-[0.14em]">
     {title ?? s.label}
   </div>
   <div class="text-sm leading-relaxed">{@render children()}</div>

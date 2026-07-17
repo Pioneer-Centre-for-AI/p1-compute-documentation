@@ -14,7 +14,7 @@
     {#each nav as entry}
       {#if isGroup(entry)}
         <li>
-          <div class="mb-2 px-2 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+          <div class="eyebrow mb-2 px-2">
             {entry.label}
           </div>
           <ul class="space-y-0.5">
@@ -27,7 +27,7 @@
                 >
                   <span>{item.label}</span>
                   {#if item.badge}
-                    <span class="ml-2 rounded bg-slate-200 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-slate-700 dark:bg-slate-700 dark:text-slate-200">
+                    <span class="ml-2 rounded bg-slate-200 px-1.5 py-0.5 font-mono text-[10px] font-medium uppercase tracking-wide text-slate-700 dark:bg-slate-700 dark:text-slate-200">
                       {item.badge.text}
                     </span>
                   {/if}

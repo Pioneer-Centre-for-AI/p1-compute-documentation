@@ -21,7 +21,10 @@
 {#if cluster}
   <div class="mx-auto flex w-full max-w-5xl gap-12">
     <article class="prose min-w-0 flex-1 max-w-3xl" use:headingAnchors>
-      <BrandAccent color={cluster.meta.brandColor} />
+      <div class="not-prose mb-4 flex items-center gap-3">
+        <BrandAccent color={cluster.meta.brandColor} width="w-12" />
+        <span class="eyebrow">Cluster · {cluster.meta.navLabel ?? cluster.meta.title}</span>
+      </div>
       <h1>{cluster.meta.title}</h1>
       {@render children()}
       <h2 id="hardware-specification">Hardware Specification</h2>

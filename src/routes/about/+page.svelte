@@ -48,6 +48,8 @@
 
 <article class="prose mx-auto w-full max-w-3xl" use:headingAnchors>
 
+<p class="eyebrow not-prose">Pioneer Centre for AI</p>
+
 <h1>About P1 Compute Resources</h1>
 
 <p>

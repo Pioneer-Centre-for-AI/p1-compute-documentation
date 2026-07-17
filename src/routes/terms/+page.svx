@@ -8,6 +8,8 @@
 
 <article class="prose mx-auto w-full max-w-3xl" use:headingAnchors>
 
+<p class="eyebrow not-prose">Policy</p>
+
 # Terms and Conditions
 
 ## Intended Use

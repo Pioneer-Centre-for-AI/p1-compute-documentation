@@ -20,7 +20,7 @@
               href={person.profileUrl}
               target="_blank"
               rel="noopener noreferrer"
-              class="hover:text-blue-600 dark:hover:text-blue-400"
+              class="hover:text-[var(--color-brand)]"
             >
               {person.name}
             </a>
@@ -28,11 +28,11 @@
             {person.name}
           {/if}
         </h3>
-        <p class="mb-1 text-sm font-medium text-blue-600 dark:text-blue-400">{person.role}</p>
+        <p class="eyebrow mb-1 !text-[var(--color-plum)] dark:!text-[var(--color-plum-bright)]">{person.role}</p>
         <p class="mb-3 text-sm text-slate-600 dark:text-slate-400">{person.institution}</p>
         <a
           href="mailto:{person.email}"
-          class="text-sm font-medium text-blue-600 no-underline hover:underline dark:text-blue-400"
+          class="text-sm font-medium text-[var(--color-brand)] no-underline hover:underline"
         >
           {person.email}
         </a>

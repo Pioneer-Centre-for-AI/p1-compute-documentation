@@ -18,6 +18,7 @@
 
 <div class="mx-auto w-full max-w-3xl">
   <article class="prose">
+    <p class="eyebrow not-prose">P1 Compute</p>
     <h1>Clusters</h1>
     <p>
       P1 focuses on three HPC facilities, each matched to a research profile. Use the table below

@@ -81,25 +81,23 @@
 
 {#if entries.length > 0}
   <nav class="text-sm" aria-label="On this page">
-    <div class="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-      On this page
-    </div>
+    <div class="eyebrow mb-3">On this page</div>
     <ul class="space-y-1">
       {#each entries as entry}
         <li>
           <a
             href={`#${entry.id}`}
-            class="block rounded px-2 py-1 no-underline {activeId === entry.id ? 'bg-slate-100 font-semibold text-slate-900 dark:bg-slate-800 dark:text-slate-50' : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100'}"
+            class="block border-l-2 py-1 pl-3 no-underline transition-colors {activeId === entry.id ? 'border-[var(--color-brand)] font-semibold text-slate-900 dark:text-slate-50' : 'border-transparent text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100'}"
           >
             {entry.label}
           </a>
           {#if entry.children}
-            <ul class="ml-3 mt-0.5 space-y-0.5 border-l border-slate-200 dark:border-slate-700">
+            <ul class="space-y-0.5">
               {#each entry.children as child}
                 <li>
                   <a
                     href={`#${child.id}`}
-                    class="block rounded px-2 py-0.5 text-[13px] no-underline {activeId === child.id ? 'font-semibold text-slate-900 dark:text-slate-50' : 'text-slate-500 hover:text-slate-900 dark:text-slate-500 dark:hover:text-slate-100'}"
+                    class="block border-l-2 py-0.5 pl-6 text-[13px] no-underline transition-colors {activeId === child.id ? 'border-[var(--color-brand)] font-semibold text-slate-900 dark:text-slate-50' : 'border-transparent text-slate-500 hover:text-slate-900 dark:text-slate-500 dark:hover:text-slate-100'}"
                   >
                     {child.label}
                   </a>
