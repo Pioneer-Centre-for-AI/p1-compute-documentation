@@ -1,0 +1,280 @@
+---
+title: P1 Gefion HPC (Sandbox)
+description: On-demand access to 1–2 H100 GPUs on Gefion for iterative development, testing, and small-scale pilots.
+order: 3
+navLabel: Gefion
+badge:
+  text: Sandbox
+  variant: note
+brandColor: var(--color-brand-gefion)
+hardware:
+  - label: Nodes
+    value: 2× NVIDIA DGX
+  - label: GPUs
+    value: 16× H100 total (8 per node, high-speed interconnect)
+  - label: RAM
+    value: 2 TB per node
+  - label: High-speed storage
+    value: 30 TB per node
+  - label: Scheduler
+    value: SLURM
+---
+
+<script>
+  import AffiliateButton from '$lib/components/AffiliateButton.svelte';
+  import Aside from '$lib/components/Aside.svelte';
+  import EmbedForm from '$lib/components/EmbedForm.svelte';
+  import Support from '$lib/components/Support.svelte';
+</script>
+
+The P1 Gefion Sandbox provides on-demand access to 1–2 H100 GPUs on
+[Gefion](https://dcai.dk/gefion) for iterative development, testing, and small-scale pilots. It is
+designed as a stepping stone — enabling a seamless transition from early experiments into larger
+production workloads on full 8-GPU nodes (e.g., for NNF voucher projects).
+
+Detailed internal documentation is maintained by the DCAI team at
+[guide.gefion.dcai.dk](https://guide.gefion.dcai.dk). It is currently only accessible via the
+Citrix Gateway or via Teleport with Web Application Access (though the latter has not been tested
+in depth yet).
+
+## Getting Access
+
+### Sign-up Form
+
+Before accessing the P1 Gefion sandbox, you must be a P1 affiliate. Sign in to your profile,
+update your details, and submit a request to become an affiliate member — a P1 staff member will
+review and approve.
+
+<AffiliateButton />
+
+Once your affiliation is approved, fill in the sandbox sign-up form below. A DCAI team member will
+then contact you to get you set up with a DCAI username and initial-setup-password.
+
+<EmbedForm
+  title="P1 Gefion Sandbox Sign-up Form"
+  src="https://forms.office.com/Pages/ResponsePage.aspx?id=I_FR8s7JjkSSdzS7KFkR2cHxzPsQ0cdIuQChdDR2mhJUNVdUNU9KUU9SSFZXNjVDWExTVEFPMElWTi4u&embed=true"
+  minHeight="1200px"
+/>
+
+### Who's eligible?
+
+**Requirements:** PhD or higher (exceptions may apply), valid Danish university email, and
+registered P1 affiliation.
+
+## Getting Started
+
+### How to connect
+
+Gefion uses [Teleport](https://goteleport.com/) for secure SSH access. Install the
+[Teleport CLI client (`tsh`)](https://goteleport.com/docs/connect-your-client/tsh/) and
+authenticate:
+
+```bash
+tsh login --proxy secureremote.dcai.dk --user <username>
+```
+
+Then add the following to your `~/.ssh/config`:
+
+```text file=~/.ssh/config
+Host gefion
+  Port 3022
+  User <username>
+  HostName slurm-login-01.hpc.ite.dcai.dk
+  ProxyCommand tsh proxy ssh --cluster=secureremote.dcai.dk --proxy=secureremote.dcai.dk:443 %r@%h:%p
+  CertificateFile ~/.tsh/keys/secureremote.dcai.dk/<username>-ssh/secureremote.dcai.dk-cert.pub
+  ConnectTimeout 30
+  ControlMaster no
+  ControlPersist no
+  IdentityFile ~/.tsh/keys/secureremote.dcai.dk/<username>
+  UserKnownHostsFile ~/.tsh/known_hosts
+```
+
+Connect with:
+
+```bash
+ssh gefion
+```
+
+#### Visual Studio Code
+
+With the SSH config in place you can use the
+[VS Code Remote – SSH extension](https://code.visualstudio.com/docs/remote/ssh) to connect to
+`gefion` via the command palette (Ctrl+Shift+P → "Remote-SSH: Connect to Host…").
+
+### How to transfer data
+
+Use `rsync` for source code and small datasets, and [rclone](https://rclone.org/) for large
+datasets — both work over the Teleport-backed SSH access and are more ergonomic than a plain SFTP
+session. If `rsync` / `rclone` hit issues — they wrap OpenSSH and don't tolerate every
+intermediate config — fall back to an `sftp` client directly.
+
+Large transfers go through the SFTP endpoint `xfer.dcai.dk`, which requires your public IP to be
+whitelisted. Contact [DCAI support](mailto:support@dcai.dk) and share the output of
+`curl ifconfig.io` to request access.
+
+```text file=~/.ssh/config
+Host gefion-xfer
+  Port 2234
+  User <username>
+  HostName xfer.dcai.dk
+```
+
+```ini file=~/.config/rclone/rclone.conf
+[gefion]
+disable_hashcheck = true
+shell_type = unix
+ssh = ssh gefion-xfer
+type = sftp
+```
+
+#### Inbound (push to Gefion)
+
+Small data — `rsync` over the existing `gefion` SSH host:
+
+```bash
+rsync -avz ./src gefion:~/project/src
+```
+
+Large datasets — `rclone` via the SFTP endpoint:
+
+```bash
+rclone sync ./datasets gefion:to_gefion/dest --dry-run   # preview changes
+rclone sync ./datasets gefion:to_gefion/dest             # sync for real
+rclone ls gefion:to_gefion/dest                          # list files
+```
+
+<Aside type="note">
+
+Data uploaded via the SFTP endpoint lands on a transfer staging area, not directly in your home
+directory. After the transfer, copy from the staging host on the login node — see the DCAI guide
+for the current staging host and path.
+
+</Aside>
+
+#### Outbound (pull from Gefion)
+
+Same tools, in reverse — run from your local machine pulling from `gefion:...`:
+
+```bash
+rsync -avz gefion:~/project/results ./results
+```
+
+```bash
+rclone sync gefion:from_gefion/results ./results
+```
+
+#### Between clusters
+
+For large inter-cluster transfers, the recommended bridge is via the DTU transfer node. All P1
+clusters and most Danish university systems are on the
+[Danish Research Network (forskningsnettet)](https://www.deic.dk/en/danish-research-network),
+which gives high-bandwidth, low-latency links between Danish research institutions — going
+cluster → cluster over forskningsnettet is much faster than round-tripping via your local machine
+over the public internet.
+
+From inside Gefion, SFTP into `transfer.gbar.dtu.dk`, then SSH into the DTU P1 cluster from there
+and move the data further. Use the `sftp` client directly for this hop — `rsync` and `rclone`
+wrap OpenSSH and currently don't traverse this path cleanly.
+
+```bash
+# from inside Gefion
+sftp <dtu-username>@transfer.gbar.dtu.dk
+# then SSH into your DTU account and pull from /tmp or your transfer landing dir
+```
+
+#### SFTP fallback
+
+If `rsync` / `rclone` aren't working, connect with the SFTP client directly:
+
+```bash
+sftp gefion-xfer
+```
+
+<details>
+<summary>Tip: Using the DTU cluster as a jump host</summary>
+
+If your IP cannot be whitelisted on `xfer.dcai.dk` but you do have DTU access, you can use the
+DTU cluster as a proxy. Add these entries:
+
+```text file=~/.ssh/config
+Host dtu-transfer
+  ForwardAgent yes
+  User <dtu-username>
+  HostName transfer.gbar.dtu.dk
+  ControlMaster no
+  ControlPersist no
+
+Host gefion-jump
+  Port 2234
+  User <gefion-username>
+  HostName xfer.dcai.dk
+  ProxyJump dtu-transfer
+```
+
+```ini file=~/.config/rclone/rclone.conf
+[gefion-jump]
+disable_hashcheck = true
+shell_type = unix
+ssh = ssh gefion-jump
+type = sftp
+```
+
+Then use `gefion-jump:` instead of `gefion:` in your rclone commands.
+
+</details>
+
+### How to start an interactive job
+
+Request an interactive session with GPUs via `srun`:
+
+```bash
+ssh gefion
+srun --pty -N 1 -n 1 --gpus=2 --mem=8GB --time=1:00:00 /bin/bash
+```
+
+Which will open an interactive session with 2 H100 GPUs and 8 GB of RAM.
+
+### How to submit a batch job
+
+```bash file=train.sh
+#!/bin/bash
+
+#SBATCH --account=<account-nb>
+#SBATCH --job-name=testing-train-script
+#SBATCH --nodes=1
+#SBATCH --gpus=2
+#SBATCH --mem=20GB
+#SBATCH --time=1:00:00
+#SBATCH --error=slurm_files/error/%x_%j.err
+#SBATCH --output=slurm_files/output/%x_%j.out
+
+cd $SLURM_SUBMIT_DIR
+module load CUDA/12.8
+nvidia-smi
+uv run train.py
+```
+
+```bash
+sbatch train.sh              # submit above script 1 time
+sbatch --array=0-7 train.sh  # submit above script 8 times
+```
+
+## Policy & Support
+
+### Usage Rules
+
+- Per-person limit of 2 GPUs, up to 16 H100 GPUs total across the sandbox
+- 300 TB shared storage allowance
+- User accounts are individual and non-transferable
+- Accounts can be associated with one or more Gefion projects
+
+Limits may be adjusted on an ongoing basis to meet the needs of P1 students and faculty.
+
+### Who to contact
+
+<Support
+  technicalSupportEmail="support@dcai.dk"
+  technicalSupportLabel="DCAI Support Team"
+  computeCoordinatorEmail="bstja@dtu.dk"
+  emailSubjectPrefix="P1 Gefion Sandbox:"
+/>

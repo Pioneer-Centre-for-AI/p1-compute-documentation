@@ -5,6 +5,12 @@
 
   onMount(() => {
     isDark = document.documentElement.classList.contains('dark');
+    const onChange = (e: Event) => {
+      const detail = (e as CustomEvent<{ isDark: boolean }>).detail;
+      if (detail) isDark = detail.isDark;
+    };
+    window.addEventListener('themechange', onChange);
+    return () => window.removeEventListener('themechange', onChange);
   });
 
   function toggle() {
@@ -20,6 +26,7 @@
   type="button"
   onclick={toggle}
   aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+  title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
   class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-slate-200 text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
 >
   {#if isDark}

@@ -1,5 +1,6 @@
 <script lang="ts">
   import People from '$lib/components/People.svelte';
+  import { headingAnchors } from '$lib/actions/headingAnchors';
 
   const board = [
     {
@@ -44,6 +45,8 @@
   <title>About P1 Compute Resources</title>
   <meta name="description" content="Learn more about the P1AI's HPC resources." />
 </svelte:head>
+
+<article class="prose mx-auto w-full max-w-3xl" use:headingAnchors>
 
 <h1>About P1 Compute Resources</h1>
 
@@ -112,7 +115,9 @@
   channel.
 </p>
 
-<People heading="HPC Governance Board" subheading="Contact Information" people={board} />
+<h2>HPC Governance Board</h2>
+
+<People people={board} />
 
 <h2>Investing Your Compute Budget</h2>
 
@@ -218,3 +223,5 @@
   level 2 but can support some level 1 workloads, making it capable of supporting both national and
   some European-level research projects.
 </p>
+
+</article>

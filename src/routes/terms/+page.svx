@@ -1,0 +1,80 @@
+<script>
+  import { headingAnchors } from '$lib/actions/headingAnchors';
+</script>
+
+<svelte:head>
+  <title>Terms and Conditions</title>
+</svelte:head>
+
+<article class="prose mx-auto w-full max-w-3xl" use:headingAnchors>
+
+# Terms and Conditions
+
+## Intended Use
+
+P1 compute clusters are primarily for research projects. Commercial use is generally not
+permitted on the P1 DTU and NGC HPCs; however, Gefion may accommodate certain commercial research
+projects on a case-by-case basis.
+
+## Resource Policy
+
+Resources are limited and prioritised for P1 members at the PhD, postdoc, and faculty levels. We
+are committed to open access and strive to serve as many P1 members as possible. For very
+large-scale projects, we encourage you to reach out to discuss potential solutions.
+
+## Access and Responsibility
+
+P1 does not directly operate the compute resources, as these are managed by the respective
+institutions. However, P1 provides guidance and support for using these resources and works
+closely with the institutions to ensure they meet the needs of P1-affiliated researchers.
+
+### Access Eligibility
+
+P1 HPC resources are intended for academic research purposes only and are available exclusively
+to researchers at Danish universities. Industry access is generally prohibited unless it is part
+of a research collaboration with a Danish university.
+
+If you are not affiliated with a Danish university but are working on a project with a
+university-affiliated researcher, we can create an additional guest agreement covering data
+privacy and security to grant you access to these resources.
+
+## User Revision Policy
+
+User review happens once or twice a year. We cannot rely on personal email addresses for this
+process, so we use emails managed by partner institutions to verify user activity.
+
+During each review, users receive an email asking them to:
+
+- Confirm they are still actively using the cluster (no response may indicate that the partner university has revoked access)
+- Provide a brief explanation of their current research activities
+
+The HPC governance board receives a list of all current accounts so they can step in for manual
+review if needed.
+
+Users who either fail to respond or are not approved by the governance board will have their
+account placed in a 6-month grace period.
+
+## Data Retention Policy
+
+Once an account enters the grace period, the user's data is moved to a temporary storage
+location, where it will remain for the duration of the grace period (6 months, until the next
+review cycle). This allows for recovery or changes in data ownership. The user can at any time
+request to have their data deleted.
+
+**Data Recovery Process:**
+
+- Users can request data recovery during the grace period by contacting the HPC governance board
+- Data ownership can be transferred to another approved user during this time
+- After the grace period ends, all data in temporary storage will be permanently deleted
+
+**Important:** Users should ensure they have backed up any important data before or during the
+grace period, as data recovery after the grace period is not possible.
+
+## Detailed Cluster Information
+
+Each cluster is hosted at a separate institution and managed by its own administrators. This site
+provides an overview and a starting point for accessing P1 compute resources. For the most
+up-to-date technical details, refer to the respective cluster websites and support channels — the
+per-cluster pages in this documentation list each provider's docs.
+
+</article>

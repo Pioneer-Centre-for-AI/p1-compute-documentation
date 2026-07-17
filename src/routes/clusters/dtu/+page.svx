@@ -1,0 +1,208 @@
+---
+title: P1 DTU HPC
+description: General-purpose HPC at DTU for P1 members — free compute and storage for medium-scale ML research.
+order: 1
+navLabel: DTU HPC
+brandColor: var(--color-brand-dtu)
+hardware:
+  - label: Nodes
+    value: 7× Lenovo ThinkSystem SR665 V3
+  - label: CPU per node
+    value: 2× AMD EPYC 9354 (32 cores each)
+  - label: RAM per node
+    value: 768 GB
+  - label: GPUs per node
+    value: 2× NVIDIA H100 PCIe (80 GB)
+  - label: Shared storage
+    value: 60 TiB
+  - label: Operating system
+    value: Alma Linux
+  - label: Scheduler
+    value: LSF
+  - label: Queues
+    value: p1 (batch, 7 nodes) / p1i (interactive, 1 node)
+---
+
+<script>
+  import AffiliateButton from '$lib/components/AffiliateButton.svelte';
+  import Aside from '$lib/components/Aside.svelte';
+  import EmbedForm from '$lib/components/EmbedForm.svelte';
+  import Support from '$lib/components/Support.svelte';
+</script>
+
+The P1 DTU HPC is hosted at DTU and provides high-performance computing resources for P1 members
+(PhD and above). It is particularly suitable for medium to large-scale machine learning
+experiments and research projects. For up-to-date technical details, see the
+[P1 compute cluster documentation](https://www.hpc.dtu.dk/?page_id=5028) at DTU DCC.
+
+## Getting Access
+
+### Sign-up Form
+
+Two forms get you onto the cluster — start with P1 affiliation, then request a DTU account.
+
+Before accessing the P1 DTU HPC, you must be a P1 affiliate. Sign in to your profile, update your
+details, and submit a request to become an affiliate member — a P1 staff member will review and
+approve.
+
+<AffiliateButton />
+
+Once your affiliation is approved, fill out the DTU account request form. Only signups using an
+official university email address are accepted. The form is processed by Henning Christiansen
+(head of DTU's compute centre) and you will receive account details via email once created.
+
+<EmbedForm
+  title="DTU Account Signup Form"
+  src="https://forms.office.com/pages/responsepage.aspx?id=I_FR8s7JjkSSdzS7KFkR2TcQSfcccxdDtaq8HEbAO1RUQjZUUEoxSlRCRk5KV09WSlRZNjNLVE1KRi4u"
+  height="800px"
+/>
+
+### Access Exception
+
+**PhD P1 affiliates and above can skip this section.** If you are a P1 member currently enrolled
+in an MSc, research assistant (RA) role, or similar, you are not eligible for access without a
+written approval of exception from a responsible person (a P1 co-lead or faculty member) who can
+vouch for your request. Fill in the form below and have the responsible person send a confirmation
+to [compute-governance-p1@aicentre.dk](mailto:compute-governance-p1@aicentre.dk) so they can audit
+the request.
+
+<EmbedForm
+  title="P1 HPC Access Exception Form"
+  src="https://docs.google.com/forms/d/e/1FAIpQLSciaOm-CYwl48LGGZC7qlmCSPU7kfEitjGy4kvZXAXEPbo_eA/viewform?embedded=true"
+  minHeight="1200px"
+/>
+
+### Who's eligible?
+
+**Requirements:** PhD or higher (exceptions may apply), valid Danish university email, and
+registered P1 affiliation.
+
+## Getting Started
+
+### How to connect
+
+The cluster is reachable at `login9.hpc.dtu.dk` via SSH. From outside DTU's network, first connect
+through Cisco AnyConnect to `vpn.dtu.dk` — see
+[DTU IT's VPN guide](https://www.hpc.dtu.dk/?page_id=2501) for setup details, including MFA.
+
+For persistent access, generate a key and copy the public half to the cluster:
+
+```bash
+ssh-keygen -t ed25519 -f ~/.ssh/keyname
+```
+
+```bash
+ssh-copy-id -i ~/.ssh/keyname.pub username@login9.hpc.dtu.dk
+```
+
+Then connect:
+
+```bash
+ssh -i ~/.ssh/keyname username@login9.hpc.dtu.dk
+```
+
+### How to transfer data
+
+Use `rsync` for source code and small datasets, and [rclone](https://rclone.org/) for large
+datasets — both work over the standard SSH connection and are more ergonomic than a plain SFTP
+session. If `rsync` / `rclone` aren't available, an `sftp` client is the
+lowest-common-denominator fallback.
+
+Project data lives under the shared project storage at `/dtu/p1/`. Home directories are capped at
+30 GB; anything larger should land in your project's directory under `/dtu/p1/`. For very large
+transfers, DTU also exposes
+[dedicated transfer nodes](https://www.hpc.dtu.dk/?page_id=2671) including
+`transfer.gbar.dtu.dk`.
+
+#### Inbound (push to DTU)
+
+```bash
+rsync -avz ./src username@login9.hpc.dtu.dk:~/project/src
+```
+
+#### Outbound (pull from DTU)
+
+```bash
+rsync -avz username@login9.hpc.dtu.dk:~/project/results ./results
+```
+
+#### Between clusters
+
+All P1 clusters and most Danish university systems are on the
+[Danish Research Network (forskningsnettet)](https://www.deic.dk/en/danish-research-network),
+which gives high-bandwidth, low-latency links between Danish research institutions — much faster
+than going over the public internet. For large inter-cluster transfers, DTU's
+`transfer.gbar.dtu.dk` SFTP endpoint is the canonical staging point: SSH from it into other P1
+systems and forward data from there.
+
+#### SFTP fallback
+
+When `rsync` / `rclone` aren't usable (managed lab machines, network maintenance, etc.), connect
+with the SFTP client directly:
+
+```bash
+sftp username@transfer.gbar.dtu.dk
+```
+
+### How to start an interactive job
+
+Interactive sessions run on the `p1i` queue, intended for package installation, test runs, and
+short debugging sessions:
+
+```bash
+bsub -q p1i -gpu "num=1:mode=exclusive_process" -W 1:00 -Is /bin/bash
+```
+
+Refer to the [DTU LSF guide](https://www.hpc.dtu.dk/?page_id=2698) for queue and resource flags.
+
+### How to submit a batch job
+
+Batch jobs go to the `p1` queue:
+
+```bash file=train.sh
+#!/bin/bash
+#BSUB -J train
+#BSUB -q p1
+#BSUB -gpu "num=2:mode=exclusive_process"
+#BSUB -W 24:00
+#BSUB -R "rusage[mem=64GB]"
+#BSUB -o logs/%J.out
+#BSUB -e logs/%J.err
+
+module load cuda/12.4
+python train.py
+```
+
+```bash
+bsub < train.sh
+```
+
+## Policy & Support
+
+### Usage Rules
+
+- Maximum wall time: 72 hours
+- Maximum GPUs per job: 2 (one node)
+- Maximum running jobs: ~50% of total available GPUs
+- Storage: 500 GB project + 30 GB home directory
+
+If your project requires more storage, contact the governance group at
+[compute-governance-p1@aicentre.dk](mailto:compute-governance-p1@aicentre.dk) to discuss your
+needs.
+
+<Aside type="caution" title="GDPR Compliance">
+
+The P1 DTU HPC is only intended for non-GDPR data — public datasets, open benchmarks, etc. Your
+home directory is not shared with other users, but data is not encrypted in a way that meets GDPR
+requirements. For GDPR-compliant data processing, use the [P1 NGC HPC](/clusters/ngc/) instead.
+
+</Aside>
+
+### Who to contact
+
+<Support
+  technicalSupportEmail="support@hpc.dtu.dk"
+  technicalSupportLabel="DTU HPC Support Team"
+  computeCoordinatorEmail="bstja@dtu.dk"
+  emailSubjectPrefix="P1 DTU HPC:"
+/>

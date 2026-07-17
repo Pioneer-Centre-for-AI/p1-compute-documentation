@@ -1,0 +1,52 @@
+<script>
+  import { headingAnchors } from '$lib/actions/headingAnchors';
+</script>
+
+<svelte:head>
+  <title>Privacy</title>
+  <meta name="description" content="How this site and the P1 compute services handle your data." />
+</svelte:head>
+
+<article class="prose mx-auto w-full max-w-3xl" use:headingAnchors>
+
+# Privacy
+
+## This website
+
+This is a static documentation site. It sets no cookies and runs no analytics or tracking
+scripts. Your theme preference (light/dark) is stored in your browser's local storage and never
+leaves your device.
+
+The site is hosted on GitHub Pages; GitHub may collect technical data such as IP addresses in its
+server logs — see
+[GitHub's privacy statement](https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement).
+
+### Embedded forms
+
+Some pages embed sign-up forms from Microsoft Forms and Google Forms. Loading those pages fetches
+content from Microsoft and Google, and anything you submit through a form is processed by the
+respective provider under its own privacy policy. We only receive the answers you submit.
+
+## Cluster accounts
+
+When you request access to a P1 cluster, we process the information you provide (name, university
+email, affiliation, research description) to create and administer your account, verify
+eligibility, and conduct the periodic user reviews described in the [terms](/terms/). Account
+information is shared with the institution hosting the cluster you request access to (DTU, NGC,
+or DCAI), which operates the system and acts as your point of technical support.
+
+## Research data on the clusters
+
+Data you store or process on the clusters is governed by the hosting institution's policies, not
+by this site. For projects involving personal or sensitive data, use the
+[P1 NGC HPC](/clusters/ngc/), and note that each project must carry a signed Data Processing
+Agreement naming NGC as data processor — see the [terms](/terms/) and the per-cluster pages for
+details. Data retention and deletion after account expiry follow the
+[data retention policy](/terms/#data-retention-policy).
+
+## Contact
+
+Questions about privacy or your data:
+[compute-governance-p1@aicentre.dk](mailto:compute-governance-p1@aicentre.dk).
+
+</article>

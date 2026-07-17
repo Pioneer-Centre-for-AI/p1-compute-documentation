@@ -23,11 +23,11 @@
               <li>
                 <a
                   href={item.href}
-                  class="flex items-center justify-between rounded-md px-2 py-1.5 no-underline {active ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800'}"
+                  class="flex items-center justify-between rounded-md px-2 py-1.5 no-underline {active ? 'bg-slate-100 font-semibold text-slate-900 dark:bg-slate-800 dark:text-slate-50' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800/60 dark:hover:text-slate-100'}"
                 >
                   <span>{item.label}</span>
                   {#if item.badge}
-                    <span class="ml-2 rounded bg-amber-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-800 dark:bg-amber-900/40 dark:text-amber-200">
+                    <span class="ml-2 rounded bg-slate-200 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-slate-700 dark:bg-slate-700 dark:text-slate-200">
                       {item.badge.text}
                     </span>
                   {/if}
@@ -44,7 +44,7 @@
             href={item.href}
             target={item.newTab ? '_blank' : undefined}
             rel={item.newTab ? 'noopener noreferrer' : undefined}
-            class="flex items-center justify-between rounded-md px-2 py-1.5 no-underline {active ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800'}"
+            class="flex items-center justify-between rounded-md px-2 py-1.5 no-underline {active ? 'bg-slate-100 font-semibold text-slate-900 dark:bg-slate-800 dark:text-slate-50' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800/60 dark:hover:text-slate-100'}"
           >
             <span>{item.label}</span>
             {#if item.newTab}

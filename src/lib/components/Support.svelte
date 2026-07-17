@@ -21,64 +21,94 @@
   }
 </script>
 
-<div class="not-prose my-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-  <div class="rounded-xl border border-slate-200 bg-slate-50 p-6 dark:border-slate-700 dark:bg-slate-800/50">
-    <div class="mb-3 flex items-center gap-3 text-blue-600 dark:text-blue-400">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<dl
+  class="not-prose my-6 divide-y divide-slate-200 overflow-hidden rounded-xl border border-slate-200 bg-slate-50 dark:divide-slate-700 dark:border-slate-700 dark:bg-slate-800/40"
+>
+  <div class="grid grid-cols-[2.5rem_1fr] items-center gap-4 p-4 sm:grid-cols-[2.5rem_1fr_auto] sm:gap-6">
+    <div class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-200 text-slate-700 dark:bg-slate-700 dark:text-slate-200">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
       </svg>
-      <h3 class="m-0 text-lg font-semibold text-slate-900 dark:text-slate-100">Technical Support</h3>
     </div>
-    <p class="text-slate-600 dark:text-slate-400">
-      For technical issues, contact the
-      <a href={mailto(technicalSupportEmail, 'Technical Issue')} class="text-blue-600 dark:text-blue-400 font-medium">{technicalSupportLabel}</a>.
-    </p>
+    <div class="col-span-1">
+      <dt class="font-semibold text-slate-900 dark:text-slate-100">Technical Support</dt>
+      <dd class="text-sm text-slate-600 dark:text-slate-400">Broken or missing packages, scheduler issues</dd>
+    </div>
+    <a
+      href={mailto(technicalSupportEmail, 'Technical Issue')}
+      class="col-span-2 font-mono text-sm text-slate-900 hover:underline dark:text-slate-200 sm:col-span-1"
+    >
+      {technicalSupportLabel}
+    </a>
   </div>
 
-  <div class="rounded-xl border border-slate-200 bg-slate-50 p-6 dark:border-slate-700 dark:bg-slate-800/50">
-    <div class="mb-3 flex items-center gap-3 text-blue-600 dark:text-blue-400">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <div class="grid grid-cols-[2.5rem_1fr] items-center gap-4 p-4 sm:grid-cols-[2.5rem_1fr_auto] sm:gap-6">
+    <div class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-200 text-slate-700 dark:bg-slate-700 dark:text-slate-200">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
         <polyline points="14,2 14,8 20,8"/>
       </svg>
-      <h3 class="m-0 text-lg font-semibold text-slate-900 dark:text-slate-100">Policy Support</h3>
     </div>
-    <p class="text-slate-600 dark:text-slate-400">
-      For policy issues, contact
-      <a href={mailto('compute-governance-p1@aicentre.dk', 'Policy Question')} class="text-blue-600 dark:text-blue-400 font-medium">compute-governance-p1@aicentre.dk</a>.
-    </p>
+    <div>
+      <dt class="font-semibold text-slate-900 dark:text-slate-100">Policy Support</dt>
+      <dd class="text-sm text-slate-600 dark:text-slate-400">Priority access, queueing, access exceptions</dd>
+    </div>
+    <a
+      href={mailto('compute-governance-p1@aicentre.dk', 'Policy Question')}
+      class="col-span-2 font-mono text-sm text-slate-900 hover:underline dark:text-slate-200 sm:col-span-1"
+    >
+      compute-governance-p1@aicentre.dk
+    </a>
   </div>
 
-  <div class="rounded-xl border border-slate-200 bg-slate-50 p-6 dark:border-slate-700 dark:bg-slate-800/50">
-    <div class="mb-3 flex items-center gap-3 text-blue-600 dark:text-blue-400">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <div class="grid grid-cols-[2.5rem_1fr] items-center gap-4 p-4 sm:grid-cols-[2.5rem_1fr_auto] sm:gap-6">
+    <div class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-200 text-slate-700 dark:bg-slate-700 dark:text-slate-200">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
       </svg>
-      <h3 class="m-0 text-lg font-semibold text-slate-900 dark:text-slate-100">General Questions</h3>
     </div>
-    <p class="text-slate-600 dark:text-slate-400">
-      Use the
-      <a href="https://pioneercentreforai.slack.com/channels/compute" target="_blank" rel="noopener noreferrer" class="rounded bg-slate-200 dark:bg-slate-700 px-1 py-0.5 font-mono text-sm no-underline">#compute</a>
-      or
-      <a href="https://pioneercentreforai.slack.com/channels/ask-compute" target="_blank" rel="noopener noreferrer" class="rounded bg-slate-200 dark:bg-slate-700 px-1 py-0.5 font-mono text-sm no-underline">#ask-compute</a>
-      channels on P1 Slack.
-    </p>
+    <div>
+      <dt class="font-semibold text-slate-900 dark:text-slate-100">General Questions</dt>
+      <dd class="text-sm text-slate-600 dark:text-slate-400">Open chat with the P1 compute community</dd>
+    </div>
+    <div class="col-span-2 flex flex-wrap items-center gap-2 text-sm sm:col-span-1 sm:justify-end">
+      <a
+        href="https://pioneercentreforai.slack.com/channels/compute"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="rounded bg-slate-200 px-2 py-0.5 font-mono text-slate-900 no-underline hover:bg-slate-300 dark:bg-slate-700 dark:text-slate-100 dark:hover:bg-slate-600"
+      >
+        #compute
+      </a>
+      <a
+        href="https://pioneercentreforai.slack.com/channels/ask-compute"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="rounded bg-slate-200 px-2 py-0.5 font-mono text-slate-900 no-underline hover:bg-slate-300 dark:bg-slate-700 dark:text-slate-100 dark:hover:bg-slate-600"
+      >
+        #ask-compute
+      </a>
+    </div>
   </div>
 
   {#if showComputeCoordinator}
-    <div class="rounded-xl border border-slate-200 bg-slate-50 p-6 dark:border-slate-700 dark:bg-slate-800/50">
-      <div class="mb-3 flex items-center gap-3 text-blue-600 dark:text-blue-400">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <div class="grid grid-cols-[2.5rem_1fr] items-center gap-4 p-4 sm:grid-cols-[2.5rem_1fr_auto] sm:gap-6">
+      <div class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-200 text-slate-700 dark:bg-slate-700 dark:text-slate-200">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
           <circle cx="12" cy="7" r="4"/>
         </svg>
-        <h3 class="m-0 text-lg font-semibold text-slate-900 dark:text-slate-100">Compute Coordinator</h3>
       </div>
-      <p class="text-slate-600 dark:text-slate-400">
-        Contact
-        <a href={mailto(computeCoordinatorEmail, 'General Inquiry')} class="text-blue-600 dark:text-blue-400 font-medium">{computeCoordinatorEmail}</a>
-        for general or technical compute-related questions.
-      </p>
+      <div>
+        <dt class="font-semibold text-slate-900 dark:text-slate-100">Compute Coordinator</dt>
+        <dd class="text-sm text-slate-600 dark:text-slate-400">General or technical compute-related questions</dd>
+      </div>
+      <a
+        href={mailto(computeCoordinatorEmail, 'General Inquiry')}
+        class="col-span-2 font-mono text-sm text-slate-900 hover:underline dark:text-slate-200 sm:col-span-1"
+      >
+        {computeCoordinatorEmail}
+      </a>
     </div>
   {/if}
-</div>
+</dl>

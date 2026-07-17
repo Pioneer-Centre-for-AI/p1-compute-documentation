@@ -1,0 +1,54 @@
+<script>
+  import { headingAnchors } from '$lib/actions/headingAnchors';
+</script>
+
+<svelte:head>
+  <title>Compute Ecosystem</title>
+  <meta
+    name="description"
+    content="The Danish and international HPC landscape beyond P1 — university, national, and EU compute resources."
+  />
+</svelte:head>
+
+<article class="prose mx-auto w-full max-w-3xl" use:headingAnchors>
+
+# Compute Ecosystem
+
+P1 runs its own clusters, and we point the way to the rest. The Danish compute landscape is
+bigger than P1 — as a consortium we know it well, and we help researchers find the resource that
+fits, whether it is at P1 or elsewhere.
+
+**We consult and guide. We don't broker access.** Getting onto the systems below goes through
+their own institutions and application processes — but if you are unsure where your project
+belongs, [talk to us](/about/) first.
+
+## University HPCs
+
+Most Danish universities operate their own HPC facilities, generally available to their own
+researchers and collaborators:
+
+- **UCPH** — SCIENCE HPC Centre, Hendrix
+- **DTU** — DCC/G-Bar Central, Niflheim, Sofia, Steno, plus 5 department systems
+- **SDU** — [UCloud](https://cloud.sdu.dk/), Bitten
+- **Aarhus** — [GenomeDK](https://genome.au.dk/)
+
+## National HPCs
+
+- [DeiC](https://www.deic.dk/) — Danish e-Infrastructure Consortium, coordinating national HPC
+  resources and granting compute allocations to researchers at Danish universities
+- [Computerome](https://computerome.dk/) — the Danish national supercomputer for life sciences,
+  with support for sensitive data
+
+## International HPCs
+
+- [LUMI](https://www.lumi-supercomputer.eu/) (Finland, EU) — one of Europe's largest
+  supercomputers, accessible to Danish researchers through DeiC allocations
+
+## Where P1 fits
+
+P1's own clusters are the entry point for P1-affiliated researchers: start on the
+[DTU HPC](/clusters/dtu/) for general work, the [NGC HPC](/clusters/ngc/) for sensitive data, and
+the [Gefion sandbox](/clusters/gefion/) as a springboard to scale. When your needs outgrow them,
+the systems above are the next step — and we are happy to help you choose.
+
+</article>

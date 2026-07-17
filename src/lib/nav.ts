@@ -1,3 +1,5 @@
+import { clusters } from '$lib/content';
+
 export type NavBadgeVariant = 'caution' | 'note';
 
 export type NavItem = {
@@ -20,30 +22,18 @@ export const nav: NavEntry[] = [
   {
     label: 'Clusters',
     items: [
-      { label: 'DTU HPC', href: '/clusters/dtu-hpc/' },
-      {
-        label: 'NGC HPC',
-        href: '/clusters/ngc-hpc/',
-        badge: { text: 'WAITING LIST', variant: 'caution' }
-      },
-      {
-        label: 'DCAI Gefion',
-        href: '/clusters/dcai-gefion/',
-        badge: { text: 'INTEREST LIST', variant: 'caution' }
-      }
+      { label: 'Overview', href: '/clusters/' },
+      ...clusters.map((c) => ({
+        label: c.meta.navLabel ?? c.meta.title,
+        href: c.href,
+        badge: c.meta.badge
+      }))
     ]
   },
-  {
-    label: 'Reference',
-    items: [{ label: 'Learning Resources', href: '/reference/learning-resources/' }]
-  },
-  { label: 'Terms and Conditions', href: '/terms-and-conditions/' },
-  {
-    label: 'Computing',
-    href: 'https://www.aicentre.dk/computing',
-    external: true,
-    newTab: true
-  }
+  { label: 'Ecosystem', href: '/ecosystem/' },
+  { label: 'Learn', href: '/learn/' },
+  { label: 'Terms', href: '/terms/' },
+  { label: 'Privacy', href: '/privacy/' }
 ];
 
 export function isGroup(entry: NavEntry): entry is NavGroup {

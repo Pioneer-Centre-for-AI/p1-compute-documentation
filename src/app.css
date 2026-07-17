@@ -3,7 +3,10 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --color-brand: #0f62fe;
+  --color-brand: #2563eb;
+  --color-brand-dtu: #990000;
+  --color-brand-ngc: #2f5891;
+  --color-brand-gefion: #e9b83f;
   --font-sans:
     ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Inter, 'Helvetica Neue', Arial,
     sans-serif;
@@ -23,15 +26,6 @@ html.dark {
   color: #e2e8f0;
 }
 
-a {
-  color: var(--color-brand);
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
-}
-
 /* shiki dual-theme: flip variables on .dark */
 .shiki,
 .shiki span {
@@ -45,18 +39,35 @@ html.dark .shiki span {
   background-color: var(--shiki-dark-bg);
 }
 
-/* Compact prose styling for content pages */
+/* Code block chrome is generated as raw HTML by the mdsvex highlighter, so the
+   pre reset must live here rather than in a scoped component style. */
+.codeblock pre.shiki {
+  margin: 0;
+  padding: 0.75rem 1rem;
+  background: transparent !important;
+}
+
+/* Prose styling — only inline prose links get the brand colour.
+   Nav, sidebar, ToC, buttons control their own colour via Tailwind utilities. */
+.prose a:not(.heading-anchor) {
+  color: var(--color-brand);
+  text-decoration: none;
+}
+.prose a:not(.heading-anchor):hover {
+  text-decoration: underline;
+}
+
 .prose h1 {
-  @apply text-4xl font-bold mb-6 mt-2;
+  @apply text-4xl font-bold tracking-tight mb-6 mt-2;
 }
 .prose h2 {
-  @apply text-2xl font-semibold mt-10 mb-4 border-b border-slate-200 pb-2;
-}
-html.dark .prose h2 {
-  @apply border-slate-700;
+  @apply text-2xl font-semibold mt-12 mb-4 scroll-mt-24;
 }
 .prose h3 {
-  @apply text-xl font-semibold mt-8 mb-3;
+  @apply text-lg font-semibold mt-8 mb-3 scroll-mt-24 border-l-[3px] border-slate-300 pl-3 dark:border-slate-600;
+}
+.prose h4 {
+  @apply text-base font-semibold mt-6 mb-2 scroll-mt-24 border-l-2 border-slate-200 pl-2 dark:border-slate-700;
 }
 .prose p {
   @apply leading-relaxed my-4;
@@ -96,6 +107,31 @@ html.dark .prose th {
 html.dark .prose code:not(pre code) {
   @apply bg-slate-800;
 }
-.prose pre {
-  @apply rounded-lg p-4 overflow-x-auto my-4 text-sm;
+.prose details {
+  @apply my-4 rounded-lg border border-slate-200 dark:border-slate-700;
+}
+.prose details > summary {
+  @apply cursor-pointer rounded-lg bg-slate-50 dark:bg-slate-800/50 px-4 py-3 font-medium;
+}
+.prose details > summary:hover {
+  @apply bg-slate-100 dark:bg-slate-800;
+}
+.prose details > *:not(summary) {
+  @apply px-4 pb-4 pt-2;
+}
+
+/* Heading anchor links (added at runtime via the headingAnchors action) */
+.prose .heading-anchor {
+  @apply ml-2 text-slate-300 dark:text-slate-600 no-underline;
+  opacity: 0;
+  transition: opacity 0.15s ease-in-out;
+}
+.prose h2:hover .heading-anchor,
+.prose h3:hover .heading-anchor,
+.prose h4:hover .heading-anchor,
+.prose .heading-anchor:focus {
+  opacity: 1;
+}
+.prose .heading-anchor:hover {
+  @apply text-slate-500 dark:text-slate-400 underline;
 }

@@ -1,0 +1,181 @@
+---
+title: P1 NGC HPC
+description: GDPR-compliant HPC at the National Genome Centre for P1 projects handling sensitive or personal data.
+order: 2
+navLabel: NGC HPC
+brandColor: var(--color-brand-ngc)
+hardware:
+  - label: Topology
+    value: Air-gapped system, secure data processing
+  - label: Compliance
+    value: GDPR-compliant infrastructure
+  - label: Scheduler
+    value: PBS (qsub)
+  - label: Storage
+    value: Quotas provided upon onboarding
+  - label: Hardware details
+    value: Disclosed upon access approval
+---
+
+<script>
+  import AffiliateButton from '$lib/components/AffiliateButton.svelte';
+  import Support from '$lib/components/Support.svelte';
+</script>
+
+The P1 NGC HPC is hosted at the National Genome Centre and is designed for secure data processing
+with GDPR compliance. It provides a secure environment for handling sensitive data and research
+projects. For details on the underlying infrastructure, see
+[NGC's supercomputer page](https://www.ngc.dk/infrastrukturen-for-personlig-medicin/supercomputer).
+
+## Getting Access
+
+### Sign-up Form
+
+Before accessing the P1 NGC HPC, you must be a P1 affiliate. Sign in to your profile, update your
+details, and submit a request to become an affiliate member — a P1 staff member will review and
+approve.
+
+<AffiliateButton />
+
+Once your affiliation is approved, complete and sign the
+[NGC user creation form](https://www.ngc.dk/Media/638139612542456428/Oprettelse%20af%20Ekstern%20Bruger%20p%C3%A5%20NGC%20Infrastruktur%200.4.pdf)
+and forward it to the [Compute Coordinator](mailto:bstja@dtu.dk) to request access. You will be
+added to the NGC Slack channel once you gain access.
+
+### Who's eligible?
+
+**Requirements:** PhD or higher (exceptions may apply), valid Danish university email, and
+registered P1 affiliation.
+
+Each project needs to bring a record (a signed Data Processing Agreement) that explicitly
+mentions NGC as a data processor and that the data is allowed to be stored there. If the project
+poses a high risk to individuals whose personal data is being processed, a Data Protection Impact
+Assessment (DPIA) is also required.
+
+## Getting Started
+
+### How to connect
+
+The P1 NGC HPC is an air-gapped system requiring multi-factor authentication and a remote desktop
+client. Once registered, you'll receive specific access instructions including an Omnissa Remote
+Desktop client.
+
+Once connected with the remote desktop client, access the login node using
+`ssh -X <your-username>@login`.
+
+Useful hosts:
+
+```text
+https://console.cld076.vmc/status   # Internal status page
+cld076-0004.cld076.vmc              # Internal SFTP
+sftp.spc.ngc.dk                     # External Ingress/Egress (SFTP)
+```
+
+### How to transfer data
+
+The P1 NGC HPC is air-gapped, so `rsync` and `rclone` from outside aren't available end-to-end —
+every transfer goes through approved SFTP staging under admin supervision. Request access to
+`/data/upload` from your NGC admin as your project's data gateway, then add an SSH entry to your
+`~/.ssh/config`:
+
+```text file=~/.ssh/config
+Host ngc
+    HostName sftp.spc.ngc.dk
+    Port 6433
+    User <your-username>_sftp
+    HostKeyAlgorithms +ssh-rsa
+```
+
+#### Inbound (push to NGC)
+
+From outside the cluster, upload to the staging area:
+
+```bash
+scp ~/datasets/ISLES-2022.zip ngc:/data/upload/
+```
+
+Then inside the cluster, copy from staging into your home directory:
+
+```bash
+scp <your-username>_sftp@cld076-0004.cld076.vmc:/data/upload/ISLES-2022.zip ~/datasets/
+```
+
+#### Outbound (pull from NGC)
+
+Outbound transfers are the same path in reverse — you stage files in `/data/upload` under admin
+supervision, then fetch them from outside via the SFTP endpoint. Coordinate with your NGC admin
+before placing outbound files, since releasing data from the air-gapped environment requires
+their approval.
+
+```bash
+scp ngc:/data/upload/results.tar ~/results.tar
+```
+
+#### Between clusters
+
+Direct inter-cluster transfers aren't supported because of the air-gap. Move data via your local
+research workstation — pull from NGC's staging area, then push to the destination cluster
+(e.g. `transfer.gbar.dtu.dk` on the DTU side). The external SFTP endpoint `sftp.spc.ngc.dk` is
+reachable over the
+[Danish Research Network (forskningsnettet)](https://www.deic.dk/en/danish-research-network), so
+using a workstation that's also on the research network gives you high-bandwidth ingress/egress.
+
+#### Small files (code, configs)
+
+For source code and similar small files you have a few faster paths inside the cluster: mount a
+host directory through the Omnissa Remote Desktop client (must be enabled by an NGC admin), or
+fetch public repositories via the internal GitHub proxy.
+
+### How to start an interactive job
+
+Quick interactive session:
+
+```bash
+iqsub
+```
+
+Interactive session for a specific group with explicit resources:
+
+```bash
+qsub -I -X -W group_list=ngc-bio -A ngc-bio -l nodes=1:ppn=4,mem=20gb,walltime=02:00:00
+```
+
+### How to submit a batch job
+
+```bash file=train.sh
+#!/bin/bash
+#PBS -N train
+#PBS -W group_list=<group>
+#PBS -A <account>
+#PBS -l nodes=1:ppn=4,mem=20gb,walltime=24:00:00
+#PBS -o logs/$PBS_JOBID.out
+#PBS -e logs/$PBS_JOBID.err
+
+cd $PBS_O_WORKDIR
+python train.py
+```
+
+```bash
+qsub train.sh
+```
+
+Refer to NGC's internal documentation (linked from the status page) for the full list of
+scheduler flags and worked examples.
+
+## Policy & Support
+
+### Usage Rules
+
+- GDPR-compliant infrastructure — only use this cluster for projects that need it
+- Each project must carry a signed Data Processing Agreement naming NGC as data processor
+- High-risk projects additionally require a Data Protection Impact Assessment (DPIA)
+- Resource allocation details are provided during onboarding
+
+### Who to contact
+
+<Support
+  technicalSupportEmail="support@ngc.dk"
+  technicalSupportLabel="NGC HPC Support Team"
+  computeCoordinatorEmail="bstja@dtu.dk"
+  emailSubjectPrefix="P1 NGC HPC:"
+/>
