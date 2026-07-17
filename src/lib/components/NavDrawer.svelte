@@ -1,6 +1,7 @@
 <script lang="ts">
   import { afterNavigate } from '$app/navigation';
   import NavList from './NavList.svelte';
+  import { SURVEY_URL, PROFILE_URL } from '$lib/links';
 
   let { open = $bindable(false) }: { open?: boolean } = $props();
   let panel = $state<HTMLElement | null>(null);
@@ -70,6 +71,24 @@
         </button>
       </div>
       <NavList />
+      <div class="mt-6 flex flex-col gap-2 border-t border-slate-200 pt-4 dark:border-slate-700">
+        <a
+          href={SURVEY_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex h-9 items-center justify-center rounded-md bg-[var(--color-coral-strong)] px-3 text-sm font-semibold text-white no-underline transition-colors hover:bg-[#b92238] dark:bg-[var(--color-coral)] dark:text-slate-950 dark:hover:bg-[#ff6b7a]"
+        >
+          Update Needs
+        </a>
+        <a
+          href={PROFILE_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex h-9 items-center justify-center rounded-md border border-slate-300 px-3 text-sm font-semibold text-slate-700 no-underline transition-colors hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
+        >
+          Update Profile
+        </a>
+      </div>
     </div>
   </div>
 {/if}

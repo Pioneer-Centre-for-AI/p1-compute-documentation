@@ -2,6 +2,7 @@
   import Button from '$lib/components/Button.svelte';
   import DigitalObjectIdentifier from '$lib/components/DigitalObjectIdentifier.svelte';
   import { clusters } from '$lib/content';
+  import { SURVEY_URL } from '$lib/links';
 
   const profiles: Record<string, { profile: string; image: string; imageAlt: string }> = {
     dtu: {
@@ -187,7 +188,7 @@
         use it well.
       </p>
       <Button
-        href="https://survey.starostka.io/compute"
+        href={SURVEY_URL}
         variant="primary"
         target="_blank"
         rel="noopener noreferrer"

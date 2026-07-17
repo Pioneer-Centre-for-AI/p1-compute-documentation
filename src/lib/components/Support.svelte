@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { SURVEY_URL } from '$lib/links';
+
   type Props = {
     showComputeCoordinator?: boolean;
     technicalSupportEmail?: string;
@@ -107,7 +109,7 @@
       </div>
       <div class="col-span-2 flex flex-wrap items-center gap-2 text-sm sm:col-span-1 sm:justify-end">
         <a
-          href="https://survey.starostka.io/compute"
+          href={SURVEY_URL}
           target="_blank"
           rel="noopener noreferrer"
           class="rounded bg-[var(--color-coral-strong)] px-2 py-0.5 font-mono text-white no-underline hover:bg-[#b92238] dark:bg-[var(--color-coral)] dark:text-slate-950 dark:hover:bg-[#ff6b7a]"

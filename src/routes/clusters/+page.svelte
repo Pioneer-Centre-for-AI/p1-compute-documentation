@@ -1,5 +1,6 @@
 <script lang="ts">
   import { clusters, getCluster } from '$lib/content';
+  import { SURVEY_URL } from '$lib/links';
 
   const decisions = [
     { need: 'General ML/AI research on non-sensitive data', slug: 'dtu', why: 'Free compute and storage, batch + interactive H100 access' },
@@ -57,7 +58,7 @@
     <p class="text-sm leading-relaxed text-slate-600 dark:text-slate-400">
       Unsure which fits, or ready to onboard? Start with the compute coordinator —
       <a
-        href="https://survey.starostka.io/compute"
+        href={SURVEY_URL}
         target="_blank"
         rel="noopener noreferrer"
         class="font-semibold text-[var(--color-brand)] no-underline hover:underline"

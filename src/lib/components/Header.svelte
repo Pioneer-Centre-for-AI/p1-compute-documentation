@@ -1,5 +1,6 @@
 <script lang="ts">
   import ThemeToggle from './ThemeToggle.svelte';
+  import { SURVEY_URL, PROFILE_URL, GITHUB_URL } from '$lib/links';
 
   type Props = { variant?: 'solid' | 'landing'; onMenuClick: () => void };
   let { variant = 'solid', onMenuClick }: Props = $props();
@@ -34,15 +35,23 @@
   </div>
   <div class="flex items-center gap-2">
     <a
-      href="https://www.aicentre.dk/p1adb"
+      href={PROFILE_URL}
       target="_blank"
       rel="noopener noreferrer"
-      class="hidden h-9 items-center rounded-md bg-[var(--color-coral-strong)] px-3 text-sm font-semibold text-white no-underline transition-colors hover:bg-[#b92238] sm:inline-flex dark:bg-[var(--color-coral)] dark:text-slate-950 dark:hover:bg-[#ff6b7a]"
+      class="hidden h-9 items-center rounded-md border border-slate-300 px-3 text-sm font-semibold text-slate-700 no-underline transition-colors hover:bg-slate-100 sm:inline-flex dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
     >
       Update Profile
     </a>
     <a
-      href="https://github.com/Pioneer-Centre-for-AI/p1-compute-documentation"
+      href={SURVEY_URL}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="hidden h-9 items-center rounded-md bg-[var(--color-coral-strong)] px-3 text-sm font-semibold text-white no-underline transition-colors hover:bg-[#b92238] sm:inline-flex dark:bg-[var(--color-coral)] dark:text-slate-950 dark:hover:bg-[#ff6b7a]"
+    >
+      Update Needs
+    </a>
+    <a
+      href={GITHUB_URL}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="GitHub"

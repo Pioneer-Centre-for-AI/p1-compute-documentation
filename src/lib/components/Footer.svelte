@@ -1,5 +1,6 @@
 <script lang="ts">
   import { nav, isGroup, type NavItem } from '$lib/nav';
+  import { SURVEY_URL, PROFILE_URL, GITHUB_URL } from '$lib/links';
 
   const links: NavItem[] = nav.flatMap((entry) => (isGroup(entry) ? entry.items : [entry]));
   const year = new Date().getFullYear();
@@ -49,7 +50,7 @@
         </li>
         <li>
           <a
-            href="https://survey.starostka.io/compute"
+            href={SURVEY_URL}
             target="_blank"
             rel="noopener noreferrer"
             class="text-slate-600 no-underline hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
@@ -59,7 +60,7 @@
         </li>
         <li>
           <a
-            href="https://github.com/Pioneer-Centre-for-AI/p1-compute-documentation"
+            href={GITHUB_URL}
             target="_blank"
             rel="noopener noreferrer"
             class="text-slate-600 no-underline hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
@@ -79,7 +80,7 @@
         </li>
         <li>
           <a
-            href="https://www.aicentre.dk/p1adb"
+            href={PROFILE_URL}
             target="_blank"
             rel="noopener noreferrer"
             class="text-slate-600 no-underline hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
