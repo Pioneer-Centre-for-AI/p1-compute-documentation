@@ -1,5 +1,6 @@
 <script lang="ts">
   import People from '$lib/components/People.svelte';
+  import NeedsCallout from '$lib/components/NeedsCallout.svelte';
   import { headingAnchors } from '$lib/actions/headingAnchors';
 
   const board = [
@@ -62,6 +63,8 @@
   This documentation aims to centralize practical knowledge and provide a concise guide for P1
   affiliates on how to access and use our available high-performance computing (HPC) facilities.
 </p>
+
+<NeedsCallout />
 
 <img src="/assets/PCAI_HQ.avif" alt="Pioneer Centre for AI headquarters" class="my-6 w-full rounded-lg" loading="lazy" />
 

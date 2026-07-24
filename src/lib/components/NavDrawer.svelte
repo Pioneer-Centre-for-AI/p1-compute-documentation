@@ -78,7 +78,7 @@
           rel="noopener noreferrer"
           class="inline-flex h-9 items-center justify-center rounded-full bg-slate-800 px-4 text-sm font-medium text-white no-underline transition-colors hover:bg-slate-700 dark:bg-slate-200 dark:text-slate-900 dark:hover:bg-slate-300"
         >
-          Update Needs
+          Your Compute Needs
         </a>
         <a
           href={PROFILE_URL}
