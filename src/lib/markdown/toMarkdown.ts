@@ -103,9 +103,10 @@ const WRAPPERS: Record<string, () => string> = {
     ),
   People: () => '_(Governance board members are listed on the web version of this page.)_',
   Citation: () =>
-    '**Citing P1 compute:** if P1 compute contributed to your work, please cite ' +
-    '[10.48714/DTU.HPC.0001](https://doi.org/10.48714/DTU.HPC.0001). That covers support from the ' +
-    'DTU DCC team or the P1 compute coordinator just as much as time spent running jobs.',
+    '**Citing this cluster:** if the P1 DTU HPC contributed to your work, please cite the DTU ' +
+    'Computing Center resources DOI, [10.48714/DTU.HPC.0001](https://doi.org/10.48714/DTU.HPC.0001). ' +
+    'That covers help from the DTU DCC team or the P1 compute coordinator just as much as time ' +
+    'spent running jobs.',
   LandscapeDiagram: () =>
     '_(Diagram: a researcher enters through P1, which consults and guides, and points on to university, national, and international HPCs.)_',
   ResearchNetworkDiagram: () =>

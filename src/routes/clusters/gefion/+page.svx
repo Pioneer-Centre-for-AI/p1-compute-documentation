@@ -32,7 +32,6 @@ hardware:
 <script>
   import Aside from '$lib/components/Aside.svelte';
   import AccessException from '$lib/components/AccessException.svelte';
-  import Citation from '$lib/components/Citation.svelte';
   import EmbedForm from '$lib/components/EmbedForm.svelte';
   import GpuAllowance from '$lib/components/GpuAllowance.svelte';
   import Support from '$lib/components/Support.svelte';
@@ -69,7 +68,7 @@ then contact you to get you set up with a DCAI username and initial-setup-passwo
 
 <EmbedForm
   title="P1 Gefion Sandbox Sign-up Form"
-  src="{GEFION_SIGNUP_FORM_URL}&embed=true"
+  src="{GEFION_SIGNUP_FORM_URL}?embed=true"
   href={GEFION_SIGNUP_FORM_URL}
   description="Requires an approved P1 affiliation."
 />
@@ -394,8 +393,6 @@ Before a project winds down, talk to the compute coordinator about what needs to
 ### Temporary GPU Increase
 
 <GpuAllowance />
-
-<Citation />
 
 ### Who to contact
 

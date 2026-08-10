@@ -8,11 +8,14 @@ export const GPU_ALLOWANCE_URL = URLS.gpuAllowance;
 export const COMPUTE_BUDGET_URL = URLS.computeBudget;
 export const PROFILE_URL = URLS.profile;
 export const GITHUB_URL = URLS.github;
+export const COORDINATOR_EMAIL = URLS.coordinatorEmail;
+export const GOVERNANCE_EMAIL = URLS.governanceEmail;
 
 export const DTU_SIGNUP_FORM_URL = URLS.dtuSignup;
 export const ACCESS_EXCEPTION_FORM_URL = URLS.accessException;
 export const GEFION_SIGNUP_FORM_URL = URLS.gefionSignup;
-export const NGC_USER_FORM_URL = URLS.ngcUserForm;
+export const NGC_SIGNUP_FORM_URL = URLS.ngcSignup;
+export const NGC_HOW_TO_APPLY_URL = URLS.ngcHowToApply;
 
 export type FormInfo = {
   title: string;
@@ -49,10 +52,17 @@ export const FORMS: FormInfo[] = [
     url: GEFION_SIGNUP_FORM_URL
   },
   {
-    title: 'NGC user creation',
-    purpose: 'PDF form to print, sign, and email to the compute coordinator for NGC access.',
-    provider: 'NGC (PDF)',
-    url: NGC_USER_FORM_URL
+    title: 'NGC application form',
+    purpose:
+      'How to obtain the NGC user application form. NGC issue it themselves; sign it and email it to the compute coordinator.',
+    provider: 'NGC',
+    url: NGC_HOW_TO_APPLY_URL
+  },
+  {
+    title: 'NGC access request',
+    purpose: 'Tell the compute coordinator you are ready for an NGC account, once the paperwork is in place.',
+    provider: 'Microsoft Forms',
+    url: NGC_SIGNUP_FORM_URL
   },
   {
     title: 'Access exception request',

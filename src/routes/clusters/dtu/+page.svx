@@ -67,7 +67,8 @@ official university email address are accepted. The form is processed by Henning
 
 <EmbedForm
   title="DTU Account Signup Form"
-  src={DTU_SIGNUP_FORM_URL}
+  src="{DTU_SIGNUP_FORM_URL}?embed=true"
+  href={DTU_SIGNUP_FORM_URL}
   description="Use your official university email address."
 />
 

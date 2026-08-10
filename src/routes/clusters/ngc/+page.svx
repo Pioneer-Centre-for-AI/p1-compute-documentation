@@ -30,7 +30,8 @@ hardware:
 
 <script>
   import AccessException from '$lib/components/AccessException.svelte';
-  import Citation from '$lib/components/Citation.svelte';
+  import EmbedForm from '$lib/components/EmbedForm.svelte';
+  import { NGC_SIGNUP_FORM_URL } from '$lib/links';
   import GpuAllowance from '$lib/components/GpuAllowance.svelte';
   import Support from '$lib/components/Support.svelte';
 </script>
@@ -57,10 +58,22 @@ Before accessing the P1 NGC HPC, you must be a P1 affiliate. Sign in to
 details, and submit a request to become an affiliate member. A P1 staff member will review and
 approve.
 
-Once your affiliation is approved, complete and sign the
-[NGC user creation form](p1:ngcUserForm) and forward it to the
-[Compute Coordinator](mailto:bstja@dtu.dk) to request access. You will be added to the NGC Slack
-channel once you gain access.
+Once your affiliation is approved, three steps get you an account.
+
+1. Obtain the user application form from NGC. They issue it themselves, so it is not something we
+   can hand out. Their [how to apply for access](p1:ngcHowToApply) page explains how to get it.
+2. Complete and sign it, then email it to the [compute coordinator](mailto:bstja@dtu.dk).
+3. Fill in the access request below, so the coordinator knows the paperwork is on its way and can
+   raise the request with NGC.
+
+You will be added to the NGC Slack channel once you gain access.
+
+<EmbedForm
+  title="P1 NGC HPC Access Request"
+  src="{NGC_SIGNUP_FORM_URL}?embed=true"
+  href={NGC_SIGNUP_FORM_URL}
+  description="Requires an approved P1 affiliation and a Data Processing Agreement naming NGC."
+/>
 
 ### Access Exception
 
@@ -300,8 +313,6 @@ archiving steps with your NGC admin and the compute coordinator well before that
 ### Temporary GPU Increase
 
 <GpuAllowance />
-
-<Citation />
 
 ### Who to contact
 

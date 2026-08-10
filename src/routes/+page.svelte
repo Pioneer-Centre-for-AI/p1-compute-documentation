@@ -64,7 +64,7 @@
       </div>
       <div class="flex flex-wrap items-center gap-3 pt-2">
         <span class="text-xs text-slate-500 dark:text-slate-400">
-          Did P1 compute help your work? Please cite:
+          Did the P1 DTU HPC help your work? Please cite:
         </span>
         <DigitalObjectIdentifier />
       </div>

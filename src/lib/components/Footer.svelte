@@ -1,6 +1,12 @@
 <script lang="ts">
   import { nav, isGroup, type NavItem } from '$lib/nav';
-  import { SURVEY_URL, PROFILE_URL, GITHUB_URL } from '$lib/links';
+  import {
+    SURVEY_URL,
+    PROFILE_URL,
+    GITHUB_URL,
+    COORDINATOR_EMAIL,
+    GOVERNANCE_EMAIL
+  } from '$lib/links';
   import DigitalObjectIdentifier from './DigitalObjectIdentifier.svelte';
 
   const links: NavItem[] = nav.flatMap((entry) => (isGroup(entry) ? entry.items : [entry]));
@@ -23,7 +29,7 @@
       </p>
       <div class="mt-2">
         <p class="mb-2 text-xs text-slate-500 dark:text-slate-400">
-          Did P1 compute help your work? Please cite:
+          Did the P1 DTU HPC help your work? Please cite:
         </p>
         <DigitalObjectIdentifier />
       </div>
@@ -48,12 +54,24 @@
     <div>
       <div class="eyebrow mb-3">Contact</div>
       <ul class="space-y-1.5 text-sm">
+        <!-- Labelled rather than spelling the addresses out: two bare addresses
+             give no clue which to use, and the target shows on hover anyway. -->
         <li>
           <a
-            href="mailto:compute-governance-p1@aicentre.dk"
-            class="font-mono text-[13px] text-slate-600 no-underline hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
+            href="mailto:{COORDINATOR_EMAIL}"
+            title={COORDINATOR_EMAIL}
+            class="text-slate-600 no-underline hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
           >
-            compute-governance-p1@aicentre.dk
+            Compute coordinator
+          </a>
+        </li>
+        <li>
+          <a
+            href="mailto:{GOVERNANCE_EMAIL}"
+            title={GOVERNANCE_EMAIL}
+            class="text-slate-600 no-underline hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
+          >
+            Governance and policy
           </a>
         </li>
         <li>

@@ -11,14 +11,17 @@ export const URLS = {
   survey: 'https://survey.starostka.io/compute-needs',
   gpuAllowance: 'https://forms.cloud.microsoft/e/yN8Vxi7KTc',
   computeBudget: 'https://forms.cloud.microsoft/e/b6wcjy5kDy',
+  coordinatorEmail: 'bstja@dtu.dk',
+  governanceEmail: 'compute-governance-p1@aicentre.dk',
   profile: 'https://www.aicentre.dk/p1adb',
   github: 'https://github.com/Pioneer-Centre-for-AI/p1-compute-documentation',
-  dtuSignup:
-    'https://forms.office.com/pages/responsepage.aspx?id=I_FR8s7JjkSSdzS7KFkR2TcQSfcccxdDtaq8HEbAO1RUQjZUUEoxSlRCRk5KV09WSlRZNjNLVE1KRi4u',
-  gefionSignup:
-    'https://forms.office.com/Pages/ResponsePage.aspx?id=I_FR8s7JjkSSdzS7KFkR2cHxzPsQ0cdIuQChdDR2mhJUNVdUNU9KUU9SSFZXNjVDWExTVEFPMElWTi4u',
-  ngcUserForm:
-    'https://www.ngc.dk/Media/638139612542456428/Oprettelse%20af%20Ekstern%20Bruger%20p%C3%A5%20NGC%20Infrastruktur%200.4.pdf',
+  dtuSignup: 'https://forms.cloud.microsoft/e/DG5qCfs6Wm',
+  gefionSignup: 'https://forms.cloud.microsoft/e/f0gbc83GQU',
+  ngcSignup: 'https://forms.cloud.microsoft/e/gtfrV7ap4C',
+  // NGC issue the application form themselves; we can only point at their
+  // instructions for obtaining it.
+  ngcHowToApply:
+    'https://www.eng.ngc.dk/research-and-international-collaboration/dngc-research-services/how-to-apply-for-access',
   accessException:
     'https://docs.google.com/forms/d/e/1FAIpQLSciaOm-CYwl48LGGZC7qlmCSPU7kfEitjGy4kvZXAXEPbo_eA/viewform',
   researchNetwork: 'https://www.deic.dk/en/danish-research-network'
