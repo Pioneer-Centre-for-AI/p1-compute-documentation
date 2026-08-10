@@ -85,6 +85,9 @@
             export HOME=$(mktemp -d)
             cp -R ${nodeModules}/node_modules ./node_modules
             chmod -R u+w node_modules
+            # The .bin wrappers carry `#!/usr/bin/env node` shebangs, and
+            # /usr/bin/env does not exist inside the Linux build sandbox.
+            patchShebangs node_modules/.bin
             bun run build
             runHook postBuild
           '';
@@ -113,6 +116,9 @@
             export HOME=$(mktemp -d)
             cp -R ${nodeModules}/node_modules ./node_modules
             chmod -R u+w node_modules
+            # The .bin wrappers carry `#!/usr/bin/env node` shebangs, and
+            # /usr/bin/env does not exist inside the Linux build sandbox.
+            patchShebangs node_modules/.bin
             bun run check
             runHook postBuild
           '';
