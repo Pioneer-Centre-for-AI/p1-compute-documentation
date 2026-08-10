@@ -85,9 +85,11 @@
             export HOME=$(mktemp -d)
             cp -R ${nodeModules}/node_modules ./node_modules
             chmod -R u+w node_modules
-            # The .bin wrappers carry `#!/usr/bin/env node` shebangs, and
-            # /usr/bin/env does not exist inside the Linux build sandbox.
-            patchShebangs node_modules/.bin
+            # Package entry points carry `#!/usr/bin/env node` shebangs, and
+            # /usr/bin/env does not exist inside the Linux build sandbox. The
+            # whole tree has to be patched rather than just .bin, whose entries
+            # are symlinks that patchShebangs skips.
+            patchShebangs node_modules
             bun run build
             runHook postBuild
           '';
@@ -116,9 +118,11 @@
             export HOME=$(mktemp -d)
             cp -R ${nodeModules}/node_modules ./node_modules
             chmod -R u+w node_modules
-            # The .bin wrappers carry `#!/usr/bin/env node` shebangs, and
-            # /usr/bin/env does not exist inside the Linux build sandbox.
-            patchShebangs node_modules/.bin
+            # Package entry points carry `#!/usr/bin/env node` shebangs, and
+            # /usr/bin/env does not exist inside the Linux build sandbox. The
+            # whole tree has to be patched rather than just .bin, whose entries
+            # are symlinks that patchShebangs skips.
+            patchShebangs node_modules
             bun run check
             runHook postBuild
           '';
