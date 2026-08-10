@@ -11,10 +11,21 @@
       let
         pkgs = import nixpkgs { inherit system; };
 
+        # bun resolves platform-specific native packages (esbuild, rollup,
+        # lightningcss, tailwind oxide), so the node_modules tree — and its
+        # hash — differs per system. One shared hash cannot describe both a mac
+        # and the Linux CI runner: whichever system it was not recorded on fails
+        # with a mismatch. Record one hash per system instead.
+        nodeModulesHash = {
+          aarch64-darwin = "sha256-KiT44+6HdBayLOezW+lLseXC78rW3ljdyunvqeO8nTs=";
+          x86_64-linux = "sha256-VIiTBdSi7nXPskoJtlOF5xd8MUVt2NLwrF2UeDFayyg=";
+        }.${system} or (throw
+          "No node_modules hash recorded for ${system}. Run `nix build .#website`, then paste the printed `got:` hash into nodeModulesHash in flake.nix.");
+
         # Fixed-output derivation: fetches all bun deps over the network and
         # produces a hashed `node_modules` tree. Re-run only when package.json
         # or bun.lock changes — at which point `nix build` will fail with a
-        # hash mismatch and print the new hash to paste in below.
+        # hash mismatch and print the new hash to paste in above.
         nodeModules = pkgs.stdenvNoCC.mkDerivation {
           pname = "p1-hpc-node-modules";
           version = "0.1.0";
@@ -47,7 +58,7 @@
 
           outputHashMode = "recursive";
           outputHashAlgo = "sha256";
-          outputHash = "sha256-KiT44+6HdBayLOezW+lLseXC78rW3ljdyunvqeO8nTs=";
+          outputHash = nodeModulesHash;
         };
 
         website = pkgs.stdenvNoCC.mkDerivation {

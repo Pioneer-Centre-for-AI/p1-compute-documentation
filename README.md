@@ -51,7 +51,12 @@ nix run .#website
 
 If `package.json` or `bun.lock` changes, `nix build` will fail with a hash
 mismatch on the `node_modules` fixed-output derivation — copy the printed
-`got:` hash into `outputHash` in `flake.nix` and rebuild.
+`got:` hash into `nodeModulesHash` in `flake.nix` and rebuild.
+
+That hash is recorded **per system**, because bun resolves platform-specific
+native packages (esbuild, rollup, lightningcss, tailwind oxide). Updating it on
+a mac fixes local builds but not CI, which runs `x86_64-linux`; take the `got:`
+hash from the failed CI log and update that entry too.
 
 Nix builds from the git tree, so **a new file that has not been `git add`ed is
 invisible to `nix build`**. The symptom is a `vite:load-fallback` ENOENT for a
