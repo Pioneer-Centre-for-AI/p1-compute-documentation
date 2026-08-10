@@ -104,7 +104,7 @@
       <div>
         <dt class="font-semibold text-slate-900 dark:text-slate-100">Compute Coordinator</dt>
         <dd class="text-sm text-slate-600 dark:text-slate-400">
-          Onboarding, workload guidance, general questions — start here
+          Onboarding, workload guidance, general questions. Always happy to help
         </dd>
       </div>
       <div class="col-span-2 flex flex-wrap items-center gap-2 text-sm sm:col-span-1 sm:justify-end">

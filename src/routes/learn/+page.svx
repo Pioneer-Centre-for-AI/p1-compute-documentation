@@ -4,11 +4,15 @@
 
 <svelte:head>
   <title>Learning Resources</title>
+  <meta
+    name="description"
+    content="Talks, courses, and guides on HPC systems, MLOps, and performance optimization for researchers using P1 compute."
+  />
 </svelte:head>
 
 <article class="prose mx-auto w-full max-w-3xl" use:headingAnchors>
 
-<p class="eyebrow not-prose">Reference</p>
+<p class="eyebrow not-prose mb-4">Reference</p>
 
 # Learning Resources
 
@@ -19,10 +23,10 @@ training offered by the DTU HPC team, please visit
 
 ## Intro talks
 
-| Date | Title | Speaker | Video |
-| --- | --- | --- | --- |
-| 27/09/22 | Introduction to GPUs | Hans Henrik Brandenborg Sørensen | [Youtube Link](https://youtu.be/maCqve4VzhE) |
-| 30/11/22 | Introduction to HPC Systems | Bernd Dammann | [Youtube Link](https://youtu.be/HJ2qeROTcu4) |
+| Title | Speaker | Video |
+| --- | --- | --- |
+| Introduction to GPUs | Hans Henrik Brandenborg Sørensen | [Youtube Link](https://youtu.be/maCqve4VzhE) |
+| Introduction to HPC Systems | Bernd Dammann | [Youtube Link](https://youtu.be/HJ2qeROTcu4) |
 
 ## Learning resources
 

@@ -52,3 +52,12 @@ nix run .#website
 If `package.json` or `bun.lock` changes, `nix build` will fail with a hash
 mismatch on the `node_modules` fixed-output derivation — copy the printed
 `got:` hash into `outputHash` in `flake.nix` and rebuild.
+
+Nix builds from the git tree, so **a new file that has not been `git add`ed is
+invisible to `nix build`**. The symptom is a `vite:load-fallback` ENOENT for a
+file that plainly exists on disk. Stage it and rebuild.
+
+```bash
+# Type check and site build, the same two gates CI runs
+nix flake check
+```

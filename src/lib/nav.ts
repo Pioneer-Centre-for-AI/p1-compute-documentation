@@ -1,4 +1,5 @@
 import { clusters } from '$lib/content';
+import { events } from '$lib/events';
 
 export type NavBadgeVariant = 'caution' | 'note';
 
@@ -6,6 +7,8 @@ export type NavItem = {
   label: string;
   href: string;
   badge?: { text: string; variant: NavBadgeVariant };
+  /** Small colored dot in front of the label, e.g. a cluster brand color. */
+  dot?: string;
   external?: boolean;
   newTab?: boolean;
 };
@@ -17,8 +20,15 @@ export type NavGroup = {
 
 export type NavEntry = NavItem | NavGroup;
 
+// Terms and Privacy intentionally live only in the footer.
 export const nav: NavEntry[] = [
-  { label: 'About', href: '/about/' },
+  {
+    label: 'Getting Started',
+    items: [
+      { label: 'About', href: '/about/' },
+      { label: 'Forms & Surveys', href: '/forms/' }
+    ]
+  },
   {
     label: 'Clusters',
     items: [
@@ -26,14 +36,25 @@ export const nav: NavEntry[] = [
       ...clusters.map((c) => ({
         label: c.meta.navLabel ?? c.meta.title,
         href: c.href,
-        badge: c.meta.badge
+        badge: c.meta.badge,
+        dot: c.meta.brandColor
       }))
     ]
   },
-  { label: 'Ecosystem', href: '/ecosystem/' },
-  { label: 'Learn', href: '/learn/' },
-  { label: 'Terms', href: '/terms/' },
-  { label: 'Privacy', href: '/privacy/' }
+  {
+    label: 'Resources',
+    items: [
+      { label: 'Ecosystem', href: '/ecosystem/' },
+      { label: 'Learn', href: '/learn/' }
+    ]
+  },
+  {
+    label: 'Events',
+    items: [
+      { label: 'Overview', href: '/events/' },
+      ...events.map((e) => ({ label: e.meta.navLabel ?? e.meta.title, href: e.href }))
+    ]
+  }
 ];
 
 export function isGroup(entry: NavEntry): entry is NavGroup {

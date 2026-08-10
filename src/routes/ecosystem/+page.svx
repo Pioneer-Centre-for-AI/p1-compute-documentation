@@ -1,4 +1,6 @@
 <script>
+  import LandscapeDiagram from '$lib/components/LandscapeDiagram.svelte';
+  import ResearchNetworkDiagram from '$lib/components/ResearchNetworkDiagram.svelte';
   import { headingAnchors } from '$lib/actions/headingAnchors';
 </script>
 
@@ -6,51 +8,67 @@
   <title>Compute Ecosystem</title>
   <meta
     name="description"
-    content="The Danish and international HPC landscape beyond P1 — university, national, and EU compute resources."
+    content="The Danish and international HPC landscape beyond P1: university, national, and EU compute resources."
   />
 </svelte:head>
 
 <article class="prose mx-auto w-full max-w-3xl" use:headingAnchors>
 
-<p class="eyebrow not-prose">Beyond P1</p>
+<p class="eyebrow not-prose mb-4">Beyond P1</p>
 
 # Compute Ecosystem
 
-P1 runs its own clusters, and we point the way to the rest. The Danish compute landscape is
-bigger than P1 — as a consortium we know it well, and we help researchers find the resource that
-fits, whether it is at P1 or elsewhere.
+P1 funds and helps run partitions at partner facilities, and we point the way to the rest. The Danish compute
+landscape is bigger than P1. As a consortium we know it well: we understand the challenges of
+getting compute for research, we have experience across the systems below, and when your needs fit
+better elsewhere we point you in the right direction.
 
 **We consult and guide. We don't broker access.** Getting onto the systems below goes through
-their own institutions and application processes — but if you are unsure where your project
+their own institutions and application processes, but if you are unsure where your project
 belongs, [talk to us](/about/) first.
+
+<LandscapeDiagram class="not-prose my-8" />
 
 ## University HPCs
 
 Most Danish universities operate their own HPC facilities, generally available to their own
 researchers and collaborators:
 
-- **UCPH** — SCIENCE HPC Centre, Hendrix
-- **DTU** — DCC/G-Bar Central, Niflheim, Sofia, Steno, plus 5 department systems
-- **SDU** — [UCloud](https://cloud.sdu.dk/), Bitten
-- **Aarhus** — [GenomeDK](https://genome.au.dk/)
+- **UCPH**: SCIENCE HPC Centre, Hendrix
+- **DTU**: DCC/G-Bar Central, Niflheim, Sofia, Steno, plus 5 department systems
+- **SDU**: [UCloud](https://cloud.sdu.dk/), Bitten
+- **Aarhus**: [GenomeDK](https://genome.au.dk/)
+
+## The Danish Research Network
+
+Danish universities and national facilities share a dedicated high-bandwidth network,
+forskningsnettet, operated by [DeiC](p1:researchNetwork). It is why
+moving a dataset between two Danish facilities is usually faster than pulling it down to your own
+machine and pushing it back up, and why a cluster-to-cluster hop is worth preferring when you have
+the choice.
+
+<ResearchNetworkDiagram class="not-prose my-8" />
+
+The diagram shows only the systems documented on this site. Forskningsnettet reaches considerably
+further, covering the other Danish universities and research institutions.
 
 ## National HPCs
 
-- [DeiC](https://www.deic.dk/) — Danish e-Infrastructure Consortium, coordinating national HPC
+- [DeiC](https://www.deic.dk/): Danish e-Infrastructure Consortium, coordinating national HPC
   resources and granting compute allocations to researchers at Danish universities
-- [Computerome](https://computerome.dk/) — the Danish national supercomputer for life sciences,
+- [Computerome](https://computerome.dk/): the Danish national supercomputer for life sciences,
   with support for sensitive data
 
 ## International HPCs
 
-- [LUMI](https://www.lumi-supercomputer.eu/) (Finland, EU) — one of Europe's largest
+- [LUMI](https://www.lumi-supercomputer.eu/) (Finland, EU): one of Europe's largest
   supercomputers, accessible to Danish researchers through DeiC allocations
 
 ## Where P1 fits
 
-P1's own clusters are the entry point for P1-affiliated researchers: start on the
+The P1 partitions are the entry point for P1-affiliated researchers: start on the
 [DTU HPC](/clusters/dtu/) for general work, the [NGC HPC](/clusters/ngc/) for sensitive data, and
-the [Gefion sandbox](/clusters/gefion/) as a springboard to scale. When your needs outgrow them,
-the systems above are the next step — and we are happy to help you choose.
+the [Gefion sandbox](/clusters/gefion/) to get a workload ready for large-scale runs. When your
+needs outgrow them, the systems above are the next step, and we are happy to help you choose.
 
 </article>

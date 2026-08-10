@@ -4,48 +4,67 @@ description: GDPR-compliant HPC at the National Genome Centre for P1 projects ha
 order: 2
 navLabel: NGC HPC
 brandColor: var(--color-brand-ngc)
+providerDocs:
+  provider: NGC
+  note: Until it is published, the internal documentation linked from the status page inside the environment is the reference, and the compute coordinator can help with anything it does not cover.
 hardware:
+  - label: Nodes
+    value: 8 compute (Lenovo VX665) + 3 storage (VX650)
+  - label: CPU per compute node
+    value: 2× AMD EPYC 9354 (32 cores each)
+  - label: RAM per compute node
+    value: 768 GB
+  - label: GPUs
+    value: 14× NVIDIA H100 PCIe (80 GB)
+  - label: Storage
+    value: About 2 PB total (245 TB SSD, 368 TB HDD, 1.44 PB cold)
   - label: Topology
-    value: Air-gapped system, secure data processing
+    value: Air-gapped, per-project isolation through VMware vSphere
   - label: Compliance
     value: GDPR-compliant infrastructure
+  - label: Operating system
+    value: Rocky Linux
   - label: Scheduler
-    value: PBS (qsub)
-  - label: Storage
-    value: Quotas provided upon onboarding
-  - label: Hardware details
-    value: Disclosed upon access approval
+    value: TORQUE (PBS)
 ---
 
 <script>
+  import AccessException from '$lib/components/AccessException.svelte';
+  import Citation from '$lib/components/Citation.svelte';
+  import GpuAllowance from '$lib/components/GpuAllowance.svelte';
   import Support from '$lib/components/Support.svelte';
 </script>
 
 The P1 NGC HPC is hosted at the National Genome Centre and is designed for secure data processing
-with GDPR compliance. It provides a secure environment for handling sensitive data and research
-projects. For details on the underlying infrastructure, see
+with GDPR compliance. Projects are isolated from one another through VMware vSphere
+virtualization, and the facility carries petabyte-scale storage, so it suits sensitive-data work
+with large datasets. For details on the underlying infrastructure, see
 [NGC's supercomputer page](https://www.ngc.dk/infrastrukturen-for-personlig-medicin/supercomputer).
 
 ## Getting Access
 
 ### Talk to the compute coordinator
 
-Onboarding starts with a short conversation. Fill in the
-[workload survey](https://survey.starostka.io/compute) to tell the P1 compute coordinator about
-your needs, expectations, and workload — for NGC this matters doubly, since GDPR projects need
-their data-processing paperwork lined up early.
+You are welcome to go straight to the sign-up steps below. If you would like a hand, the
+[workload survey](p1:survey) tells the P1 compute coordinator about your needs, expectations, and
+workload. For NGC it is worth doing early, since GDPR projects need their data-processing
+paperwork lined up.
 
 ### Sign-up Form
 
 Before accessing the P1 NGC HPC, you must be a P1 affiliate. Sign in to
-[your P1 profile](https://www.aicentre.dk/p1adb) (also reachable via **Update Profile** in the
-header), update your details, and submit a request to become an affiliate member — a P1 staff
-member will review and approve.
+[your P1 profile](p1:profile) (also reachable via **Update Profile** in the header), update your
+details, and submit a request to become an affiliate member. A P1 staff member will review and
+approve.
 
 Once your affiliation is approved, complete and sign the
-[NGC user creation form](https://www.ngc.dk/Media/638139612542456428/Oprettelse%20af%20Ekstern%20Bruger%20p%C3%A5%20NGC%20Infrastruktur%200.4.pdf)
-and forward it to the [Compute Coordinator](mailto:bstja@dtu.dk) to request access. You will be
-added to the NGC Slack channel once you gain access.
+[NGC user creation form](p1:ngcUserForm) and forward it to the
+[Compute Coordinator](mailto:bstja@dtu.dk) to request access. You will be added to the NGC Slack
+channel once you gain access.
+
+### Access Exception
+
+<AccessException />
 
 ### Who's eligible?
 
@@ -78,7 +97,7 @@ sftp.spc.ngc.dk                     # External Ingress/Egress (SFTP)
 
 ### How to transfer data
 
-The P1 NGC HPC is air-gapped, so `rsync` and `rclone` from outside aren't available end-to-end —
+The P1 NGC HPC is air-gapped, so `rsync` and `rclone` from outside aren't available end-to-end:
 every transfer goes through approved SFTP staging under admin supervision. Request access to
 `/data/upload` from your NGC admin as your project's data gateway, then add an SSH entry to your
 `~/.ssh/config`:
@@ -90,6 +109,40 @@ Host ngc
     User <your-username>_sftp
     HostKeyAlgorithms +ssh-rsa
 ```
+
+#### Code from git
+
+The same air gap applies to git: the cluster cannot reach GitHub, GitLab, or any other public
+forge directly. An internal GitHub proxy covers some public repositories, so try a plain clone
+first and fall back to a bundle when the proxy does not have what you need.
+
+A bundle is a single file holding the full history, which means the cluster copy stays a real git
+repository rather than a flattened snapshot. Private repositories always take this path.
+
+On your own machine:
+
+```bash
+git bundle create repo.bundle --all
+scp repo.bundle ngc:/data/upload/
+```
+
+Then on the cluster, clone from the staged bundle:
+
+```bash
+scp <your-username>_sftp@cld076-0004.cld076.vmc:/data/upload/repo.bundle ~/
+git clone repo.bundle your-repo
+```
+
+To ship later changes, create a bundle covering only the new commits and pull it in:
+
+```bash
+git bundle create update.bundle <last-transferred-commit>..HEAD    # on your machine
+git pull ~/update.bundle HEAD                                      # on the cluster
+```
+
+If a bundle is more machinery than you need, the
+[Small files](#small-files-code-configs) recipe below copies a plain working tree without any
+history.
 
 #### Inbound (push to NGC)
 
@@ -107,7 +160,7 @@ scp <your-username>_sftp@cld076-0004.cld076.vmc:/data/upload/ISLES-2022.zip ~/da
 
 #### Outbound (pull from NGC)
 
-Outbound transfers are the same path in reverse — you stage files in `/data/upload` under admin
+Outbound transfers are the same path in reverse: you stage files in `/data/upload` under admin
 supervision, then fetch them from outside via the SFTP endpoint. Coordinate with your NGC admin
 before placing outbound files, since releasing data from the air-gapped environment requires
 their approval.
@@ -119,17 +172,48 @@ scp ngc:/data/upload/results.tar ~/results.tar
 #### Between clusters
 
 Direct inter-cluster transfers aren't supported because of the air-gap. Move data via your local
-research workstation — pull from NGC's staging area, then push to the destination cluster
+research workstation: pull from NGC's staging area, then push to the destination cluster
 (e.g. `transfer.gbar.dtu.dk` on the DTU side). The external SFTP endpoint `sftp.spc.ngc.dk` is
-reachable over the
-[Danish Research Network (forskningsnettet)](https://www.deic.dk/en/danish-research-network), so
-using a workstation that's also on the research network gives you high-bandwidth ingress/egress.
+reachable over [forskningsnettet](/ecosystem/#the-danish-research-network), so using a workstation
+that is also on the research network gives you high-bandwidth ingress and egress.
 
 #### Small files (code, configs)
 
-For source code and similar small files you have a few faster paths inside the cluster: mount a
-host directory through the Omnissa Remote Desktop client (must be enabled by an NGC admin), or
-fetch public repositories via the internal GitHub proxy.
+For source code and similar small files you have a faster path inside the cluster: mount a host
+directory through the Omnissa Remote Desktop client, which an NGC admin has to enable for you.
+Public repositories available through the internal GitHub proxy can also be cloned directly, as
+described under [Code from git](#code-from-git).
+
+### Software environment
+
+The air gap shapes everything here: `pip install`, `conda`, and `apt` cannot reach the public
+internet, so an environment that builds itself on first run will fail. Plan on one of three routes.
+
+Environment modules cover what is already installed:
+
+```bash
+module avail
+module load <module>
+module list
+module purge
+```
+
+Otherwise, bring the dependencies in the same way you bring data. Resolve them on a machine with
+network access, then stage the result through `/data/upload`:
+
+```bash
+pip download -r requirements.txt -d wheels/     # on your own machine
+tar czf wheels.tar.gz wheels/
+scp wheels.tar.gz ngc:/data/upload/
+```
+
+```bash
+pip install --no-index --find-links=wheels/ -r requirements.txt   # on the cluster
+```
+
+For anything with awkward system libraries, build a container image outside and stage the image
+file instead. That also makes the environment reproducible, which matters more here than on the
+open clusters, since you cannot simply reinstall later.
 
 ### How to start an interactive job
 
@@ -139,10 +223,11 @@ Quick interactive session:
 iqsub
 ```
 
-Interactive session for a specific group with explicit resources:
+Interactive session for a specific group with explicit resources. Substitute your own project
+group and account, which you receive when your access is approved:
 
 ```bash
-qsub -I -X -W group_list=ngc-bio -A ngc-bio -l nodes=1:ppn=4,mem=20gb,walltime=02:00:00
+qsub -I -X -W group_list=<group> -A <account> -l nodes=1:ppn=4,mem=20gb,walltime=02:00:00
 ```
 
 ### How to submit a batch job
@@ -153,28 +238,70 @@ qsub -I -X -W group_list=ngc-bio -A ngc-bio -l nodes=1:ppn=4,mem=20gb,walltime=0
 #PBS -W group_list=<group>
 #PBS -A <account>
 #PBS -l nodes=1:ppn=4,mem=20gb,walltime=24:00:00
-#PBS -o logs/$PBS_JOBID.out
-#PBS -e logs/$PBS_JOBID.err
+#PBS -o logs/
+#PBS -e logs/
 
 cd $PBS_O_WORKDIR
 python train.py
 ```
 
+PBS reads the `#PBS` lines before any shell runs, so a variable such as `$PBS_JOBID` is not
+expanded there. Naming a directory instead lets PBS write `<jobname>.o<jobid>` and
+`<jobname>.e<jobid>` into it.
+
+Create the log directory before submitting, since the job fails at start if it does not exist:
+
 ```bash
+mkdir -p logs
 qsub train.sh
 ```
 
 Refer to NGC's internal documentation (linked from the status page) for the full list of
 scheduler flags and worked examples.
 
+### Monitoring and cancelling jobs
+
+```bash
+qstat -u $USER          # your jobs and their state
+qstat -f <jobid>        # full detail; the comment field says why a job is still queued
+qstat -Q                # queue overview
+qdel <jobid>            # cancel
+```
+
+A job sitting in `Q` is normal. The comment in `qstat -f` states what it is waiting for, usually
+that the requested nodes, memory, or wall time are not free yet.
+
 ## Policy & Support
 
 ### Usage Rules
 
-- GDPR-compliant infrastructure — only use this cluster for projects that need it
+- GDPR-compliant infrastructure. Only use this cluster for projects that need it
 - Each project must carry a signed Data Processing Agreement naming NGC as data processor
 - High-risk projects additionally require a Data Protection Impact Assessment (DPIA)
-- Resource allocation details are provided during onboarding
+- Per-project storage quotas are set during onboarding, from the roughly 2 PB available
+
+### Storage, quotas, and backups
+
+Your quota is set when your project is onboarded. Check what you are using before staging a large
+dataset:
+
+```bash
+du -sh ~                    # your home directory
+df -h .                     # space left on the filesystem you are standing in
+```
+
+The staging area at `/data/upload` is a gateway, not storage. Clear your files from it once they
+have landed, so the next transfer is not competing with them.
+
+Retention is governed by your project's Data Processing Agreement rather than by convenience:
+personal data may not simply be left in place once the project ends. Agree the deletion or
+archiving steps with your NGC admin and the compute coordinator well before that date.
+
+### Temporary GPU Increase
+
+<GpuAllowance />
+
+<Citation />
 
 ### Who to contact
 

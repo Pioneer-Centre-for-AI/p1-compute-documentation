@@ -1,0 +1,61 @@
+<script>
+  import { headingAnchors } from '$lib/actions/headingAnchors';
+  import { FORMS } from '$lib/links';
+</script>
+
+<svelte:head>
+  <title>Forms & Surveys</title>
+  <meta
+    name="description"
+    content="Every form and survey used for P1 compute onboarding, access, and feedback, collected in one place."
+  />
+</svelte:head>
+
+<article class="prose mx-auto w-full max-w-3xl" use:headingAnchors>
+
+<p class="eyebrow not-prose mb-4">Getting Started</p>
+
+# Forms & Surveys
+
+Every form and survey used for P1 compute in one place, listed in the order a new researcher
+typically meets them. Each opens in a new tab; the cluster pages embed the same forms in context.
+
+<!-- md:replace forms-table -->
+<div class="not-prose my-8 overflow-x-auto">
+  <table class="w-full border-collapse text-sm">
+    <thead>
+      <tr class="bg-slate-100 text-left dark:bg-slate-800">
+        <th class="border border-slate-200 px-4 py-3 font-semibold dark:border-slate-700">Form</th>
+        <th class="border border-slate-200 px-4 py-3 font-semibold dark:border-slate-700">Purpose</th>
+        <th class="border border-slate-200 px-4 py-3 font-semibold dark:border-slate-700">Provider</th>
+      </tr>
+    </thead>
+    <tbody>
+      {#each FORMS as form}
+        <tr>
+          <td class="border border-slate-200 px-4 py-3 align-top whitespace-nowrap dark:border-slate-700">
+            <a
+              href={form.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-1.5 font-semibold text-[var(--color-brand)] no-underline hover:underline"
+            >
+              {form.title}
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M15 3h6v6M10 14L21 3M21 14v7H3V3h7" />
+              </svg>
+            </a>
+          </td>
+          <td class="border border-slate-200 px-4 py-3 align-top text-slate-700 dark:border-slate-700 dark:text-slate-300">{form.purpose}</td>
+          <td class="border border-slate-200 px-4 py-3 align-top whitespace-nowrap text-slate-500 dark:border-slate-700 dark:text-slate-400">{form.provider}</td>
+        </tr>
+      {/each}
+    </tbody>
+  </table>
+</div>
+<!-- md:end -->
+
+Unsure where to start? The [cluster overview](/clusters/) helps you pick the right one, and each
+cluster page lists the forms it needs in the order you need them.
+
+</article>

@@ -4,6 +4,7 @@ import { mdsvex } from 'mdsvex';
 import rehypeSlug from 'rehype-slug';
 import rehypeExternalLinks from 'rehype-external-links';
 import { renderCodeBlock } from './src/lib/markdown/highlight.js';
+import { urlScheme } from './src/lib/markdown/urlScheme.js';
 
 /**
  * mdsvex highlighter emitting the same chrome as CodeBlock.svelte.
@@ -22,6 +23,7 @@ const config = {
   preprocess: [
     mdsvex({
       extensions: ['.svx'],
+      remarkPlugins: [urlScheme],
       rehypePlugins: [
         rehypeSlug,
         [rehypeExternalLinks, { target: '_blank', rel: ['noopener', 'noreferrer'] }]
@@ -35,7 +37,9 @@ const config = {
     adapter: adapter({
       pages: 'build',
       assets: 'build',
-      fallback: undefined,
+      // GitHub Pages serves 404.html for any path it cannot resolve. Without
+      // this the site falls back to GitHub's generic 404 rather than its own.
+      fallback: '404.html',
       strict: true
     }),
     paths: {

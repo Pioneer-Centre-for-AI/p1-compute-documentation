@@ -8,15 +8,15 @@
 
 <article class="prose mx-auto w-full max-w-3xl" use:headingAnchors>
 
-<p class="eyebrow not-prose">Policy</p>
+<p class="eyebrow not-prose mb-4">Policy</p>
 
 # Terms and Conditions
 
 ## Intended Use
 
 P1 compute clusters are primarily for research projects. Commercial use is generally not
-permitted on the P1 DTU and NGC HPCs; however, Gefion may accommodate certain commercial research
-projects on a case-by-case basis.
+permitted on the P1 DTU and NGC HPCs; however, the P1 Gefion HPC may accommodate certain
+commercial research projects on a case-by-case basis.
 
 ## Resource Policy
 
@@ -76,7 +76,7 @@ grace period, as data recovery after the grace period is not possible.
 
 Each cluster is hosted at a separate institution and managed by its own administrators. This site
 provides an overview and a starting point for accessing P1 compute resources. For the most
-up-to-date technical details, refer to the respective cluster websites and support channels — the
+up-to-date technical details, refer to the respective cluster websites and support channels. The
 per-cluster pages in this documentation list each provider's docs.
 
 </article>

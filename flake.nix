@@ -86,6 +86,33 @@
           '';
         };
 
+        # svelte-check as a flake check, so CI gates on type errors without a
+        # second dependency install: it reuses the same node_modules FOD as the
+        # website build, and produces no output beyond a success marker.
+        typecheck = pkgs.stdenvNoCC.mkDerivation {
+          pname = "p1-hpc-typecheck";
+          version = "0.1.0";
+
+          src = website.src;
+
+          nativeBuildInputs = [ pkgs.bun pkgs.nodejs_22 ];
+
+          buildPhase = ''
+            runHook preBuild
+            export HOME=$(mktemp -d)
+            cp -R ${nodeModules}/node_modules ./node_modules
+            chmod -R u+w node_modules
+            bun run check
+            runHook postBuild
+          '';
+
+          installPhase = ''
+            runHook preInstall
+            touch $out
+            runHook postInstall
+          '';
+        };
+
         serveScript = pkgs.writeShellScript "serve-p1-hpc" ''
           exec ${pkgs.miniserve}/bin/miniserve \
             --index index.html \
@@ -97,6 +124,9 @@
       {
         packages.website = website;
         packages.default = website;
+
+        checks.typecheck = typecheck;
+        checks.website = website;
 
         apps.website = {
           type = "app";

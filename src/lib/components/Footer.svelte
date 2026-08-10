@@ -1,6 +1,7 @@
 <script lang="ts">
   import { nav, isGroup, type NavItem } from '$lib/nav';
   import { SURVEY_URL, PROFILE_URL, GITHUB_URL } from '$lib/links';
+  import DigitalObjectIdentifier from './DigitalObjectIdentifier.svelte';
 
   const links: NavItem[] = nav.flatMap((entry) => (isGroup(entry) ? entry.items : [entry]));
   const year = new Date().getFullYear();
@@ -17,8 +18,15 @@
         </span>
       </a>
       <p class="max-w-xs text-sm leading-relaxed text-slate-500 dark:text-slate-400">
-        We help researchers find compute that fits — at P1 or elsewhere.
+        We fund and help run partitions at partner HPC facilities, train and guide researchers, and
+        point the way across the wider compute landscape.
       </p>
+      <div class="mt-2">
+        <p class="mb-2 text-xs text-slate-500 dark:text-slate-400">
+          Did P1 compute help your work? Please cite:
+        </p>
+        <DigitalObjectIdentifier />
+      </div>
     </div>
 
     <nav aria-label="Footer">

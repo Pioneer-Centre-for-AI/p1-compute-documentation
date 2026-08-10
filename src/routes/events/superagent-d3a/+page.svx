@@ -1,0 +1,148 @@
+---
+title: 'Supercomputing: Agents & Challenges'
+description: 'A 90-minute interactive session on keeping shared HPC productive for researchers, and where agentic GenAI opens new possibilities.'
+order: 1
+navLabel: SuperAgent D3A
+eyebrow: D3A 4.0 2026
+startDate: '2026-10-08'
+dateLabel: Thursday 8 October 2026
+shortLabel: 8 Oct · SuperAgent D3A
+duration: PT90M
+venue: Room to be announced
+---
+
+<script>
+  import People from '$lib/components/People.svelte';
+  import {
+    superAgentAtAGlance,
+    sessionTypes,
+    sessionTypeColor,
+    superAgentProgramme,
+    superAgentOrganizers,
+    superAgentCollaborations
+  } from '$lib/events';
+</script>
+
+**Thursday 8 October 2026** · 90 minutes · D3A 4.0 2026, room to be announced.
+
+Shared HPC only pays off when researchers can get their work done on it. This session puts HPC
+providers and researchers in the same room to name the frictions that are in the way, and to
+investigate where agentic GenAI opens new possibilities.
+
+## About this session
+
+<!-- md:replace about-cards -->
+<div class="not-prose my-6 grid gap-6 sm:grid-cols-3">
+  {#each superAgentAtAGlance as panel}
+    <div class="rounded-xl border border-slate-200 bg-slate-50 p-5 dark:border-slate-700 dark:bg-slate-800/40">
+      <p class="eyebrow mb-3">{panel.label}</p>
+      <ul
+        class="list-disc space-y-1.5 ps-5 text-sm leading-relaxed text-slate-600 marker:text-slate-400 dark:text-slate-400 dark:marker:text-slate-500"
+      >
+        {#each panel.items as item}
+          <li>{item}</li>
+        {/each}
+      </ul>
+    </div>
+  {/each}
+</div>
+<!-- md:end -->
+
+## Programme
+
+Three short talks set the stage. The rest of the session is breakouts, plenum, and synthesis.
+
+<!-- md:replace programme -->
+<div class="not-prose mt-6 mb-4 flex flex-wrap gap-x-6 gap-y-2 text-xs text-slate-600 dark:text-slate-400">
+  {#each sessionTypes as t}
+    <span class="flex items-center gap-2">
+      <span class="inline-block h-3 w-3 rounded-sm" style:background-color={t.color}></span>
+      {t.label}
+    </span>
+  {/each}
+</div>
+
+<div class="not-prose mb-8 overflow-x-auto">
+  <table class="w-full border-collapse text-sm">
+    <thead>
+      <tr class="bg-slate-100 text-left dark:bg-slate-800">
+        <th class="border border-slate-200 px-4 py-3 font-semibold dark:border-slate-700">Time</th>
+        <th class="border border-slate-200 px-4 py-3 font-semibold dark:border-slate-700">Session</th>
+        <th class="border border-slate-200 px-4 py-3 font-semibold dark:border-slate-700">Speaker</th>
+      </tr>
+    </thead>
+    <tbody>
+      {#each superAgentProgramme as row}
+        <tr>
+          <td class="border border-slate-200 px-4 py-3 align-top dark:border-slate-700">
+            <span class="flex items-center gap-3">
+              <span
+                class="h-5 w-[3px] shrink-0 rounded-sm"
+                style:background-color={sessionTypeColor[row.type]}
+              ></span>
+              <span class="whitespace-nowrap font-medium tabular-nums text-slate-900 dark:text-slate-100">
+                {row.time}
+              </span>
+            </span>
+          </td>
+          <td class="border border-slate-200 px-4 py-3 align-top text-slate-700 dark:border-slate-700 dark:text-slate-300">
+            {row.session}
+          </td>
+          <td class="border border-slate-200 px-4 py-3 align-top text-slate-700 dark:border-slate-700 dark:text-slate-300">
+            {#if row.speakerUrl}
+              <a
+                href={row.speakerUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="font-semibold text-[var(--color-brand)] no-underline hover:underline"
+              >{row.speaker}</a>
+            {:else}
+              {row.speaker}
+            {/if}
+            {#if row.affiliation}
+              <span class="block text-xs text-slate-500 dark:text-slate-400">{row.affiliation}</span>
+            {/if}
+          </td>
+        </tr>
+      {/each}
+    </tbody>
+  </table>
+</div>
+<!-- md:end -->
+
+## Outcomes
+
+Questions we hope to answer together.
+
+1. Which frictions are blocking researchers from getting work done on shared HPC?
+2. What should HPC providers pick up next, and what useful practices can researchers share with
+   each other in the meantime?
+3. As agents take over cluster work, will researchers still need cluster knowledge, and who debugs
+   it when the agent gets it wrong?
+
+## Organizers
+
+<!-- md:replace organizers -->
+<People people={superAgentOrganizers} />
+<!-- md:end -->
+
+## Collaborations
+
+<!-- md:replace collaborations -->
+<div class="not-prose my-6 grid gap-6 sm:grid-cols-3">
+  {#each superAgentCollaborations as c}
+    <a
+      href={c.href}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="group flex flex-col rounded-xl border border-slate-200 p-5 no-underline transition-colors hover:border-slate-300 hover:bg-slate-50 dark:border-slate-700 dark:hover:border-slate-600 dark:hover:bg-slate-800/50"
+    >
+      <span class="mb-4 flex h-16 items-center justify-center rounded-lg bg-white p-3">
+        <img src={c.logo} alt="" class="max-h-10 w-auto" />
+      </span>
+      <span class="eyebrow mb-2">{c.name}</span>
+      <span class="text-sm leading-relaxed text-slate-600 dark:text-slate-400">{c.blurb}</span>
+    </a>
+  {/each}
+</div>
+<!-- md:end -->

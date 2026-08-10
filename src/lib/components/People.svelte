@@ -18,60 +18,42 @@
       .join('');
 </script>
 
-<div class="not-prose grid grid-cols-1 gap-5 my-6 sm:grid-cols-2 lg:grid-cols-3">
+<ul
+  class="not-prose my-6 divide-y divide-slate-200 overflow-hidden rounded-xl border border-slate-200 bg-slate-50 dark:divide-slate-700 dark:border-slate-700 dark:bg-slate-800/40"
+>
   {#each people as person}
-    <div
-      class="group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-slate-400 hover:shadow-xl dark:border-slate-700/70 dark:bg-slate-800/40 dark:hover:border-slate-500"
-    >
+    <!-- Wraps below sm: the email is long enough in mono that keeping it on the
+         same row squeezes the name down to a few characters on a phone. -->
+    <li class="flex flex-wrap items-center gap-x-4 gap-y-1 px-4 py-3">
       <span
-        class="absolute inset-x-0 top-0 h-1 bg-slate-900 dark:bg-slate-100"
+        class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-slate-200 font-mono text-xs font-semibold text-slate-700 select-none dark:bg-slate-700 dark:text-slate-200"
         aria-hidden="true"
-      ></span>
-
-      <div class="flex flex-col gap-4 p-5">
-        <div class="flex items-center justify-between gap-3">
-          <div
-            class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-slate-800 to-slate-950 font-mono text-sm font-semibold tracking-wide text-white shadow-inner select-none dark:from-slate-600 dark:to-slate-800"
-            aria-hidden="true"
-          >
-            {initials(person.name)}
-          </div>
-          <span
-            class="eyebrow shrink-0 rounded-full bg-slate-100 px-2.5 py-1 !text-slate-600 dark:bg-slate-700/60 dark:!text-slate-300"
-          >
-            {person.role}
-          </span>
-        </div>
-
-        <div>
-          <h3 class="font-semibold leading-snug text-slate-900 dark:text-slate-100">
-            {#if person.profileUrl}
-              <a
-                href={person.profileUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="no-underline transition-colors hover:text-[var(--color-brand)]"
-              >
-                {person.name}
-              </a>
-            {:else}
+      >
+        {initials(person.name)}
+      </span>
+      <span class="flex min-w-0 flex-1 flex-col gap-x-3 sm:flex-row sm:items-center">
+        <span class="truncate font-medium text-slate-900 dark:text-slate-100">
+          {#if person.profileUrl}
+            <a
+              href={person.profileUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="no-underline hover:underline"
+            >
               {person.name}
-            {/if}
-          </h3>
-          <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">{person.institution}</p>
-        </div>
-      </div>
-
+            </a>
+          {:else}
+            {person.name}
+          {/if}
+        </span>
+        <span class="eyebrow shrink-0" title={person.institution}>{person.role}</span>
+      </span>
       <a
         href="mailto:{person.email}"
-        class="mt-auto flex items-center gap-1.5 border-t border-slate-100 px-5 py-3.5 text-sm font-medium text-slate-500 no-underline transition-colors hover:bg-slate-50 hover:text-[var(--color-brand)] dark:border-slate-700/60 dark:text-slate-400 dark:hover:bg-slate-700/30"
+        class="w-full shrink-0 ps-[3.25rem] font-mono text-[13px] break-all text-slate-600 no-underline hover:text-slate-900 hover:underline sm:w-auto sm:ps-0 dark:text-slate-400 dark:hover:text-slate-100"
       >
-        <svg class="h-4 w-4 shrink-0" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-          <rect x="2.5" y="4.5" width="15" height="11" rx="2" stroke="currentColor" stroke-width="1.5" />
-          <path d="m3.5 6 6.5 4.5L16.5 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-        <span class="truncate">{person.email}</span>
+        {person.email}
       </a>
-    </div>
+    </li>
   {/each}
-</div>
+</ul>

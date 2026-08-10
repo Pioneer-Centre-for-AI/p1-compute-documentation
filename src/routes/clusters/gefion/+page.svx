@@ -1,65 +1,82 @@
 ---
-title: P1 Gefion HPC (Sandbox)
-description: On-demand access to 1–2 H100 GPUs on Gefion for iterative development, testing, and small-scale pilots.
+title: P1 Gefion HPC
+description: A sandbox on Gefion for developing and maturing workloads until they are ready for large-scale runs.
 order: 3
-navLabel: Gefion
-badge:
-  text: Sandbox
-  variant: note
+navLabel: Gefion HPC
 brandColor: var(--color-brand-gefion)
+providerDocs:
+  provider: DCAI
+  url: https://doc-open-ai.secureremote.dcai.dk
+  note: Requires signing in through the Teleport proxy before the link resolves.
 hardware:
   - label: Nodes
-    value: 2× NVIDIA DGX
+    value: 2× NVIDIA DGX H100 (8 GPUs each)
   - label: GPUs
-    value: 16× H100 total (8 per node, high-speed interconnect)
-  - label: RAM
-    value: 2 TB per node
-  - label: High-speed storage
-    value: 30 TB per node
+    value: 16× H100 SXM, 640 GB GPU memory, around 32 petaFLOPS FP8
+  - label: CPU per node
+    value: 2× Intel Xeon Platinum 8480C (56 cores each)
+  - label: RAM per node
+    value: 2 TB
+  - label: Interconnect
+    value: NVLink at 900 GB/s GPU to GPU, InfiniBand up to 400 Gbps
+  - label: Shared storage
+    value: 300 TB, 500 GB default quota
+  - label: Home directory
+    value: 25 GB
+  - label: Operating system
+    value: NVIDIA DGX OS (Ubuntu based)
   - label: Scheduler
-    value: SLURM
+    value: Slurm
 ---
 
 <script>
   import Aside from '$lib/components/Aside.svelte';
+  import AccessException from '$lib/components/AccessException.svelte';
+  import Citation from '$lib/components/Citation.svelte';
   import EmbedForm from '$lib/components/EmbedForm.svelte';
+  import GpuAllowance from '$lib/components/GpuAllowance.svelte';
   import Support from '$lib/components/Support.svelte';
+  import { GEFION_SIGNUP_FORM_URL } from '$lib/links';
 </script>
 
-The P1 Gefion Sandbox provides on-demand access to 1–2 H100 GPUs on
-[Gefion](https://dcai.dk/gefion) for iterative development, testing, and small-scale pilots. It is
-designed as a stepping stone — enabling a seamless transition from early experiments into larger
-production workloads on full 8-GPU nodes (e.g., for NNF voucher projects).
+The P1 Gefion HPC is a sandbox providing on-demand access to H100 GPUs on
+[Gefion](https://dcai.dk/gefion) for iterative development, testing, and small-scale pilots.
 
-Detailed internal documentation is maintained by the DCAI team at
-[guide.gefion.dcai.dk](https://guide.gefion.dcai.dk). It is currently only accessible via the
-Citrix Gateway or via Teleport with Web Application Access (though the latter has not been tested
-in depth yet).
+Its purpose is to get a workload ready to run at scale. You develop and mature it here, on the same
+hardware generation you will eventually run on, so that when you do scale up the work is already
+proven. The step to full 8-GPU production nodes is a separate matter and needs its own funding, for
+example a Novo Nordisk Foundation (NNF) compute voucher or another allocation. The sandbox is what
+puts you in a position to apply for one with something that already works.
 
 ## Getting Access
 
 ### Talk to the compute coordinator
 
-Onboarding starts with a short conversation. Fill in the
-[workload survey](https://survey.starostka.io/compute) to tell the P1 compute coordinator about
-your needs, expectations, and workload — for the sandbox this also helps us plan the step up to
-full production nodes if your project scales.
+You are welcome to go straight to the sign-up form below. If you would like a hand, the
+[workload survey](p1:survey) tells the P1 compute coordinator about your needs, expectations, and
+workload. For the sandbox it also helps us plan the step up to full production nodes if your
+project scales.
 
 ### Sign-up Form
 
 Before accessing the P1 Gefion sandbox, you must be a P1 affiliate. Sign in to
-[your P1 profile](https://www.aicentre.dk/p1adb) (also reachable via **Update Profile** in the
-header), update your details, and submit a request to become an affiliate member — a P1 staff
-member will review and approve.
+[your P1 profile](p1:profile) (also reachable via **Update Profile** in the header), update your
+details, and submit a request to become an affiliate member. A P1 staff member will review and
+approve.
 
-Once your affiliation is approved, fill in the sandbox sign-up form below. A DCAI team member will
+Once your affiliation is approved, fill in the sandbox sign-up form. A DCAI team member will
 then contact you to get you set up with a DCAI username and initial-setup-password.
 
 <EmbedForm
   title="P1 Gefion Sandbox Sign-up Form"
-  src="https://forms.office.com/Pages/ResponsePage.aspx?id=I_FR8s7JjkSSdzS7KFkR2cHxzPsQ0cdIuQChdDR2mhJUNVdUNU9KUU9SSFZXNjVDWExTVEFPMElWTi4u&embed=true"
-  minHeight="1200px"
+  src="{GEFION_SIGNUP_FORM_URL}&embed=true"
+  href={GEFION_SIGNUP_FORM_URL}
+  description="Requires an approved P1 affiliation."
 />
+
+### Access Exception
+
+<AccessException />
 
 ### Who's eligible?
 
@@ -103,15 +120,15 @@ ssh gefion
 #### Visual Studio Code
 
 With the SSH config in place you can use the
-[VS Code Remote – SSH extension](https://code.visualstudio.com/docs/remote/ssh) to connect to
-`gefion` via the command palette (Ctrl+Shift+P → "Remote-SSH: Connect to Host…").
+[VS Code Remote SSH extension](https://code.visualstudio.com/docs/remote/ssh) to connect to
+`gefion` via the command palette (Ctrl+Shift+P, then "Remote-SSH: Connect to Host").
 
 ### How to transfer data
 
 Use `rsync` for source code and small datasets, and [rclone](https://rclone.org/) for large
-datasets — both work over the Teleport-backed SSH access and are more ergonomic than a plain SFTP
-session. If `rsync` / `rclone` hit issues — they wrap OpenSSH and don't tolerate every
-intermediate config — fall back to an `sftp` client directly.
+datasets. Both work over the Teleport-backed SSH access and are more ergonomic than a plain SFTP
+session. If `rsync` / `rclone` hit issues (they wrap OpenSSH and don't tolerate every
+intermediate config), fall back to an `sftp` client directly.
 
 Large transfers go through the SFTP endpoint `xfer.dcai.dk`, which requires your public IP to be
 whitelisted. Contact [DCAI support](mailto:support@dcai.dk) and share the output of
@@ -132,15 +149,38 @@ ssh = ssh gefion-xfer
 type = sftp
 ```
 
+#### Code from git
+
+For source code, cloning on the login node is usually simpler than pushing from your machine. It
+keeps the cluster copy tracked, so later updates are a `git pull` rather than another `rsync`.
+
+```bash
+ssh gefion
+git clone https://github.com/your-org/your-repo.git
+```
+
+An HTTPS remote is the path of least resistance and works with a personal access token for
+private repositories. An SSH remote needs its own key generated on the cluster and added to your
+git host, separate from the Teleport credentials you use to log in:
+
+```bash
+ssh-keygen -t ed25519 -C "gefion"     # then add ~/.ssh/id_ed25519.pub to your git host
+git clone git@github.com:your-org/your-repo.git
+```
+
+The P1 partition sits on Gefion's open system, so the login node reaches public git hosts
+normally. Keep code in git and move only datasets and checkpoints with the `rsync` and `rclone`
+recipes below.
+
 #### Inbound (push to Gefion)
 
-Small data — `rsync` over the existing `gefion` SSH host:
+Small data: `rsync` over the existing `gefion` SSH host:
 
 ```bash
 rsync -avz ./src gefion:~/project/src
 ```
 
-Large datasets — `rclone` via the SFTP endpoint:
+Large datasets: `rclone` via the SFTP endpoint:
 
 ```bash
 rclone sync ./datasets gefion:to_gefion/dest --dry-run   # preview changes
@@ -151,14 +191,14 @@ rclone ls gefion:to_gefion/dest                          # list files
 <Aside type="note">
 
 Data uploaded via the SFTP endpoint lands on a transfer staging area, not directly in your home
-directory. After the transfer, copy from the staging host on the login node — see the DCAI guide
+directory. After the transfer, copy from the staging host on the login node. See the DCAI guide
 for the current staging host and path.
 
 </Aside>
 
 #### Outbound (pull from Gefion)
 
-Same tools, in reverse — run from your local machine pulling from `gefion:...`:
+Same tools, in reverse; run from your local machine pulling from `gefion:...`:
 
 ```bash
 rsync -avz gefion:~/project/results ./results
@@ -171,15 +211,13 @@ rclone sync gefion:from_gefion/results ./results
 #### Between clusters
 
 For large inter-cluster transfers, the recommended bridge is via the DTU transfer node. All P1
-clusters and most Danish university systems are on the
-[Danish Research Network (forskningsnettet)](https://www.deic.dk/en/danish-research-network),
-which gives high-bandwidth, low-latency links between Danish research institutions — going
-cluster → cluster over forskningsnettet is much faster than round-tripping via your local machine
-over the public internet.
+clusters and most Danish university systems sit on
+[forskningsnettet](/ecosystem/#the-danish-research-network), so going cluster to cluster is much
+faster than round-tripping via your local machine over the public internet.
 
 From inside Gefion, SFTP into `transfer.gbar.dtu.dk`, then SSH into the DTU P1 cluster from there
-and move the data further. Use the `sftp` client directly for this hop — `rsync` and `rclone`
-wrap OpenSSH and currently don't traverse this path cleanly.
+and move the data further. Use the `sftp` client directly for this hop, since `rsync` and
+`rclone` wrap OpenSSH and currently don't traverse this path cleanly.
 
 ```bash
 # from inside Gefion
@@ -228,16 +266,50 @@ Then use `gefion-jump:` instead of `gefion:` in your rclone commands.
 
 </details>
 
+### Software environment
+
+Software comes from environment modules rather than being installed system-wide. `module spider`
+searches the whole tree, including modules that stay hidden until a dependency is loaded:
+
+```bash
+module avail            # what is loadable right now
+module spider CUDA      # search everything, including hidden modules
+module load CUDA/12.8
+module list
+module purge            # start clean
+```
+
+Load the same modules inside your job script as you did when testing interactively. A login shell
+and a batch job do not share an environment.
+
+For Python, [uv](https://docs.astral.sh/uv/) is the quickest route to a reproducible environment
+and is what the batch example below uses:
+
+```bash
+uv venv
+uv pip install -r requirements.txt
+uv run train.py
+```
+
+Containers are the more reproducible option when your stack is awkward to install. Apptainer runs
+them without root, and `--nv` exposes the node's GPUs inside the container:
+
+```bash
+apptainer exec --nv ~/images/pytorch.sif python train.py
+```
+
 ### How to start an interactive job
 
 Request an interactive session with GPUs via `srun`:
 
 ```bash
 ssh gefion
-srun --pty -N 1 -n 1 --gpus=2 --mem=8GB --time=1:00:00 /bin/bash
+srun --pty -N 1 -n 1 --gpus=2 --mem=64GB --time=1:00:00 /bin/bash
 ```
 
-Which will open an interactive session with 2 H100 GPUs and 8 GB of RAM.
+Which will open an interactive session with 2 H100 GPUs and 64 GB of RAM. Size `--mem` for the
+data you are loading rather than the GPUs: the nodes carry 2 TB, and asking for a few GB is the
+usual reason a job dies partway through with an out-of-memory error.
 
 ### How to submit a batch job
 
@@ -259,21 +331,71 @@ nvidia-smi
 uv run train.py
 ```
 
+Create the output directories before submitting, since SLURM fails the job at start if it cannot
+write the log files:
+
 ```bash
+mkdir -p slurm_files/output slurm_files/error
 sbatch train.sh              # submit above script 1 time
 sbatch --array=0-7 train.sh  # submit above script 8 times
 ```
+
+### Monitoring and cancelling jobs
+
+```bash
+squeue --me                                            # your jobs and their state
+squeue --me -o "%.10i %.9P %.20j %.2t %.10M %R"        # %R gives the pending reason
+sinfo                                                  # node and partition availability
+scancel <jobid>                                        # cancel
+sacct -j <jobid> --format=JobID,State,Elapsed,MaxRSS   # after it finishes
+```
+
+A job sitting in `PD` is normal. The reason in `%R` is usually `Resources` (the GPUs or memory you
+asked for are busy) or `Priority` (other jobs are ahead of you). `sacct` after the fact is the
+fastest way to see whether a job was killed for exceeding its memory or time request.
 
 ## Policy & Support
 
 ### Usage Rules
 
-- Per-person limit of 2 GPUs, up to 16 H100 GPUs total across the sandbox
-- 300 TB shared storage allowance
+- Default per-person limit: 2 concurrent jobs with 2 GPUs each, so 4 GPUs in use at once
+- 16 H100 GPUs in the sandbox in total, shared across everyone using it
+- 300 TB shared storage, with a 500 GB default quota and a 25 GB home directory
 - User accounts are individual and non-transferable
 - Accounts can be associated with one or more Gefion projects
 
 Limits may be adjusted on an ongoing basis to meet the needs of P1 students and faculty.
+
+<Aside type="note" title="GDPR Compliance">
+
+The P1 Gefion HPC is a GDPR-compliant environment, so projects handling personal data can run
+here. Have your project's data-processing paperwork in place first, and agree the details with
+DCAI and the compute coordinator before uploading any personal data.
+
+</Aside>
+
+### Storage, quotas, and backups
+
+Your home directory holds 25 GB, so datasets and checkpoints belong in your project space against
+the 500 GB default quota. Check what you are using before a large transfer:
+
+```bash
+du -sh ~                    # your home directory, 25 GB
+df -h .                     # space left on the filesystem you are standing in
+```
+
+Remember that data arriving through the SFTP endpoint lands on the transfer staging area rather
+than in your home directory, so it counts twice until you clean up the staged copy.
+
+Treat cluster storage as working space rather than an archive. Keep code in git and keep a second
+copy of anything you cannot regenerate, either on institutional storage or on your own machine.
+Before a project winds down, talk to the compute coordinator about what needs to be moved off.
+
+### Temporary GPU Increase
+
+<GpuAllowance />
+
+<Citation />
 
 ### Who to contact
 
@@ -281,5 +403,5 @@ Limits may be adjusted on an ongoing basis to meet the needs of P1 students and 
   technicalSupportEmail="support@dcai.dk"
   technicalSupportLabel="DCAI Support Team"
   computeCoordinatorEmail="bstja@dtu.dk"
-  emailSubjectPrefix="P1 Gefion Sandbox:"
+  emailSubjectPrefix="P1 Gefion HPC:"
 />

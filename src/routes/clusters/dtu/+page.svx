@@ -1,56 +1,65 @@
 ---
 title: P1 DTU HPC
-description: General-purpose HPC at DTU for P1 members — free compute and storage for medium-scale ML research.
+description: General-purpose HPC at DTU for P1 members, with free compute and storage for medium-scale ML research.
 order: 1
 navLabel: DTU HPC
 brandColor: var(--color-brand-dtu)
+providerDocs:
+  provider: DTU DCC
+  url: https://www.hpc.dtu.dk/?page_id=5028
 hardware:
   - label: Nodes
-    value: 7× Lenovo ThinkSystem SR665 V3
+    value: 8× Lenovo ThinkSystem SR665 V3 (7 batch, 1 interactive)
   - label: CPU per node
     value: 2× AMD EPYC 9354 (32 cores each)
   - label: RAM per node
     value: 768 GB
-  - label: GPUs per node
-    value: 2× NVIDIA H100 PCIe (80 GB)
+  - label: GPUs
+    value: 16× NVIDIA H100 PCIe (80 GB), 2 per node
   - label: Shared storage
-    value: 60 TiB
+    value: 60 TiB at /dtu/p1, 500 GB default project quota
+  - label: Home directory
+    value: 30 GB
+  - label: Storage fabric
+    value: NFSv4.2 over 100 Gbit EDR InfiniBand with RDMA, 11× Micron 7450 NVMe (RAID 5)
   - label: Operating system
-    value: Alma Linux
+    value: AlmaLinux
   - label: Scheduler
-    value: LSF
+    value: IBM Spectrum LSF
   - label: Queues
     value: p1 (batch, 7 nodes) / p1i (interactive, 1 node)
 ---
 
 <script>
   import Aside from '$lib/components/Aside.svelte';
+  import AccessException from '$lib/components/AccessException.svelte';
+  import Citation from '$lib/components/Citation.svelte';
   import EmbedForm from '$lib/components/EmbedForm.svelte';
+  import GpuAllowance from '$lib/components/GpuAllowance.svelte';
   import Support from '$lib/components/Support.svelte';
+  import { DTU_SIGNUP_FORM_URL } from '$lib/links';
 </script>
 
 The P1 DTU HPC is hosted at DTU and provides high-performance computing resources for P1 members
 (PhD and above). It is particularly suitable for medium to large-scale machine learning
-experiments and research projects. For up-to-date technical details, see the
-[P1 compute cluster documentation](https://www.hpc.dtu.dk/?page_id=5028) at DTU DCC.
+experiments and research projects.
 
 ## Getting Access
 
 ### Talk to the compute coordinator
 
-Onboarding starts with a short conversation. Fill in the
-[workload survey](https://survey.starostka.io/compute) to tell the P1 compute coordinator about
-your needs, expectations, and workload — we use it to point you to the right resource and to help
-you get the most out of it.
+You are welcome to go straight to the sign-up forms below. If you would like a hand, the
+[workload survey](p1:survey) tells the P1 compute coordinator about your needs, expectations, and
+workload. We use it to point you to the right resource and to help you get the most out of it.
 
 ### Sign-up Form
 
-Two forms get you onto the cluster — start with P1 affiliation, then request a DTU account.
+Two forms get you onto the cluster: start with P1 affiliation, then request a DTU account.
 
 Before accessing the P1 DTU HPC, you must be a P1 affiliate. Sign in to
-[your P1 profile](https://www.aicentre.dk/p1adb) (also reachable via **Update Profile** in the
-header), update your details, and submit a request to become an affiliate member — a P1 staff
-member will review and approve.
+[your P1 profile](p1:profile) (also reachable via **Update Profile** in the header), update your
+details, and submit a request to become an affiliate member. A P1 staff member will review and
+approve.
 
 Once your affiliation is approved, fill out the DTU account request form. Only signups using an
 official university email address are accepted. The form is processed by Henning Christiansen
@@ -58,24 +67,13 @@ official university email address are accepted. The form is processed by Henning
 
 <EmbedForm
   title="DTU Account Signup Form"
-  src="https://forms.office.com/pages/responsepage.aspx?id=I_FR8s7JjkSSdzS7KFkR2TcQSfcccxdDtaq8HEbAO1RUQjZUUEoxSlRCRk5KV09WSlRZNjNLVE1KRi4u"
-  height="800px"
+  src={DTU_SIGNUP_FORM_URL}
+  description="Use your official university email address."
 />
 
 ### Access Exception
 
-**PhD P1 affiliates and above can skip this section.** If you are a P1 member currently enrolled
-in an MSc, research assistant (RA) role, or similar, you are not eligible for access without a
-written approval of exception from a responsible person (a P1 co-lead or faculty member) who can
-vouch for your request. Fill in the form below and have the responsible person send a confirmation
-to [compute-governance-p1@aicentre.dk](mailto:compute-governance-p1@aicentre.dk) so they can audit
-the request.
-
-<EmbedForm
-  title="P1 HPC Access Exception Form"
-  src="https://docs.google.com/forms/d/e/1FAIpQLSciaOm-CYwl48LGGZC7qlmCSPU7kfEitjGy4kvZXAXEPbo_eA/viewform?embedded=true"
-  minHeight="1200px"
-/>
+<AccessException />
 
 ### Who's eligible?
 
@@ -87,7 +85,7 @@ registered P1 affiliation.
 ### How to connect
 
 The cluster is reachable at `login9.hpc.dtu.dk` via SSH. From outside DTU's network, first connect
-through Cisco AnyConnect to `vpn.dtu.dk` — see
+through Cisco AnyConnect to `vpn.dtu.dk`. See
 [DTU IT's VPN guide](https://www.hpc.dtu.dk/?page_id=2501) for setup details, including MFA.
 
 For persistent access, generate a key and copy the public half to the cluster:
@@ -109,7 +107,7 @@ ssh -i ~/.ssh/keyname username@login9.hpc.dtu.dk
 ### How to transfer data
 
 Use `rsync` for source code and small datasets, and [rclone](https://rclone.org/) for large
-datasets — both work over the standard SSH connection and are more ergonomic than a plain SFTP
+datasets. Both work over the standard SSH connection and are more ergonomic than a plain SFTP
 session. If `rsync` / `rclone` aren't available, an `sftp` client is the
 lowest-common-denominator fallback.
 
@@ -119,24 +117,49 @@ transfers, DTU also exposes
 [dedicated transfer nodes](https://www.hpc.dtu.dk/?page_id=2671) including
 `transfer.gbar.dtu.dk`.
 
-#### Inbound (push to DTU)
+#### Code from git
+
+For source code, cloning on the login node is usually simpler than pushing from your machine. It
+keeps the cluster copy tracked, so later updates are a `git pull` rather than another `rsync`.
 
 ```bash
-rsync -avz ./src username@login9.hpc.dtu.dk:~/project/src
+ssh username@login9.hpc.dtu.dk
+cd /dtu/p1/username
+git clone https://github.com/your-org/your-repo.git
+```
+
+An HTTPS remote is the path of least resistance and works with a personal access token for
+private repositories. An SSH remote needs its own key generated on the cluster and added to your
+git host. That key is separate from the one you use to log in to DTU:
+
+```bash
+ssh-keygen -t ed25519 -C "dtu-hpc"     # then add ~/.ssh/id_ed25519.pub to your git host
+git clone git@github.com:your-org/your-repo.git
+```
+
+Keep code in git and data in `/dtu/p1/`. Use the `rsync` and `rclone` recipes below for the
+datasets and checkpoints that do not belong in a repository.
+
+#### Inbound (push to DTU)
+
+Send datasets and checkpoints to your project directory, not to your home directory, which only
+has 30 GB:
+
+```bash
+rsync -avz ./datasets username@login9.hpc.dtu.dk:/dtu/p1/username/datasets
 ```
 
 #### Outbound (pull from DTU)
 
 ```bash
-rsync -avz username@login9.hpc.dtu.dk:~/project/results ./results
+rsync -avz username@login9.hpc.dtu.dk:/dtu/p1/username/results ./results
 ```
 
 #### Between clusters
 
-All P1 clusters and most Danish university systems are on the
-[Danish Research Network (forskningsnettet)](https://www.deic.dk/en/danish-research-network),
-which gives high-bandwidth, low-latency links between Danish research institutions — much faster
-than going over the public internet. For large inter-cluster transfers, DTU's
+All P1 clusters and most Danish university systems sit on
+[forskningsnettet](/ecosystem/#the-danish-research-network), so a cluster-to-cluster hop is much
+faster than round-tripping through your own machine. For large inter-cluster transfers, DTU's
 `transfer.gbar.dtu.dk` SFTP endpoint is the canonical staging point: SSH from it into other P1
 systems and forward data from there.
 
@@ -147,6 +170,37 @@ with the SFTP client directly:
 
 ```bash
 sftp username@transfer.gbar.dtu.dk
+```
+
+### Software environment
+
+Software comes from environment modules rather than being installed system-wide, so nothing is
+loaded until you ask for it:
+
+```bash
+module avail            # everything on offer
+module load cuda/12.4
+module list             # what is loaded right now
+module purge            # start clean
+```
+
+Load the same modules inside your job script as you did when testing interactively. A login shell
+and a batch job do not share an environment.
+
+For Python, build a virtual environment in your project directory rather than your home directory,
+so package installs do not eat the 30 GB home quota:
+
+```bash
+python3 -m venv /dtu/p1/username/venvs/myproject
+source /dtu/p1/username/venvs/myproject/bin/activate
+pip install -r requirements.txt
+```
+
+Containers are the more reproducible option when your stack is awkward to install. Apptainer runs
+them without root, and `--nv` exposes the node's GPUs inside the container:
+
+```bash
+apptainer exec --nv /dtu/p1/username/images/pytorch.sif python train.py
 ```
 
 ### How to start an interactive job
@@ -178,9 +232,26 @@ module load cuda/12.4
 python train.py
 ```
 
+Create the log directory before submitting, since LSF fails the job at start if it cannot write
+the output files:
+
 ```bash
+mkdir -p logs
 bsub < train.sh
 ```
+
+### Monitoring and cancelling jobs
+
+```bash
+bjobs                   # your jobs and their state
+bjobs -l <jobid>        # full detail, including why a job is still pending
+bpeek <jobid>           # tail the output of a running job
+bqueues p1 p1i          # how busy the queues are
+bkill <jobid>           # cancel
+```
+
+A job sitting in `PEND` is normal. `bjobs -l` states the reason, which is usually that the
+requested GPUs, memory, or wall time are not free yet. Asking for less tends to start sooner.
 
 ## Policy & Support
 
@@ -188,20 +259,41 @@ bsub < train.sh
 
 - Maximum wall time: 72 hours
 - Maximum GPUs per job: 2 (one node)
-- Maximum running jobs: ~50% of total available GPUs
-- Storage: 500 GB project + 30 GB home directory
+- Maximum GPUs in use at once per person: about half the cluster, so roughly 8 of the 16 H100s
+- Storage: 500 GB per project under `/dtu/p1/`, plus a 30 GB home directory
 
 If your project requires more storage, contact the governance group at
 [compute-governance-p1@aicentre.dk](mailto:compute-governance-p1@aicentre.dk) to discuss your
 needs.
 
+### Storage, quotas, and backups
+
+Your 500 GB project allowance is a slice of the cluster's 60 TiB shared pool. Check what you are
+using before a large transfer:
+
+```bash
+du -sh /dtu/p1/username     # project storage
+du -sh ~                    # home, capped at 30 GB
+```
+
+Treat cluster storage as working space rather than an archive. Keep code in git and keep a second
+copy of anything you cannot regenerate, either on institutional storage or on your own machine.
+Before a project winds down, talk to the compute coordinator about what needs to be moved off.
+
 <Aside type="caution" title="GDPR Compliance">
 
-The P1 DTU HPC is only intended for non-GDPR data — public datasets, open benchmarks, etc. Your
-home directory is not shared with other users, but data is not encrypted in a way that meets GDPR
-requirements. For GDPR-compliant data processing, use the [P1 NGC HPC](/clusters/ngc/) instead.
+The P1 DTU HPC is only intended for non-GDPR data: public datasets, open benchmarks, etc. Your
+home directory is not readable by other users, but the cluster as a whole is not an approved
+environment for processing personal data, and no file-level measure on your side changes that.
+If your project involves personal data, talk to the compute coordinator before you start.
 
 </Aside>
+
+### Temporary GPU Increase
+
+<GpuAllowance />
+
+<Citation />
 
 ### Who to contact
 

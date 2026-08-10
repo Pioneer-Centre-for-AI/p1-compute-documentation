@@ -1,0 +1,68 @@
+<script>
+  import { events } from '$lib/events';
+  import { headingAnchors } from '$lib/actions/headingAnchors';
+</script>
+
+<svelte:head>
+  <title>Events</title>
+  <meta
+    name="description"
+    content="Sessions, workshops, talks, and meetups that P1 Compute runs or takes part in."
+  />
+</svelte:head>
+
+<article class="prose mx-auto w-full max-w-3xl" use:headingAnchors>
+
+<p class="eyebrow not-prose mb-4">P1 Compute</p>
+
+# Events
+
+Sessions, workshops, talks, and meetups that P1 Compute runs or takes part in. Some bring
+researchers and providers together, others are training, hands-on work, or a look at where the
+field is heading. Each page carries the programme, the speakers, and what the session set out to
+answer.
+
+## Compute that serves science
+
+Three principles guide the sessions we run, and they shape the questions in the compute needs
+survey too.
+
+### Empowerment first
+
+Infrastructure is at its best when it gets out of the way. Every hour not spent fighting the
+system is an hour spent on the science.
+
+### Accountability in delivery
+
+Racked nodes are a start, not a finish. Everyone gains when a system arrives as an environment
+people can work in from day one.
+
+### Integrity in architecture
+
+Scientific computing is a long game. Systems designed around the people running the workloads
+keep paying off well after the invoice is settled.
+
+Getting there is a shared effort. Telling us about your workload in the
+[compute needs survey](p1:survey) is how everyday friction becomes something we can take up with
+providers together.
+
+## Sessions
+
+<!-- md:replace event-cards -->
+<div class="not-prose grid gap-6 sm:grid-cols-2">
+  {#each events as event}
+    <a
+      href={event.href}
+      class="group flex flex-col rounded-xl border border-slate-200 p-5 no-underline transition-colors hover:border-slate-300 hover:bg-slate-50 dark:border-slate-700 dark:hover:border-slate-600 dark:hover:bg-slate-800/50"
+    >
+      <span class="eyebrow mb-2">{event.meta.dateLabel} · {event.meta.eyebrow}</span>
+      <span class="mb-1 font-semibold text-slate-900 dark:text-slate-100">{event.meta.title}</span>
+      <span class="text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+        {event.meta.description}
+      </span>
+    </a>
+  {/each}
+</div>
+<!-- md:end -->
+
+</article>

@@ -1,22 +1,28 @@
-name: Deploy to GitHub Pages
+name: Build and deploy
 
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
+# Least privilege by default. The Pages permissions are granted only to the
+# deploy job, so a pull request from a fork cannot obtain them.
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
+# Pull requests supersede themselves; pushes to main must not cancel a
+# half-finished deploy.
 concurrency:
-  group: pages
-  cancel-in-progress: false
+  group: pages-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   build:
+    name: Build and check
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -26,14 +32,24 @@ jobs:
         with:
           extra_nix_config: |
             experimental-features = nix-command flakes
+            accept-flake-config = true
 
       - name: Set up cachix
         uses: cachix/cachix-action@v15
         with:
           name: nix-community
-          # To enable pushing your own derivations to a private cache, set CACHIX_AUTH_TOKEN
-          # in repo secrets and replace `name` above with your cache name.
+          # Read-only against a public cache, which covers bun and node from
+          # nixpkgs but not this project's own derivations. To also cache the
+          # node_modules FOD and the site build across runs (the slow parts),
+          # create your own cache, set CACHIX_AUTH_TOKEN in repo secrets, and
+          # swap `name` for it.
           # authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+
+      # Runs svelte-check and the site build. Both are flake checks, so this
+      # gates pull requests on type errors, on the Zod frontmatter schemas, and
+      # on the MARKDOWN_PAGES drift guard in the .md endpoint.
+      - name: Check
+        run: nix flake check --print-build-logs
 
       - name: Build site
         run: nix build .#website --print-build-logs
@@ -44,17 +60,36 @@ jobs:
           cp -RL result/. site/
           chmod -R u+w site
 
+      # Fail loudly rather than deploying a site missing its own entry points.
+      - name: Verify output
+        run: |
+          for f in index.html 404.html sitemap.xml robots.txt CNAME; do
+            if [ ! -f "site/$f" ]; then
+              echo "::error::expected site/$f in the build output"
+              exit 1
+            fi
+          done
+          echo "Pages: $(find site -name '*.html' | wc -l), size: $(du -sh site | cut -f1)"
+
       - name: Configure Pages
+        if: github.event_name != 'pull_request'
         uses: actions/configure-pages@v5
 
       - name: Upload Pages artifact
+        if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v3
         with:
           path: site
 
   deploy:
+    name: Deploy to GitHub Pages
     needs: build
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

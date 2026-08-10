@@ -5,6 +5,9 @@
   type TocChild = { id: string; label: string };
   type TocEntry = { id: string; label: string; children?: TocChild[] };
 
+  /** Link to this page's raw markdown twin, when it has one. */
+  let { mdHref = null }: { mdHref?: string | null } = $props();
+
   let entries = $state<TocEntry[]>([]);
   let activeId = $state<string | null>(null);
   let observer: IntersectionObserver | null = null;
@@ -64,7 +67,7 @@
         }
         if (next) activeId = next;
       },
-      { rootMargin: '-80px 0px -60% 0px', threshold: [0, 1] }
+      { rootMargin: '-96px 0px -60% 0px', threshold: [0, 1] }
     );
 
     for (const t of targets) observer.observe(t);
@@ -79,7 +82,7 @@
   afterNavigate(scan);
 </script>
 
-{#if entries.length > 0}
+{#if entries.length >= 2}
   <nav class="text-sm" aria-label="On this page">
     <div class="eyebrow mb-3">On this page</div>
     <ul class="space-y-1">
@@ -97,7 +100,7 @@
                 <li>
                   <a
                     href={`#${child.id}`}
-                    class="block border-l-2 py-0.5 pl-6 text-[13px] no-underline transition-colors {activeId === child.id ? 'border-[var(--color-brand)] font-semibold text-slate-900 dark:text-slate-50' : 'border-transparent text-slate-500 hover:text-slate-900 dark:text-slate-500 dark:hover:text-slate-100'}"
+                    class="block border-l-2 py-0.5 pl-6 text-[13px] no-underline transition-colors {activeId === child.id ? 'border-[var(--color-brand)] font-semibold text-slate-900 dark:text-slate-50' : 'border-transparent text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100'}"
                   >
                     {child.label}
                   </a>
@@ -108,5 +111,18 @@
         </li>
       {/each}
     </ul>
+
+    {#if mdHref}
+      <a
+        href={mdHref}
+        class="mt-4 inline-flex items-center gap-1.5 border-t border-slate-200 pt-3 text-xs text-slate-500 no-underline transition-colors hover:text-slate-900 dark:border-slate-700 dark:text-slate-400 dark:hover:text-slate-100"
+      >
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+          <polyline points="14,2 14,8 20,8" />
+        </svg>
+        View as Markdown
+      </a>
+    {/if}
   </nav>
 {/if}

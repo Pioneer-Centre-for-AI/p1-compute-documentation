@@ -9,7 +9,7 @@
 
 <article class="prose mx-auto w-full max-w-3xl" use:headingAnchors>
 
-<p class="eyebrow not-prose">Policy</p>
+<p class="eyebrow not-prose mb-4">Policy</p>
 
 # Privacy
 
@@ -20,7 +20,7 @@ scripts. Your theme preference (light/dark) is stored in your browser's local st
 leaves your device.
 
 The site is hosted on GitHub Pages; GitHub may collect technical data such as IP addresses in its
-server logs — see
+server logs; see
 [GitHub's privacy statement](https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement).
 
 ### Embedded forms
@@ -42,7 +42,7 @@ or DCAI), which operates the system and acts as your point of technical support.
 Data you store or process on the clusters is governed by the hosting institution's policies, not
 by this site. For projects involving personal or sensitive data, use the
 [P1 NGC HPC](/clusters/ngc/), and note that each project must carry a signed Data Processing
-Agreement naming NGC as data processor — see the [terms](/terms/) and the per-cluster pages for
+Agreement naming NGC as data processor. See the [terms](/terms/) and the per-cluster pages for
 details. Data retention and deletion after account expiry follow the
 [data retention policy](/terms/#data-retention-policy).
 
