@@ -12,6 +12,7 @@ export const URLS = {
   gpuAllowance: 'https://forms.cloud.microsoft/e/yN8Vxi7KTc',
   computeBudget: 'https://forms.cloud.microsoft/e/b6wcjy5kDy',
   coordinatorEmail: 'bstja@dtu.dk',
+  coordinatorOrcid: 'https://orcid.org/0000-0002-2740-1651',
   governanceEmail: 'compute-governance-p1@aicentre.dk',
   profile: 'https://www.aicentre.dk/p1adb',
   github: 'https://github.com/Pioneer-Centre-for-AI/p1-compute-documentation',

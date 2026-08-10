@@ -165,10 +165,13 @@ export function svxToMarkdown(source: string, meta: Meta = {}): string {
   out = out.replace(/<Support\b[\s\S]*?\/>/g, (tag) => {
     const techEmail = attr(tag, 'technicalSupportEmail');
     const techLabel = attr(tag, 'technicalSupportLabel') ?? 'Technical support';
-    const coordinator = attr(tag, 'computeCoordinatorEmail') ?? 'bstja@dtu.dk';
+    const coordinator = attr(tag, 'computeCoordinatorEmail') ?? URLS.coordinatorEmail;
     const rows = [];
     if (techEmail) rows.push(`- ${techLabel}: ${techEmail}`);
     rows.push(`- P1 compute coordinator: ${coordinator}`);
+    rows.push(
+      `- Helped with your work? Acknowledge the coordinator's ORCID: ${URLS.coordinatorOrcid}`
+    );
     return rows.join('\n');
   });
 

@@ -9,6 +9,7 @@ export const COMPUTE_BUDGET_URL = URLS.computeBudget;
 export const PROFILE_URL = URLS.profile;
 export const GITHUB_URL = URLS.github;
 export const COORDINATOR_EMAIL = URLS.coordinatorEmail;
+export const COORDINATOR_ORCID = URLS.coordinatorOrcid;
 export const GOVERNANCE_EMAIL = URLS.governanceEmail;
 
 export const DTU_SIGNUP_FORM_URL = URLS.dtuSignup;

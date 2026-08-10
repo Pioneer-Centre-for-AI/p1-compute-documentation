@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { SURVEY_URL } from '$lib/links';
+  import { SURVEY_URL, COORDINATOR_ORCID } from '$lib/links';
 
   type Props = {
     showComputeCoordinator?: boolean;
@@ -105,6 +105,19 @@
         <dt class="font-semibold text-slate-900 dark:text-slate-100">Compute Coordinator</dt>
         <dd class="text-sm text-slate-600 dark:text-slate-400">
           Onboarding, workload guidance, general questions. Always happy to help
+        </dd>
+        <!-- Works on every cluster, unlike the DTU-only DOI: acknowledging the
+             coordinator credits the person rather than the facility. -->
+        <dd class="mt-1 text-xs text-slate-500 dark:text-slate-400">
+          Helped with your work? Acknowledge
+          <a
+            href={COORDINATOR_ORCID}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="font-mono text-slate-600 hover:underline dark:text-slate-300"
+          >
+            ORCID 0000-0002-2740-1651
+          </a>
         </dd>
       </div>
       <div class="col-span-2 flex flex-wrap items-center gap-2 text-sm sm:col-span-1 sm:justify-end">
