@@ -25,7 +25,7 @@
       </div>
       <p class="text-sm leading-relaxed text-slate-600 dark:text-slate-400">
         We want to hear what researchers actually need from HPC, whether that is hardware (GPUs,
-        memory, storage, interconnect) or the software layers you run on top. Fill in the short
+        memory, storage, interconnect) or the software layers you run on top. Fill in the
         <strong class="font-semibold text-slate-700 dark:text-slate-300">Your Compute Needs</strong>
         survey to inform the compute coordinator, so we can take strategic action based on real data
         points instead of guesswork.

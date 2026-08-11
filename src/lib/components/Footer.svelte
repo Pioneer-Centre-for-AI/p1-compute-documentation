@@ -77,7 +77,10 @@
 
 <footer class="border-t border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-950">
   <div class="mx-auto grid w-full max-w-7xl gap-10 px-4 py-12 sm:grid-cols-2 md:px-6 lg:grid-cols-3">
-    <div class="flex flex-col gap-3">
+    <!-- Three blocks in a two-column grid leave a ragged row, so between `sm`
+         and `lg` the brand takes the full width and the two link columns sit
+         side by side beneath it. -->
+    <div class="flex flex-col gap-3 sm:col-span-2 lg:col-span-1">
       <a href="/" class="flex items-center gap-3 no-underline">
         <img src="/assets/logos/PCAI_Solo_RGB.svg" alt="" class="block h-8 w-8 dark:hidden" />
         <img src="/assets/logos/PCAI_Solo_White.svg" alt="" class="hidden h-8 w-8 dark:block" />
@@ -97,9 +100,9 @@
       </div>
     </div>
 
-    <!-- Two columns of groups when there is room. At `sm` this cell is only
-         half the viewport, which is too narrow for two, so it stacks. -->
-    <nav aria-label="Footer" class="grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-1 lg:grid-cols-2">
+    <!-- Always two columns of groups: stacking them makes this cell far taller
+         than the one beside it, which is what left the big gap at tablet width. -->
+    <nav aria-label="Footer" class="grid grid-cols-2 gap-x-6 gap-y-8">
       {#each siteGroups as group}
         {@render linkGroup(group.label, group.items)}
       {/each}
