@@ -2,3 +2,8 @@ User-agent: *
 Allow: /
 
 Sitemap: https://hpc.aicentre.dk/sitemap.xml
+
+# Index of this site for language models, per llmstxt.org. Every page also has
+# a markdown twin at the same path with .md appended.
+# https://hpc.aicentre.dk/llms.txt
+# https://hpc.aicentre.dk/llms-full.txt

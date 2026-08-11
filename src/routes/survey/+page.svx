@@ -17,9 +17,9 @@
 
 # Your Compute Needs
 
-I am the P1 compute coordinator, and this short survey is how I get to know the people using our
-partitions. I want to hear what you are actually trying to run, what you need from HPC, and where
-the current systems get in your way. Nine questions, a few minutes, entirely optional.
+I am Benjamin Starostka Jakobsen, the P1 compute coordinator, and this survey is how I get to know
+the people using our partitions. I want to hear what you are actually trying to run, what you need
+from HPC, and where the current systems get in your way. Entirely optional.
 
 <!-- md:replace embed -->
 <div class="not-prose my-8">

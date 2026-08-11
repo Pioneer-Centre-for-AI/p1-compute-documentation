@@ -4,6 +4,10 @@
 
 <svelte:head>
   <title>Terms and Conditions</title>
+  <meta
+    name="description"
+    content="Who may use the P1 compute resources, what they may be used for, and the responsibilities that come with an account."
+  />
 </svelte:head>
 
 <article class="prose mx-auto w-full max-w-3xl" use:headingAnchors>

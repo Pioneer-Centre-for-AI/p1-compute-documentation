@@ -5,12 +5,10 @@
 // new page cannot appear in the sitemap without also passing that guard, and
 // cannot be silently left out of it either.
 import { MARKDOWN_PAGES } from '$lib/markdownPages';
+import { SITE_URL } from '$lib/site';
 import type { RequestHandler } from './$types';
 
 export const prerender = true;
-
-// Not exported: SvelteKit rejects arbitrary named exports from an endpoint.
-const SITE_URL = 'https://hpc.aicentre.dk';
 
 // The landing page is a +page.svelte rather than a .svx, so it is not in
 // MARKDOWN_PAGES and is added here explicitly.
