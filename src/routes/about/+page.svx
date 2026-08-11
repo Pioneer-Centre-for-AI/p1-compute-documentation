@@ -1,4 +1,5 @@
 <script>
+  import Meta from '$lib/components/Meta.svelte';
   import People from '$lib/components/People.svelte';
   import NeedsCallout from '$lib/components/NeedsCallout.svelte';
   import ComputeBudget from '$lib/components/ComputeBudget.svelte';
@@ -44,10 +45,11 @@
   ];
 </script>
 
-<svelte:head>
-  <title>About P1 Compute Resources</title>
-  <meta name="description" content="Learn more about the P1AI's HPC resources." />
-</svelte:head>
+<Meta
+  title="About P1 Compute Resources"
+  description="Learn more about the P1AI's HPC resources."
+  type="article"
+/>
 
 <article class="prose mx-auto w-full max-w-3xl" use:headingAnchors>
 

@@ -1,16 +1,15 @@
 <script>
+  import Meta from '$lib/components/Meta.svelte';
   import LandscapeDiagram from '$lib/components/LandscapeDiagram.svelte';
   import ResearchNetworkDiagram from '$lib/components/ResearchNetworkDiagram.svelte';
   import { headingAnchors } from '$lib/actions/headingAnchors';
 </script>
 
-<svelte:head>
-  <title>Compute Ecosystem</title>
-  <meta
-    name="description"
-    content="The Danish and international HPC landscape beyond P1: university, national, and EU compute resources."
-  />
-</svelte:head>
+<Meta
+  title="Compute Ecosystem"
+  description="The Danish and international HPC landscape beyond P1: university, national, and EU compute resources."
+  type="website"
+/>
 
 <article class="prose mx-auto w-full max-w-3xl" use:headingAnchors>
 

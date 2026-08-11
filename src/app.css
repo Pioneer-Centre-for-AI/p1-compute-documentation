@@ -38,12 +38,17 @@
   --font-mono: 'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
-/* Semantic accent — flips with theme so prose links and CTA text stay AA. */
+/* Semantic accent — flips with theme so prose links and CTA text stay AA.
+   color-scheme rides along so scrollbars and native controls follow the site's
+   own toggle rather than the OS, which is what the `dark` class already does
+   for everything else. */
 :root {
   --color-brand: var(--color-plum);
+  color-scheme: light;
 }
 html.dark {
   --color-brand: var(--color-plum-bright);
+  color-scheme: dark;
 }
 
 /* Yellow marker highlight, as on aicentre.dk headlines. */

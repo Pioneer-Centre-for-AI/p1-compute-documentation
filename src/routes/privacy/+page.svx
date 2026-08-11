@@ -1,11 +1,13 @@
 <script>
+  import Meta from '$lib/components/Meta.svelte';
   import { headingAnchors } from '$lib/actions/headingAnchors';
 </script>
 
-<svelte:head>
-  <title>Privacy</title>
-  <meta name="description" content="How this site and the P1 compute services handle your data." />
-</svelte:head>
+<Meta
+  title="Privacy"
+  description="How this site and the P1 compute services handle your data."
+  type="article"
+/>
 
 <article class="prose mx-auto w-full max-w-3xl" use:headingAnchors>
 

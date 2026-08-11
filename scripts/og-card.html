@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1200px; height: 630px; overflow: hidden; }
+      body {
+        background: #14161f;
+        color: #f8fafc;
+        font-family: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 76px 80px;
+        position: relative;
+      }
+      .accent {
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 10px;
+        background: #b46bd6;
+      }
+      .top { display: flex; align-items: center; gap: 22px; }
+      .top img { width: 54px; height: 54px; }
+      .brand { font-size: 30px; font-weight: 600; letter-spacing: -0.01em; }
+      h1 {
+        font-size: 82px;
+        font-weight: 700;
+        line-height: 1.04;
+        letter-spacing: -0.03em;
+        max-width: 15ch;
+      }
+      p {
+        margin-top: 26px;
+        font-size: 30px;
+        line-height: 1.4;
+        color: #94a3b8;
+        max-width: 30ch;
+      }
+      .foot {
+        font-family: 'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 21px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #64748b;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="accent"></div>
+    <div class="top">
+      <img src="../static/assets/logos/PCAI_Solo_White.svg" alt="" />
+      <span class="brand">Pioneer Centre for AI</span>
+    </div>
+    <div>
+      <h1>Compute for AI research</h1>
+      <p>Dedicated HPC partitions at DTU, NGC, and Gefion.</p>
+    </div>
+    <div class="foot">hpc.aicentre.dk</div>
+  </body>
+</html>
+<!--
+  Source for static/assets/og.png, the link-preview card. Regenerate after
+  editing with headless Firefox (a separate profile is required so it can run
+  alongside a normal Firefox window):
+
+    /Applications/Firefox.app/Contents/MacOS/firefox --headless \
+      --profile "$(mktemp -d)" --window-size=1200,630 \
+      --screenshot static/assets/og.png scripts/og-card.html
+-->

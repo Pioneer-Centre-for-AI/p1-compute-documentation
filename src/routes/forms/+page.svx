@@ -1,15 +1,14 @@
 <script>
+  import Meta from '$lib/components/Meta.svelte';
   import { headingAnchors } from '$lib/actions/headingAnchors';
   import { FORMS } from '$lib/links';
 </script>
 
-<svelte:head>
-  <title>Forms & Surveys</title>
-  <meta
-    name="description"
-    content="Every form and survey used for P1 compute onboarding, access, and feedback, collected in one place."
-  />
-</svelte:head>
+<Meta
+  title="Forms & Surveys"
+  description="Every form and survey used for P1 compute onboarding, access, and feedback, collected in one place."
+  type="website"
+/>
 
 <article class="prose mx-auto w-full max-w-3xl" use:headingAnchors>
 

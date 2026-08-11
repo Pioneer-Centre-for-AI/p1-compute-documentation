@@ -1,15 +1,14 @@
 <script>
+  import Meta from '$lib/components/Meta.svelte';
   import { headingAnchors } from '$lib/actions/headingAnchors';
   import { SURVEY_URL } from '$lib/links';
 </script>
 
-<svelte:head>
-  <title>Your Compute Needs</title>
-  <meta
-    name="description"
-    content="Tell the P1 compute coordinator about your workload, what you need from HPC, and where the current systems get in your way."
-  />
-</svelte:head>
+<Meta
+  title="Your Compute Needs"
+  description="Tell the P1 compute coordinator about your workload, what you need from HPC, and where the current systems get in your way."
+  type="article"
+/>
 
 <article class="prose mx-auto w-full max-w-3xl" use:headingAnchors>
 

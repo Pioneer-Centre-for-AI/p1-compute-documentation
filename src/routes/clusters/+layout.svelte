@@ -2,6 +2,7 @@
   import { page } from '$app/stores';
   import BrandAccent from '$lib/components/BrandAccent.svelte';
   import ClusterIllustration from '$lib/components/ClusterIllustration.svelte';
+  import Meta from '$lib/components/Meta.svelte';
   import HardwareSpec from '$lib/components/HardwareSpec.svelte';
   import ProviderDocs from '$lib/components/ProviderDocs.svelte';
   import { headingAnchors } from '$lib/actions/headingAnchors';
@@ -15,12 +16,9 @@
   const cluster = $derived(clusters.find((c) => c.href === $page.url.pathname) ?? null);
 </script>
 
-<svelte:head>
-  {#if cluster}
-    <title>{cluster.meta.title}</title>
-    <meta name="description" content={cluster.meta.description} />
-  {/if}
-</svelte:head>
+{#if cluster}
+  <Meta title={cluster.meta.title} description={cluster.meta.description} type="article" />
+{/if}
 
 {#if cluster}
   <!-- The TOC aside and the two-column shell come from the root layout. -->

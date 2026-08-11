@@ -1,5 +1,6 @@
 <script lang="ts">
   import Button from '$lib/components/Button.svelte';
+  import Meta from '$lib/components/Meta.svelte';
   import DigitalObjectIdentifier from '$lib/components/DigitalObjectIdentifier.svelte';
   import LandscapeDiagram from '$lib/components/LandscapeDiagram.svelte';
   import { clusters } from '$lib/content';
@@ -26,13 +27,11 @@
   const ecosystem = ['DeiC', 'LUMI', 'UCloud', 'GenomeDK', 'Computerome'];
 </script>
 
-<svelte:head>
-  <title>Pioneer Centre for AI · Compute</title>
-  <meta
-    name="description"
-    content="Overview, guidance, and onboarding for high-performance computing at the Pioneer Centre for AI in Denmark."
-  />
-</svelte:head>
+<Meta
+  title="Pioneer Centre for AI · Compute"
+  description="Overview, guidance, and onboarding for high-performance computing at the Pioneer Centre for AI in Denmark."
+  isLanding
+/>
 
 <main class="mx-auto w-full max-w-6xl px-4 md:px-6">
   <!-- Hero -->

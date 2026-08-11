@@ -1,6 +1,7 @@
 <script lang="ts">
   import { page } from '$app/stores';
   import BrandAccent from '$lib/components/BrandAccent.svelte';
+  import Meta from '$lib/components/Meta.svelte';
   import { headingAnchors } from '$lib/actions/headingAnchors';
   import { events } from '$lib/events';
 
@@ -33,10 +34,12 @@
   );
 </script>
 
+{#if event}
+  <Meta title={event.meta.title} description={event.meta.description} type="article" />
+{/if}
+
 <svelte:head>
   {#if event}
-    <title>{event.meta.title}</title>
-    <meta name="description" content={event.meta.description} />
     <!-- Built in markup, not in the script block above: a literal closing
          script tag inside <script> would terminate it. -->
     {@html `<script type="application/ld+json">${jsonLd}<\/script>`}

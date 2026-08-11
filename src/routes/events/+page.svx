@@ -1,15 +1,14 @@
 <script>
+  import Meta from '$lib/components/Meta.svelte';
   import { events } from '$lib/events';
   import { headingAnchors } from '$lib/actions/headingAnchors';
 </script>
 
-<svelte:head>
-  <title>Events</title>
-  <meta
-    name="description"
-    content="Sessions, workshops, talks, and meetups that P1 Compute runs or takes part in."
-  />
-</svelte:head>
+<Meta
+  title="Events"
+  description="Sessions, workshops, talks, and meetups that P1 Compute runs or takes part in."
+  type="website"
+/>
 
 <article class="prose mx-auto w-full max-w-3xl" use:headingAnchors>
 

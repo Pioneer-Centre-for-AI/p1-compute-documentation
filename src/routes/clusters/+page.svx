@@ -1,17 +1,16 @@
 <script>
+  import Meta from '$lib/components/Meta.svelte';
   import ClusterIllustration from '$lib/components/ClusterIllustration.svelte';
   import { clusters, clusterDecisionEntries as decisions } from '$lib/content';
   import { headingAnchors } from '$lib/actions/headingAnchors';
   import { SURVEY_PAGE } from '$lib/links';
 </script>
 
-<svelte:head>
-  <title>Clusters</title>
-  <meta
-    name="description"
-    content="Three P1 partitions at Danish HPC facilities, three research profiles, and how to choose between them."
-  />
-</svelte:head>
+<Meta
+  title="Clusters"
+  description="Three P1 partitions at Danish HPC facilities, three research profiles, and how to choose between them."
+  type="website"
+/>
 
 <article class="prose mx-auto w-full max-w-3xl" use:headingAnchors>
 

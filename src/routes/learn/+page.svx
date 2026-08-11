@@ -1,14 +1,13 @@
 <script>
+  import Meta from '$lib/components/Meta.svelte';
   import { headingAnchors } from '$lib/actions/headingAnchors';
 </script>
 
-<svelte:head>
-  <title>Learning Resources</title>
-  <meta
-    name="description"
-    content="Talks, courses, and guides on HPC systems, MLOps, and performance optimization for researchers using P1 compute."
-  />
-</svelte:head>
+<Meta
+  title="Learning Resources"
+  description="Talks, courses, and guides on HPC systems, MLOps, and performance optimization for researchers using P1 compute."
+  type="website"
+/>
 
 <article class="prose mx-auto w-full max-w-3xl" use:headingAnchors>
 
