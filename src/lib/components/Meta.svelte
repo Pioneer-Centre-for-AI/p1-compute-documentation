@@ -15,10 +15,24 @@
     type?: 'website' | 'article';
     /** Absolute or root-relative image for link previews. */
     image?: string;
+    /** Describes the image for people using a screen reader on the unfurled link. */
+    imageAlt?: string;
     /** Set on the landing page, whose title is already the site name. */
     isLanding?: boolean;
   };
-  let { title, description, type = 'website', image, isLanding = false }: Props = $props();
+  let {
+    title,
+    description,
+    type = 'website',
+    image,
+    imageAlt,
+    isLanding = false
+  }: Props = $props();
+
+  // Describes the default card. A page passing its own `image` should pass
+  // `imageAlt` too; falling back to this would then describe the wrong picture.
+  const DEFAULT_IMAGE_ALT =
+    'Pioneer Centre for AI · Compute. Dedicated HPC partitions at DTU, NGC, and Gefion.';
 
   // "Privacy · Pioneer Centre for AI · Compute" reads long in a tab, so the
   // suffix is the short form. The landing page is already the full name.
@@ -27,6 +41,7 @@
   const imageUrl = $derived(
     image ? (image.startsWith('http') ? image : `${SITE_URL}${image}`) : `${SITE_URL}/assets/og.png`
   );
+  const alt = $derived(imageAlt ?? (image ? description : DEFAULT_IMAGE_ALT));
 </script>
 
 <svelte:head>
@@ -41,6 +56,7 @@
   <meta property="og:description" content={description} />
   <meta property="og:url" content={canonical} />
   <meta property="og:image" content={imageUrl} />
+  <meta property="og:image:alt" content={alt} />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
 
@@ -48,4 +64,5 @@
   <meta name="twitter:title" content={fullTitle} />
   <meta name="twitter:description" content={description} />
   <meta name="twitter:image" content={imageUrl} />
+  <meta name="twitter:image:alt" content={alt} />
 </svelte:head>

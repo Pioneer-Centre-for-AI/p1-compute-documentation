@@ -9,7 +9,7 @@
 // Privacy) land in `## Optional`, which the spec defines as safe to skip.
 import { isGroup, nav } from '$lib/nav';
 import { twinMeta, twinPaths } from '$lib/markdown/twins';
-import { SITE_NAME, SITE_SUMMARY, SITE_URL } from '$lib/site';
+import { LANDING_DESCRIPTION, SITE_NAME, SITE_SUMMARY, SITE_URL } from '$lib/site';
 import type { RequestHandler } from './$types';
 
 export const prerender = true;
@@ -39,6 +39,10 @@ export const GET: RequestHandler = () => {
     sections.push(`## ${entry.label}\n\n${paths.map(link).join('\n')}`);
   }
 
+  // The landing page is a +page.svelte, so it has no twin and no nav entry.
+  // Link the HTML rather than leave the site's front door out of the index.
+  sections.unshift(`## Start here\n\n- [${SITE_NAME}](${SITE_URL}/): ${LANDING_DESCRIPTION}`);
+
   const rest = twinPaths.filter((path) => !indexed.has(path));
   if (rest.length) {
     sections.push(`## Optional\n\n${rest.map(link).join('\n')}`);
@@ -48,8 +52,9 @@ export const GET: RequestHandler = () => {
 
 > ${SITE_SUMMARY}
 
-Every page on this site has a markdown twin at the same path with \`.md\` appended, which is what
-the links below point at. ${SITE_URL}/llms-full.txt is the whole site as a single file.
+Almost every page has a markdown twin at the same path with \`.md\` appended, and that is what the
+links below point at; the home page is the one exception and links to its HTML.
+${SITE_URL}/llms-full.txt is the whole site as a single file.
 
 ${sections.join('\n\n')}
 `;
