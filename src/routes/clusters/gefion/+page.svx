@@ -52,7 +52,7 @@ puts you in a position to apply for one with something that already works.
 ### Talk to the compute coordinator
 
 You are welcome to go straight to the sign-up form below. If you would like a hand, the
-[workload survey](p1:survey) tells the P1 compute coordinator about your needs, expectations, and
+[workload survey](p1:surveyPage) tells the P1 compute coordinator about your needs, expectations, and
 workload. For the sandbox it also helps us plan the step up to full production nodes if your
 project scales.
 

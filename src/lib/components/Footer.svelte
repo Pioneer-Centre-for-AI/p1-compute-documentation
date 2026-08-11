@@ -1,7 +1,7 @@
 <script lang="ts">
   import { nav, isGroup, type NavItem } from '$lib/nav';
   import {
-    SURVEY_URL,
+    SURVEY_PAGE,
     PROFILE_URL,
     GITHUB_URL,
     COORDINATOR_EMAIL,
@@ -76,12 +76,10 @@
         </li>
         <li>
           <a
-            href={SURVEY_URL}
-            target="_blank"
-            rel="noopener noreferrer"
+            href={SURVEY_PAGE}
             class="text-slate-600 no-underline hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
           >
-            Tell us about your workload ↗
+            Tell us about your workload
           </a>
         </li>
         <li>

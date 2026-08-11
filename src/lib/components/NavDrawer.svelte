@@ -1,7 +1,7 @@
 <script lang="ts">
   import { afterNavigate } from '$app/navigation';
   import NavList from './NavList.svelte';
-  import { SURVEY_URL, PROFILE_URL } from '$lib/links';
+  import { SURVEY_PAGE, PROFILE_URL } from '$lib/links';
 
   let { open = $bindable(false) }: { open?: boolean } = $props();
   let panel = $state<HTMLElement | null>(null);
@@ -73,9 +73,7 @@
       <NavList />
       <div class="mt-6 flex flex-col gap-2 border-t border-slate-200 pt-4 dark:border-slate-700">
         <a
-          href={SURVEY_URL}
-          target="_blank"
-          rel="noopener noreferrer"
+          href={SURVEY_PAGE}
           class="inline-flex h-9 items-center justify-center rounded-full bg-slate-800 px-4 text-sm font-medium text-white no-underline transition-colors hover:bg-slate-700 dark:bg-slate-200 dark:text-slate-900 dark:hover:bg-slate-300"
         >
           Your Compute Needs

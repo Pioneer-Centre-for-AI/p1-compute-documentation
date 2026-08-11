@@ -2,7 +2,7 @@
   import ClusterIllustration from '$lib/components/ClusterIllustration.svelte';
   import { clusters, clusterDecisionEntries as decisions } from '$lib/content';
   import { headingAnchors } from '$lib/actions/headingAnchors';
-  import { SURVEY_URL } from '$lib/links';
+  import { SURVEY_PAGE } from '$lib/links';
 </script>
 
 <svelte:head>
@@ -59,9 +59,7 @@ one that fits your project, then follow its page for access and usage instructio
   <p class="text-sm leading-relaxed text-slate-600 dark:text-slate-400">
     Unsure which fits, or want a second opinion? The compute coordinator is glad to help:
     <a
-      href={SURVEY_URL}
-      target="_blank"
-      rel="noopener noreferrer"
+      href={SURVEY_PAGE}
       class="font-semibold text-[var(--color-brand)] no-underline hover:underline"
     >tell us about your workload →</a>
     and we'll help you find and use the right resource. Entirely optional, and you are just as

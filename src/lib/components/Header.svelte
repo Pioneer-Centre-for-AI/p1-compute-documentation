@@ -1,7 +1,7 @@
 <script lang="ts">
   import EventNotice from './EventNotice.svelte';
   import ThemeToggle from './ThemeToggle.svelte';
-  import { SURVEY_URL, PROFILE_URL, GITHUB_URL } from '$lib/links';
+  import { SURVEY_PAGE, PROFILE_URL, GITHUB_URL } from '$lib/links';
 
   type Props = { variant?: 'solid' | 'landing'; onMenuClick: () => void };
   let { variant = 'solid', onMenuClick }: Props = $props();
@@ -57,9 +57,7 @@
         Update Profile
       </a>
       <a
-        href={SURVEY_URL}
-        target="_blank"
-        rel="noopener noreferrer"
+        href={SURVEY_PAGE}
         class="hidden h-9 items-center rounded-full bg-slate-800 px-4 text-sm font-medium whitespace-nowrap text-white no-underline transition-colors hover:bg-slate-700 md:inline-flex dark:bg-slate-200 dark:text-slate-900 dark:hover:bg-slate-300"
       >
         Your Compute Needs

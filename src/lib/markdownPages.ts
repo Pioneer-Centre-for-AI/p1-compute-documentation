@@ -17,6 +17,7 @@ export const MARKDOWN_PAGES = [
   'forms',
   'learn',
   'privacy',
+  'survey',
   'terms'
 ];
 

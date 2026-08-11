@@ -81,10 +81,15 @@ const BLOCKS: Record<string, () => Record<string, string>> = {
         return [d.need, `[${label}](${d.cluster.href})`, d.why];
       })
     ),
-    guidance: `**Guidance:** unsure which fits, or want a second opinion? The compute coordinator is glad to help: [tell us about your workload](${URLS.survey}). Entirely optional, and you are just as welcome to head straight to a cluster page.`,
+    guidance: `**Guidance:** unsure which fits, or want a second opinion? The compute coordinator is glad to help: [tell us about your workload](${URLS.surveyPage}). Entirely optional, and you are just as welcome to head straight to a cluster page.`,
     'cluster-cards': clusters
       .map((c) => `- [${c.meta.title}](${c.href}): ${c.meta.description}`)
       .join('\n')
+  }),
+  // The page embeds the form in an iframe, which is meaningless in markdown;
+  // the twin gets the link instead.
+  survey: () => ({
+    embed: `**Form:** [Your Compute Needs survey](${URLS.survey})`
   }),
   forms: () => ({
     'forms-table': markdownTable(

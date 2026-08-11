@@ -98,7 +98,7 @@ const WRAPPERS: Record<string, () => string> = {
   NeedsCallout: () =>
     formLine(
       'Your compute needs survey',
-      URLS.survey,
+      URLS.surveyPage,
       'Tell the P1 compute coordinator about your workload, needs, and expectations.'
     ),
   People: () => '_(Governance board members are listed on the web version of this page.)_',

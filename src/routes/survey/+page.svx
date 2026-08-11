@@ -1,0 +1,71 @@
+<script>
+  import { headingAnchors } from '$lib/actions/headingAnchors';
+  import { SURVEY_URL } from '$lib/links';
+</script>
+
+<svelte:head>
+  <title>Your Compute Needs</title>
+  <meta
+    name="description"
+    content="Tell the P1 compute coordinator about your workload, what you need from HPC, and where the current systems get in your way."
+  />
+</svelte:head>
+
+<article class="prose mx-auto w-full max-w-3xl" use:headingAnchors>
+
+<p class="eyebrow not-prose mb-4">Getting Started</p>
+
+# Your Compute Needs
+
+I am the P1 compute coordinator, and this short survey is how I get to know the people using our
+partitions. I want to hear what you are actually trying to run, what you need from HPC, and where
+the current systems get in your way. Nine questions, a few minutes, entirely optional.
+
+<!-- md:replace embed -->
+<div class="not-prose my-8">
+  <div class="mb-2 flex items-center justify-end">
+    <a
+      href={SURVEY_URL}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="inline-flex items-center gap-1.5 text-xs font-medium text-slate-500 no-underline hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
+    >
+      Open in a new tab
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M15 3h6v6M10 14L21 3M21 14v7H3V3h7" />
+      </svg>
+    </a>
+  </div>
+  <div class="overflow-hidden rounded-xl border border-slate-200 bg-white dark:border-slate-700">
+    <iframe
+      src="{SURVEY_URL}?embed=true"
+      title="Your Compute Needs survey"
+      class="h-[75vh] min-h-[560px] w-full border-0 bg-white"
+      allow="fullscreen"
+    ></iframe>
+  </div>
+  <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">
+    Form not loading, or being asked to sign in? Some browsers block embedded forms. Use the
+    new tab link above and it will work the same way.
+  </p>
+</div>
+<!-- md:end -->
+
+## What I do with your answers
+
+I read every response myself. They shape what I raise with the HPC teams at DTU, NGC, and Gefion,
+what we prioritise when partitions are renewed, and which topics turn into
+[events](/events/) and training.
+
+If your answers suggest a conversation would help more than a form, I will get in touch and we can
+talk it through. That consultation is part of the role, and it costs you nothing.
+
+## Prefer to just ask
+
+You do not have to fill in anything to get help. Mail me at
+[bstja@dtu.dk](mailto:bstja@dtu.dk), or find the compute community in
+`#compute` and `#ask-compute` on the P1 Slack. The survey exists because patterns across many
+researchers tell me things a single conversation cannot, not because it is a gate in front of
+support.
+
+</article>

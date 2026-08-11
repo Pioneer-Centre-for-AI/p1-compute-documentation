@@ -3,7 +3,7 @@
   import DigitalObjectIdentifier from '$lib/components/DigitalObjectIdentifier.svelte';
   import LandscapeDiagram from '$lib/components/LandscapeDiagram.svelte';
   import { clusters } from '$lib/content';
-  import { SURVEY_URL } from '$lib/links';
+  import { SURVEY_PAGE } from '$lib/links';
 
   const profiles: Record<string, { profile: string; image: string; imageAlt: string }> = {
     dtu: {
@@ -148,10 +148,8 @@
           is the next step, and we help you choose.
         </p>
         <Button
-          href={SURVEY_URL}
+          href={SURVEY_PAGE}
           variant="primary"
-          target="_blank"
-          rel="noopener noreferrer"
         >
           {#snippet children()}
             Tell us about your workload

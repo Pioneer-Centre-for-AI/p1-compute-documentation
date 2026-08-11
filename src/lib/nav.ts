@@ -26,6 +26,7 @@ export const nav: NavEntry[] = [
     label: 'Getting Started',
     items: [
       { label: 'About', href: '/about/' },
+      { label: 'Your Compute Needs', href: '/survey/' },
       { label: 'Forms & Surveys', href: '/forms/' }
     ]
   },

@@ -6,7 +6,11 @@
 // Every form is institution-hosted (Microsoft Forms), so each one outlives
 // whoever holds the coordinator role. Nothing here points at a personal domain.
 export const URLS = {
+  // The raw form. Only the /survey/ page and the /forms/ directory link here
+  // directly; every call to action on the site points at `surveyPage` instead,
+  // so the form opens in the site's own chrome rather than a new tab.
   survey: 'https://forms.cloud.microsoft/e/Np1yaVKBup',
+  surveyPage: '/survey/',
   gpuAllowance: 'https://forms.cloud.microsoft/e/yN8Vxi7KTc',
   computeBudget: 'https://forms.cloud.microsoft/e/b6wcjy5kDy',
   coordinatorEmail: 'bstja@dtu.dk',

@@ -47,7 +47,7 @@ with large datasets. For details on the underlying infrastructure, see
 ### Talk to the compute coordinator
 
 You are welcome to go straight to the sign-up steps below. If you would like a hand, the
-[workload survey](p1:survey) tells the P1 compute coordinator about your needs, expectations, and
+[workload survey](p1:surveyPage) tells the P1 compute coordinator about your needs, expectations, and
 workload. For NGC it is worth doing early, since GDPR projects need their data-processing
 paperwork lined up.
 

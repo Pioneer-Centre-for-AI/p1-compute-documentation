@@ -4,6 +4,7 @@
 import { URLS } from './urls.js';
 
 export const SURVEY_URL = URLS.survey;
+export const SURVEY_PAGE = URLS.surveyPage;
 export const GPU_ALLOWANCE_URL = URLS.gpuAllowance;
 export const COMPUTE_BUDGET_URL = URLS.computeBudget;
 export const PROFILE_URL = URLS.profile;

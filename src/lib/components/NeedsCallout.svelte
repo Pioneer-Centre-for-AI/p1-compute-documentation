@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { SURVEY_URL } from '$lib/links';
+  import { SURVEY_PAGE } from '$lib/links';
 </script>
 
 <aside
@@ -31,9 +31,7 @@
         points instead of guesswork.
       </p>
       <a
-        href={SURVEY_URL}
-        target="_blank"
-        rel="noopener noreferrer"
+        href={SURVEY_PAGE}
         class="inline-flex w-fit items-center gap-2 rounded-full bg-slate-800 px-4 py-2 text-sm font-medium text-white no-underline transition-colors hover:bg-slate-700 dark:bg-slate-200 dark:text-slate-900 dark:hover:bg-slate-300"
       >
         Share Your Compute Needs

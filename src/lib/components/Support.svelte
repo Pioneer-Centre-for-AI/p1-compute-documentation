@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { SURVEY_URL, COORDINATOR_ORCID } from '$lib/links';
+  import { SURVEY_PAGE, COORDINATOR_ORCID } from '$lib/links';
 
   type Props = {
     showComputeCoordinator?: boolean;
@@ -122,9 +122,7 @@
       </div>
       <div class="col-span-2 flex flex-wrap items-center gap-2 text-sm sm:col-span-1 sm:justify-end">
         <a
-          href={SURVEY_URL}
-          target="_blank"
-          rel="noopener noreferrer"
+          href={SURVEY_PAGE}
           class="rounded bg-slate-800 px-2 py-0.5 font-mono text-white no-underline hover:bg-slate-700 dark:bg-slate-200 dark:text-slate-900 dark:hover:bg-slate-300"
         >
           workload survey

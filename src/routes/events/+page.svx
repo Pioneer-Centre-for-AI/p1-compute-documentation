@@ -43,7 +43,7 @@ Scientific computing is a long game. Systems designed around the people running 
 keep paying off well after the invoice is settled.
 
 Getting there is a shared effort. Telling us about your workload in the
-[compute needs survey](p1:survey) is how everyday friction becomes something we can take up with
+[compute needs survey](p1:surveyPage) is how everyday friction becomes something we can take up with
 providers together.
 
 ## Sessions
