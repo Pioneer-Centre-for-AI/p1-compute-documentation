@@ -83,6 +83,17 @@
           </a>
         </li>
         <li>
+          <!-- Points at the index rather than /about/, so it is equally useful
+               pasted into an agent and clicked by a curious human. -->
+          <a
+            href="/llms.txt"
+            title="Index of this site for AI agents, per llmstxt.org"
+            class="text-slate-600 no-underline hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
+          >
+            Docs for AI agents
+          </a>
+        </li>
+        <li>
           <a
             href={GITHUB_URL}
             target="_blank"

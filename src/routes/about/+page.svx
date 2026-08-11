@@ -145,4 +145,22 @@ support some Tier 1 workloads, but the P1 sandbox on it is Tier 3 capacity: enou
 mature a workload on the hardware it will eventually run on. Running at Tier 2 scale on Gefion is a
 funded step of its own, and the sandbox exists to make you ready to take it.
 
+## Reading these docs with an AI agent
+
+If you work with a coding agent or a chat assistant, you can hand it this site rather than pasting
+pages in by hand. Three routes, in increasing order of how much they load:
+
+- `https://hpc.aicentre.dk/llms.txt` is an index of every page with a one-line summary, following
+  the [llms.txt convention](https://llmstxt.org/). Point an agent here and it can fetch only the
+  pages it needs.
+- `https://hpc.aicentre.dk/llms-full.txt` is the entire site as one markdown file, for pasting
+  straight into a context window.
+- Any page works as plain markdown by adding `.md` to its path, so
+  `https://hpc.aicentre.dk/clusters/dtu.md` is the DTU page without the site chrome. The
+  **View as Markdown** link in the page outline does the same thing.
+
+These are generated from the same source as the pages you are reading, so they cannot drift out of
+date. Treat them as a snapshot of guidance rather than live system state: queue limits and hardware
+change, and the provider documentation linked on each cluster page is always the authority.
+
 </article>
