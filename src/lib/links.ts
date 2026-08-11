@@ -31,7 +31,7 @@ export const FORMS: FormInfo[] = [
   {
     title: 'Your Compute Needs survey',
     purpose: 'Tell the compute coordinator about your workload, needs, and expectations. Optional, and the easiest way to get help choosing.',
-    provider: 'P1 Compute Coordinator',
+    provider: 'Microsoft Forms',
     url: SURVEY_URL
   },
   {

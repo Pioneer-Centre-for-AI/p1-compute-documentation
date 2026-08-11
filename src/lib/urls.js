@@ -3,12 +3,10 @@
 // Plain JS (not TS) because svelte.config.js is loaded directly by Node and
 // imports this through the `p1:` remark plugin — same reason markdown/highlight.js
 // is plain JS. `links.ts` re-exports these as named constants for Svelte code.
-// Form hosting follows one rule: `survey` is the only form on the compute
-// coordinator's own site, because the compute-needs consultation is a service
-// that person provides while holding the role. Every other form belongs to an
-// institution and is hosted accordingly, so it outlives whoever is coordinator.
+// Every form is institution-hosted (Microsoft Forms), so each one outlives
+// whoever holds the coordinator role. Nothing here points at a personal domain.
 export const URLS = {
-  survey: 'https://survey.starostka.io/compute-needs',
+  survey: 'https://forms.cloud.microsoft/e/Np1yaVKBup',
   gpuAllowance: 'https://forms.cloud.microsoft/e/yN8Vxi7KTc',
   computeBudget: 'https://forms.cloud.microsoft/e/b6wcjy5kDy',
   coordinatorEmail: 'bstja@dtu.dk',
