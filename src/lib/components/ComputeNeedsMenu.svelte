@@ -32,14 +32,31 @@
   }
 
   function onKeydown(e: KeyboardEvent) {
-    if (e.key === 'Escape') close();
+    if (e.key === 'Escape') {
+      close();
+      return;
+    }
+    // Arrow keys are what a role="menu" promises; without them the menu is a
+    // list of links wearing the wrong role.
+    if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
+    if (!open) {
+      open = true;
+      e.preventDefault();
+      return;
+    }
+    const items = [...(menu?.querySelectorAll<HTMLElement>('[role="menuitem"]') ?? [])];
+    if (!items.length) return;
+    e.preventDefault();
+    const at = items.indexOf(document.activeElement as HTMLElement);
+    const step = e.key === 'ArrowDown' ? 1 : -1;
+    items[(at + step + items.length) % items.length].focus();
   }
 
   // Both halves of the pill are the same surface, so the hover tint is an
   // overlay rather than a second background colour: two slate shades meeting at
   // the divider read as two buttons that happen to touch.
   const segment =
-    'relative transition-colors before:absolute before:inset-0 before:bg-white/0 before:transition-colors hover:before:bg-white/12 dark:before:bg-slate-900/0 dark:hover:before:bg-slate-900/10 focus-visible:outline-none focus-visible:before:bg-white/12 dark:focus-visible:before:bg-slate-900/10';
+    'relative cursor-pointer transition-colors before:absolute before:inset-0 before:bg-white/0 before:transition-colors hover:before:bg-white/12 dark:before:bg-slate-900/0 dark:hover:before:bg-slate-900/10 focus-visible:outline-none focus-visible:before:bg-white/12 dark:focus-visible:before:bg-slate-900/10';
 
   const item =
     'group flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left no-underline transition-colors hover:bg-slate-100 focus-visible:bg-slate-100 focus-visible:outline-none dark:hover:bg-slate-800 dark:focus-visible:bg-slate-800';
@@ -49,7 +66,7 @@
 
 <div bind:this={wrapper} class="relative hidden md:block">
   <div
-    class="flex h-9 items-stretch overflow-hidden rounded-full bg-slate-800 text-white ring-1 ring-slate-900/5 ring-inset dark:bg-slate-200 dark:text-slate-900 dark:ring-white/10"
+    class="flex h-9 items-stretch overflow-hidden rounded-full bg-slate-800 text-white ring-1 ring-slate-900/5 ring-inset transition-shadow has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-slate-500 has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-white dark:bg-slate-200 dark:text-slate-900 dark:ring-white/10 dark:has-[:focus-visible]:ring-offset-slate-900"
   >
     <a
       href={SURVEY_PAGE}
@@ -62,10 +79,13 @@
       type="button"
       aria-haspopup="menu"
       aria-expanded={open}
+      aria-controls="compute-needs-menu"
       aria-label="More ways to reach the compute coordinator"
       onclick={() => (open = !open)}
       onkeydown={onKeydown}
-      class="{segment} inline-flex w-9 items-center justify-center"
+      class="{segment} inline-flex w-9 items-center justify-center {open
+        ? 'before:bg-white/12 dark:before:bg-slate-900/10'
+        : ''}"
     >
       <svg
         width="13"
@@ -88,6 +108,7 @@
   {#if open}
     <div
       bind:this={menu}
+      id="compute-needs-menu"
       role="menu"
       tabindex="-1"
       onkeydown={onKeydown}

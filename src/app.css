@@ -51,6 +51,16 @@ html.dark {
   color-scheme: dark;
 }
 
+/* Tailwind v4's preflight dropped the pointer cursor on buttons. The site
+   styles anchors and buttons identically all over (the header's split button,
+   every modal trigger, the theme toggle), so without this the two halves of
+   one control feel different under the mouse. */
+button:not(:disabled),
+summary,
+[role='button']:not([aria-disabled='true']) {
+  cursor: pointer;
+}
+
 /* Yellow marker highlight, as on aicentre.dk headlines. */
 mark {
   background: var(--color-highlight);
