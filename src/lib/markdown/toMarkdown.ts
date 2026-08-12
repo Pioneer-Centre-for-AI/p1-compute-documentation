@@ -101,6 +101,9 @@ const WRAPPERS: Record<string, () => string> = {
       URLS.surveyPage,
       'Tell the P1 compute coordinator about your workload, needs, and expectations.'
     ),
+  BookConsultation: () =>
+    "**Book a consultation:** [pick a time in the compute coordinator's calendar]" +
+    `(${URLS.booking}), in person or online.`,
   People: () => '_(Governance board members are listed on the web version of this page.)_',
   Citation: () =>
     '**Citing this cluster:** if the P1 DTU HPC contributed to your work, please cite the DTU ' +
@@ -169,6 +172,7 @@ export function svxToMarkdown(source: string, meta: Meta = {}): string {
     const rows = [];
     if (techEmail) rows.push(`- ${techLabel}: ${techEmail}`);
     rows.push(`- P1 compute coordinator: ${coordinator}`);
+    rows.push(`- Book a consultation with the coordinator: ${URLS.booking}`);
     rows.push(
       `- Helped with your work? Acknowledge the coordinator's ORCID: ${URLS.coordinatorOrcid}`
     );

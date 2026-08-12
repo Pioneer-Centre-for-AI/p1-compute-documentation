@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { SURVEY_PAGE, COORDINATOR_ORCID } from '$lib/links';
+  import { SURVEY_PAGE, COORDINATOR_ORCID, BOOKING_URL } from '$lib/links';
 
   type Props = {
     showComputeCoordinator?: boolean;
@@ -126,6 +126,14 @@
           class="rounded bg-slate-800 px-2 py-0.5 font-mono text-white no-underline hover:bg-slate-700 dark:bg-slate-200 dark:text-slate-900 dark:hover:bg-slate-300"
         >
           workload survey
+        </a>
+        <a
+          href={BOOKING_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="rounded bg-slate-200 px-2 py-0.5 font-mono text-slate-900 no-underline hover:bg-slate-300 dark:bg-slate-700 dark:text-slate-100 dark:hover:bg-slate-600"
+        >
+          book a call
         </a>
         <a
           href={mailto(computeCoordinatorEmail, 'General Inquiry')}

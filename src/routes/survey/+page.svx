@@ -1,5 +1,6 @@
 <script>
   import Meta from '$lib/components/Meta.svelte';
+  import BookConsultation from '$lib/components/BookConsultation.svelte';
   import { headingAnchors } from '$lib/actions/headingAnchors';
   import { SURVEY_URL } from '$lib/links';
 </script>
@@ -58,6 +59,15 @@ what we prioritise when partitions are renewed, and which topics turn into
 
 If your answers suggest a conversation would help more than a form, I will get in touch and we can
 talk it through. That consultation is part of the role, and it costs you nothing.
+
+## Rather talk than write
+
+Book a slot in my calendar and we meet in person or online, whichever suits you. Bring anything:
+what you are trying to run, which cluster fits, why your jobs are slower than they should be, or
+how to spend a hardware budget before you commit it.
+
+<BookConsultation />
+
 
 ## Prefer to just ask
 

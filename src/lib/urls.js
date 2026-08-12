@@ -4,7 +4,9 @@
 // imports this through the `p1:` remark plugin — same reason markdown/highlight.js
 // is plain JS. `links.ts` re-exports these as named constants for Svelte code.
 // Every form is institution-hosted (Microsoft Forms), so each one outlives
-// whoever holds the coordinator role. Nothing here points at a personal domain.
+// whoever holds the coordinator role. The one deliberate exception is
+// `booking`: a calendar belongs to a person, not to an institution, so it
+// cannot be role-hosted. Whoever holds the role next replaces the URL.
 export const URLS = {
   // The raw form. Only the /survey/ page and the /forms/ directory link here
   // directly; every call to action on the site points at `surveyPage` instead,
@@ -13,6 +15,10 @@ export const URLS = {
   surveyPage: '/survey/',
   gpuAllowance: 'https://forms.cloud.microsoft/e/yN8Vxi7KTc',
   computeBudget: 'https://forms.cloud.microsoft/e/b6wcjy5kDy',
+  // Cal.com booking page for a 15 minute consultation with the coordinator,
+  // in person or online. Paired with the compute-needs survey by design: the
+  // survey and the slug carry the same name.
+  booking: 'https://book.starostka.io/benjamin/compute-needs',
   coordinatorEmail: 'bstja@dtu.dk',
   coordinatorOrcid: 'https://orcid.org/0000-0002-2740-1651',
   governanceEmail: 'compute-governance-p1@aicentre.dk',
