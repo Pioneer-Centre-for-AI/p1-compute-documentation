@@ -62,7 +62,7 @@ mentions NGC as a data processor and that the data is allowed to be stored there
 poses a high risk to individuals whose personal data is being processed, a Data Protection Impact
 Assessment (DPIA) is also required.
 
-### Should I talk to someone first?
+### Do I need to talk to someone first?
 
 You are welcome to go straight to the sign-up steps below. If you would like a hand, the
 [workload survey](p1:surveyPage) tells the P1 compute coordinator about your needs, expectations, and

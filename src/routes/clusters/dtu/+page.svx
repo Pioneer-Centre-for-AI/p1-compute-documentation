@@ -59,7 +59,7 @@ experiments and research projects.
 **Requirements:** PhD or higher (exceptions may apply), valid Danish university email, and
 registered P1 affiliation.
 
-### Should I talk to someone first?
+### Do I need to talk to someone first?
 
 You are welcome to go straight to the sign-up forms below. If you would like a hand, the
 [workload survey](p1:surveyPage) tells the P1 compute coordinator about your needs, expectations, and
