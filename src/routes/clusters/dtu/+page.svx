@@ -7,6 +7,13 @@ brandColor: var(--color-brand-dtu)
 providerDocs:
   provider: DTU DCC
   url: https://www.hpc.dtu.dk/?page_id=5028
+quotas:
+  wallTime: 72 hours
+  gpusPerJob: 2 (one node)
+  gpusAtOnce: About half the cluster, so roughly 8 of the 16 H100s
+  homeDirectory: 30 GB
+  projectStorage: 500 GB default, under /dtu/p1/
+  sharedPool: 60 TiB
 hardware:
   - label: Nodes
     value: 8× Lenovo ThinkSystem SR665 V3 (7 batch, 1 interactive)
@@ -33,6 +40,7 @@ hardware:
 <script>
   import Aside from '$lib/components/Aside.svelte';
   import AccessException from '$lib/components/AccessException.svelte';
+  import ClusterQuotas from '$lib/components/ClusterQuotas.svelte';
   import Citation from '$lib/components/Citation.svelte';
   import EmbedForm from '$lib/components/EmbedForm.svelte';
   import GpuAllowance from '$lib/components/GpuAllowance.svelte';
@@ -258,10 +266,7 @@ requested GPUs, memory, or wall time are not free yet. Asking for less tends to 
 
 ### Usage Rules
 
-- Maximum wall time: 72 hours
-- Maximum GPUs per job: 2 (one node)
-- Maximum GPUs in use at once per person: about half the cluster, so roughly 8 of the 16 H100s
-- Storage: 500 GB per project under `/dtu/p1/`, plus a 30 GB home directory
+<ClusterQuotas slug="dtu" />
 
 If your project requires more storage, contact the governance group at
 [compute-governance-p1@aicentre.dk](mailto:compute-governance-p1@aicentre.dk) to discuss your

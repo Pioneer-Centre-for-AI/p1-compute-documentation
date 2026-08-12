@@ -6,6 +6,7 @@
 // otherwise shell placeholders like `User <your-username>_sftp` would be eaten
 // as if they were HTML.
 import * as links from '$lib/links';
+import { QUOTA_GROUPS, type ClusterQuotaMeta } from '$lib/content';
 import { URLS } from '$lib/urls';
 
 type Meta = {
@@ -15,6 +16,8 @@ type Meta = {
   hardware?: { label: string; value: string }[];
   /** Provider documentation pointer, rendered by the layout rather than the source. */
   providerDocs?: { provider: string; url?: string; note?: string };
+  /** Limits behind `<ClusterQuotas />`, which reads them from the cluster registry. */
+  quotas?: ClusterQuotaMeta;
   /**
    * Markdown for regions the page builds with Svelte loops, keyed by the name
    * in its `<!-- md:replace NAME -->` marker. Index pages render their tables
@@ -162,6 +165,21 @@ export function svxToMarkdown(source: string, meta: Meta = {}): string {
     const title = attr(tag, 'title') ?? 'Form';
     const url = resolveAttr(attr(tag, 'href')) ?? resolveAttr(attr(tag, 'src'));
     return formLine(title, url, attr(tag, 'description'));
+  });
+
+  // 6b. ClusterQuotas takes only a slug; the values live in the registry, so
+  //     the caller supplies them the same way it supplies the hardware rows.
+  out = out.replace(/<ClusterQuotas\b[^>]*\/>/g, () => {
+    const quotas = meta.quotas;
+    if (!quotas) return '';
+    return QUOTA_GROUPS.map(
+      (group) =>
+        `**${group.title}**\n\n` +
+        markdownTable(
+          ['Limit', 'Value'],
+          group.rows.map((r) => [r.label, quotas[r.key]])
+        )
+    ).join('\n\n');
   });
 
   // 7. Support renders as the contact list it is.

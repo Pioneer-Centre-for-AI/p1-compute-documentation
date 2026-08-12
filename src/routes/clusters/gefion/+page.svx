@@ -8,6 +8,15 @@ providerDocs:
   provider: DCAI
   url: https://doc-open-ai.secureremote.dcai.dk
   note: Requires signing in through the Teleport proxy before the link resolves.
+quotas:
+  wallTime: Not published; ask the compute coordinator before planning a long run
+  # Quoted: a bare 2 is a YAML number, and the schema wants the string it will
+  # print, so that a value can always carry its own unit or caveat.
+  gpusPerJob: '2'
+  gpusAtOnce: 4, as 2 concurrent jobs of 2 GPUs
+  homeDirectory: 25 GB
+  projectStorage: 500 GB default
+  sharedPool: 300 TB
 hardware:
   - label: Nodes
     value: 2× NVIDIA DGX H100 (8 GPUs each)
@@ -32,6 +41,7 @@ hardware:
 <script>
   import Aside from '$lib/components/Aside.svelte';
   import AccessException from '$lib/components/AccessException.svelte';
+  import ClusterQuotas from '$lib/components/ClusterQuotas.svelte';
   import EmbedForm from '$lib/components/EmbedForm.svelte';
   import GpuAllowance from '$lib/components/GpuAllowance.svelte';
   import Support from '$lib/components/Support.svelte';
@@ -357,9 +367,9 @@ fastest way to see whether a job was killed for exceeding its memory or time req
 
 ### Usage Rules
 
-- Default per-person limit: 2 concurrent jobs with 2 GPUs each, so 4 GPUs in use at once
+<ClusterQuotas slug="gefion" />
+
 - 16 H100 GPUs in the sandbox in total, shared across everyone using it
-- 300 TB shared storage, with a 500 GB default quota and a 25 GB home directory
 - User accounts are individual and non-transferable
 - Accounts can be associated with one or more Gefion projects
 

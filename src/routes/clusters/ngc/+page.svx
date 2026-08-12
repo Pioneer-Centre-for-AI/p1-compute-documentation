@@ -7,6 +7,13 @@ brandColor: var(--color-brand-ngc)
 providerDocs:
   provider: NGC
   note: Until it is published, the internal documentation linked from the status page inside the environment is the reference, and the compute coordinator can help with anything it does not cover.
+quotas:
+  wallTime: Not published; ask your NGC admin or the compute coordinator
+  gpusPerJob: Not published; ask your NGC admin or the compute coordinator
+  gpusAtOnce: Not published; ask your NGC admin or the compute coordinator
+  homeDirectory: Set per project at onboarding
+  projectStorage: Set per project at onboarding
+  sharedPool: About 2 PB (245 TB SSD, 368 TB HDD, 1.44 PB cold)
 hardware:
   - label: Nodes
     value: 8 compute (Lenovo VX665) + 3 storage (VX650)
@@ -30,6 +37,7 @@ hardware:
 
 <script>
   import AccessException from '$lib/components/AccessException.svelte';
+  import ClusterQuotas from '$lib/components/ClusterQuotas.svelte';
   import EmbedForm from '$lib/components/EmbedForm.svelte';
   import { NGC_SIGNUP_FORM_URL } from '$lib/links';
   import GpuAllowance from '$lib/components/GpuAllowance.svelte';
@@ -288,10 +296,11 @@ that the requested nodes, memory, or wall time are not free yet.
 
 ### Usage Rules
 
+<ClusterQuotas slug="ngc" />
+
 - GDPR-compliant infrastructure. Only use this cluster for projects that need it
 - Each project must carry a signed Data Processing Agreement naming NGC as data processor
 - High-risk projects additionally require a Data Protection Impact Assessment (DPIA)
-- Per-project storage quotas are set during onboarding, from the roughly 2 PB available
 
 ### Storage, quotas, and backups
 

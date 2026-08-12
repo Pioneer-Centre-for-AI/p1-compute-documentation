@@ -18,6 +18,51 @@ const ProviderDocs = z.object({
 
 export type ProviderDocsMeta = z.infer<typeof ProviderDocs>;
 
+// What a researcher is actually allowed to use. Fixed keys rather than a
+// free-form label/value list, and every one of them REQUIRED: the limits used
+// to live in three places per page (a hardware row, a Usage Rules bullet, a
+// sentence of prose), stated in a different shape on each cluster, and NGC
+// answered barely any of them. A required key cannot be quietly skipped — a
+// cluster that does not publish a limit has to say so in words, which is
+// itself the useful answer.
+//
+// Labels live in ClusterQuotas.svelte so all three pages read identically;
+// only the values belong here.
+const Quotas = z.object({
+  wallTime: z.string(),
+  gpusPerJob: z.string(),
+  gpusAtOnce: z.string(),
+  homeDirectory: z.string(),
+  projectStorage: z.string(),
+  sharedPool: z.string()
+});
+
+export type ClusterQuotaMeta = z.infer<typeof Quotas>;
+
+// The rendering order and the human labels, shared by ClusterQuotas.svelte and
+// the .md twin so the two cannot drift into naming the same limit differently.
+export const QUOTA_GROUPS: {
+  title: string;
+  rows: { key: keyof ClusterQuotaMeta; label: string }[];
+}[] = [
+  {
+    title: 'Compute',
+    rows: [
+      { key: 'wallTime', label: 'Max wall time' },
+      { key: 'gpusPerJob', label: 'GPUs per job' },
+      { key: 'gpusAtOnce', label: 'GPUs at once, per person' }
+    ]
+  },
+  {
+    title: 'Storage',
+    rows: [
+      { key: 'homeDirectory', label: 'Home directory' },
+      { key: 'projectStorage', label: 'Project storage' },
+      { key: 'sharedPool', label: 'Shared pool' }
+    ]
+  }
+];
+
 export const ClusterFrontmatter = z.object({
   title: z.string(),
   description: z.string(),
@@ -26,6 +71,7 @@ export const ClusterFrontmatter = z.object({
   badge: z.object({ text: z.string(), variant: z.enum(['caution', 'note']) }).optional(),
   brandColor: z.string(),
   providerDocs: ProviderDocs,
+  quotas: Quotas,
   hardware: z.array(HardwareItem).min(1)
 });
 

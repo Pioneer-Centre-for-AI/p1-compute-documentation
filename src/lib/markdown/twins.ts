@@ -129,6 +129,7 @@ export function renderTwin(path: string): string | null {
   return svxToMarkdown(source, {
     title: cluster?.meta.title ?? event?.meta.title,
     providerDocs: cluster?.meta.providerDocs,
+    quotas: cluster?.meta.quotas,
     hardware: cluster?.meta.hardware,
     blocks: BLOCKS[path]?.()
   });
