@@ -4,9 +4,9 @@
 // concatenates all of them, and `llms.txt` lists them with titles and
 // descriptions. Server-only — the glob below pulls every page source into the
 // bundle, which must never reach the client.
-import { clusters, clusterDecisionEntries, computeTiers } from '$lib/content';
+import { getClusters, getClusterDecisionEntries, computeTiers } from '$lib/content';
 import {
-  events,
+  getEvents,
   superAgentAtAGlance,
   superAgentCollaborations,
   superAgentOrganizers,
@@ -69,13 +69,13 @@ const BLOCKS: Record<string, () => Record<string, string>> = {
   clusters: () => ({
     'decision-table': markdownTable(
       ['If you need', 'Go to', 'Why'],
-      clusterDecisionEntries.map((d) => {
+      getClusterDecisionEntries().map((d) => {
         const label = d.cluster.meta.navLabel ?? d.cluster.meta.title;
         return [d.need, `[${label}](${d.cluster.href})`, d.why];
       })
     ),
     guidance: `**Guidance:** unsure which fits, or want a second opinion? The compute coordinator is glad to help: [tell us about your workload](${URLS.surveyPage}). Entirely optional, and you are just as welcome to head straight to a cluster page.`,
-    'cluster-cards': clusters
+    'cluster-cards': getClusters()
       .map((c) => `- [${c.meta.title}](${c.href}): ${c.meta.description}`)
       .join('\n')
   }),
@@ -91,7 +91,7 @@ const BLOCKS: Record<string, () => Record<string, string>> = {
     )
   }),
   events: () => ({
-    'event-cards': events
+    'event-cards': getEvents()
       .map((e) => `- [${e.meta.title}](${e.href}) (${e.meta.dateLabel}): ${e.meta.description}`)
       .join('\n')
   }),
@@ -123,8 +123,8 @@ export function renderTwin(path: string): string | null {
 
   // Cluster and event pages get their H1 from the layout rather than the .svx
   // body, and cluster pages their hardware table too, so both are reattached here.
-  const cluster = clusters.find((c) => c.href === `/${path}/`);
-  const event = events.find((e) => e.href === `/${path}/`);
+  const cluster = getClusters().find((c) => c.href === `/${path}/`);
+  const event = getEvents().find((e) => e.href === `/${path}/`);
 
   return svxToMarkdown(source, {
     title: cluster?.meta.title ?? event?.meta.title,
@@ -147,8 +147,8 @@ export function renderTwin(path: string): string | null {
  * all, which is a valid llms.txt and a useless one.
  */
 export function twinMeta(path: string): { title: string; description: string } {
-  const cluster = clusters.find((c) => c.href === `/${path}/`);
-  const event = events.find((e) => e.href === `/${path}/`);
+  const cluster = getClusters().find((c) => c.href === `/${path}/`);
+  const event = getEvents().find((e) => e.href === `/${path}/`);
   const fromRegistry = cluster?.meta ?? event?.meta;
   if (fromRegistry) {
     return { title: fromRegistry.title, description: fromRegistry.description };

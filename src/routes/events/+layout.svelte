@@ -3,13 +3,13 @@
   import BrandAccent from '$lib/components/BrandAccent.svelte';
   import Meta from '$lib/components/Meta.svelte';
   import { headingAnchors } from '$lib/actions/headingAnchors';
-  import { events } from '$lib/events';
+  import { getEvents } from '$lib/events';
 
   let { children } = $props();
 
   // Null on /events/ itself, which is the overview page rather than an event.
   // It renders its own <article> and passes through the {:else} branch below.
-  const event = $derived(events.find((e) => e.href === $page.url.pathname) ?? null);
+  const event = $derived(getEvents().find((e) => e.href === $page.url.pathname) ?? null);
 
   // schema.org Event, so calendars and search surfaces can read the session.
   // The room is not fixed yet, so location carries the conference name only.

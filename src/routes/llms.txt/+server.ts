@@ -7,7 +7,7 @@
 // Sections mirror src/lib/nav.ts, so a page added to the nav is indexed here
 // without a second edit. Pages deliberately kept out of the nav (Terms,
 // Privacy) land in `## Optional`, which the spec defines as safe to skip.
-import { isGroup, nav } from '$lib/nav';
+import { getNav, isGroup } from '$lib/nav';
 import { twinMeta, twinPaths } from '$lib/markdown/twins';
 import { LANDING_DESCRIPTION, SITE_NAME, SITE_SUMMARY, SITE_URL } from '$lib/site';
 import type { RequestHandler } from './$types';
@@ -29,7 +29,7 @@ export const GET: RequestHandler = () => {
   const indexed = new Set<string>();
   const sections: string[] = [];
 
-  for (const entry of nav) {
+  for (const entry of getNav()) {
     if (!isGroup(entry)) continue;
     const paths = entry.items
       .map((item) => toPath(item.href))

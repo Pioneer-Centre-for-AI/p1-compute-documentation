@@ -20,7 +20,7 @@ export type ProviderDocsMeta = z.infer<typeof ProviderDocs>;
 
 // What a researcher is actually allowed to use. Fixed keys rather than a
 // free-form label/value list, and every one of them REQUIRED: the limits used
-// to live in three places per page (a hardware row, a Usage Rules bullet, a
+// to live in three places per page (a hardware row, a usage-limits bullet, a
 // sentence of prose), stated in a different shape on each cluster, and NGC
 // answered barely any of them. A required key cannot be quietly skipped — a
 // cluster that does not publish a limit has to say so in words, which is
@@ -82,15 +82,35 @@ const modules = import.meta.glob('/src/routes/clusters/*/+page.svx', {
   eager: true
 }) as Record<string, { metadata?: unknown }>;
 
-export const clusters: ClusterEntry[] = Object.entries(modules)
-  .map(([path, mod]) => {
-    const slug = path.split('/').at(-2)!;
-    return { slug, href: `/clusters/${slug}/`, meta: ClusterFrontmatter.parse(mod.metadata) };
-  })
-  .sort((a, b) => a.meta.order - b.meta.order);
+// Parsed on first call, never at module evaluation. The glob pulls in the
+// cluster pages, and those pages import ClusterQuotas.svelte, which imports
+// this module back — a cycle. Vite's dev SSR runner walks that cycle live, so
+// a page's `metadata` export is still undefined while its own module is mid
+// evaluation, and an eager parse here threw a ZodError that took the whole nav
+// down. Reading through a function defers the access until every module in the
+// cycle has finished, where the live bindings are populated.
+//
+// `var`, not `let`, and this is the one place in the codebase that wants it.
+// The dev runner evaluates route modules concurrently and hands a module that
+// re-enters this cycle the PARTIAL namespace rather than waiting, so a caller
+// can reach getClusters() before this line has run. `var` hoists as undefined
+// and `??=` treats that as unset; `let` is in the temporal dead zone and throws
+// "Cannot access 'parsed' before initialization" instead. Callers should still
+// not invoke this at module scope — see getNav() in $lib/nav.
+var parsed: ClusterEntry[] | null | undefined;
+
+export function getClusters(): ClusterEntry[] {
+  parsed ??= Object.entries(modules)
+    .map(([path, mod]) => {
+      const slug = path.split('/').at(-2)!;
+      return { slug, href: `/clusters/${slug}/`, meta: ClusterFrontmatter.parse(mod.metadata) };
+    })
+    .sort((a, b) => a.meta.order - b.meta.order);
+  return parsed;
+}
 
 export function getCluster(slug: string): ClusterEntry | undefined {
-  return clusters.find((c) => c.slug === slug);
+  return getClusters().find((c) => c.slug === slug);
 }
 
 // The "which cluster fits me" decision table on /clusters/. Lives here rather
@@ -161,8 +181,10 @@ export const computeTiers: ComputeTier[] = [
 // .svx script blocks are plain JS and cannot carry the type assertions.
 export type ClusterDecisionEntry = ClusterDecision & { cluster: ClusterEntry };
 
-export const clusterDecisionEntries: ClusterDecisionEntry[] = clusterDecisions.map((d) => {
-  const cluster = getCluster(d.slug);
-  if (!cluster) throw new Error(`Decision row references unknown cluster "${d.slug}"`);
-  return { ...d, cluster };
-});
+export function getClusterDecisionEntries(): ClusterDecisionEntry[] {
+  return clusterDecisions.map((d) => {
+    const cluster = getCluster(d.slug);
+    if (!cluster) throw new Error(`Decision row references unknown cluster "${d.slug}"`);
+    return { ...d, cluster };
+  });
+}

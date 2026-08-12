@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from '$app/stores';
-  import { nav, isGroup, type NavItem } from '$lib/nav';
+  import { getNav, isGroup, type NavItem } from '$lib/nav';
 
   function isActive(href: string, current: string): boolean {
     if (href.startsWith('http')) return false;
@@ -38,7 +38,7 @@
 
 <nav class="text-sm" aria-label="Primary">
   <ul class="space-y-7">
-    {#each nav as entry}
+    {#each getNav() as entry}
       {#if isGroup(entry)}
         <li>
           <div class="eyebrow mb-2 px-2">

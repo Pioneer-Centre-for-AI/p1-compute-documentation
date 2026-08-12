@@ -1,7 +1,7 @@
 <script>
   import Meta from '$lib/components/Meta.svelte';
   import ClusterIllustration from '$lib/components/ClusterIllustration.svelte';
-  import { clusters, clusterDecisionEntries as decisions } from '$lib/content';
+  import { getClusters, getClusterDecisionEntries } from '$lib/content';
   import { headingAnchors } from '$lib/actions/headingAnchors';
   import { SURVEY_PAGE } from '$lib/links';
 </script>
@@ -36,7 +36,7 @@ one that fits your project, then follow its page for access and usage instructio
       </tr>
     </thead>
     <tbody>
-      {#each decisions as d}
+      {#each getClusterDecisionEntries() as d}
         <tr>
           <td class="border border-slate-200 px-4 py-3 align-top text-slate-700 dark:border-slate-700 dark:text-slate-300">{d.need}</td>
           <td class="border border-slate-200 px-4 py-3 align-top whitespace-nowrap dark:border-slate-700">
@@ -72,7 +72,7 @@ Open to researchers at any Danish university. Looking beyond P1? See the wider
 
 <!-- md:replace cluster-cards -->
 <div class="not-prose grid gap-6 sm:grid-cols-3">
-  {#each clusters as cluster}
+  {#each getClusters() as cluster}
     <a
       href={cluster.href}
       class="group flex flex-col rounded-xl border border-slate-200 p-5 no-underline transition-colors hover:border-slate-300 hover:bg-slate-50 dark:border-slate-700 dark:hover:border-slate-600 dark:hover:bg-slate-800/50"

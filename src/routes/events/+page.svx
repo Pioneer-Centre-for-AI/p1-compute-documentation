@@ -1,6 +1,6 @@
 <script>
   import Meta from '$lib/components/Meta.svelte';
-  import { events } from '$lib/events';
+  import { getEvents } from '$lib/events';
   import { headingAnchors } from '$lib/actions/headingAnchors';
 </script>
 
@@ -49,7 +49,7 @@ providers together.
 
 <!-- md:replace event-cards -->
 <div class="not-prose grid gap-6 sm:grid-cols-2">
-  {#each events as event}
+  {#each getEvents() as event}
     <a
       href={event.href}
       class="group flex flex-col rounded-xl border border-slate-200 p-5 no-underline transition-colors hover:border-slate-300 hover:bg-slate-50 dark:border-slate-700 dark:hover:border-slate-600 dark:hover:bg-slate-800/50"

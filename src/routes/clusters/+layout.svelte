@@ -6,14 +6,14 @@
   import HardwareSpec from '$lib/components/HardwareSpec.svelte';
   import ProviderDocs from '$lib/components/ProviderDocs.svelte';
   import { headingAnchors } from '$lib/actions/headingAnchors';
-  import { clusters } from '$lib/content';
+  import { getClusters } from '$lib/content';
 
   let { children } = $props();
 
   // Null on /clusters/ itself, which is the overview page rather than a cluster.
   // It renders its own <article> and passes through the {:else} branch below;
   // only the detail pages get the header, illustration, and hardware table.
-  const cluster = $derived(clusters.find((c) => c.href === $page.url.pathname) ?? null);
+  const cluster = $derived(getClusters().find((c) => c.href === $page.url.pathname) ?? null);
 </script>
 
 {#if cluster}

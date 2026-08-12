@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { nav, isGroup, type NavItem } from '$lib/nav';
+  import { getNav, isGroup, type NavItem } from '$lib/nav';
   import {
     SURVEY_PAGE,
     BOOKING_URL,
@@ -20,8 +20,8 @@
 
   // Grouped rather than flattened: two nav groups have an "Overview" item, and
   // side by side in one list they read as duplicates of each other.
-  const siteGroups = nav.filter(isGroup);
-  const looseLinks: NavItem[] = nav.filter((entry) => !isGroup(entry)) as NavItem[];
+  const siteGroups = $derived(getNav().filter(isGroup));
+  const looseLinks: NavItem[] = $derived(getNav().filter((entry) => !isGroup(entry)) as NavItem[]);
 
   // Ways to reach a person. Emails are labelled rather than spelled out: two
   // bare addresses give no clue which to use, and the target shows on hover.

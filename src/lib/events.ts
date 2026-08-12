@@ -29,12 +29,21 @@ const modules = import.meta.glob('/src/routes/events/*/+page.svx', {
   eager: true
 }) as Record<string, { metadata?: unknown }>;
 
-export const events: EventEntry[] = Object.entries(modules)
-  .map(([path, mod]) => {
-    const slug = path.split('/').at(-2)!;
-    return { slug, href: `/events/${slug}/`, meta: EventFrontmatter.parse(mod.metadata) };
-  })
-  .sort((a, b) => a.meta.order - b.meta.order);
+// Deferred exactly as getClusters() in $lib/content is, and for the same
+// reason: the event pages import this module back (the D3A page reads its
+// programme from here), so parsing at module evaluation reads frontmatter that
+// the cycle has not populated yet. See the note there for why this is `var`.
+var parsed: EventEntry[] | null | undefined;
+
+export function getEvents(): EventEntry[] {
+  parsed ??= Object.entries(modules)
+    .map(([path, mod]) => {
+      const slug = path.split('/').at(-2)!;
+      return { slug, href: `/events/${slug}/`, meta: EventFrontmatter.parse(mod.metadata) };
+    })
+    .sort((a, b) => a.meta.order - b.meta.order);
+  return parsed;
+}
 
 /**
  * Soonest event that has not happened yet, or null. ISO dates compare
@@ -42,7 +51,7 @@ export const events: EventEntry[] = Object.entries(modules)
  */
 export function upcomingEvent(today = new Date().toISOString().slice(0, 10)): EventEntry | null {
   return (
-    events
+    getEvents()
       .filter((e) => e.meta.startDate >= today)
       .sort((a, b) => a.meta.startDate.localeCompare(b.meta.startDate))[0] ?? null
   );

@@ -5,7 +5,7 @@
   import { LANDING_DESCRIPTION, SITE_NAME } from '$lib/site';
   import DigitalObjectIdentifier from '$lib/components/DigitalObjectIdentifier.svelte';
   import LandscapeDiagram from '$lib/components/LandscapeDiagram.svelte';
-  import { clusters } from '$lib/content';
+  import { getClusters } from '$lib/content';
   import { SURVEY_PAGE } from '$lib/links';
 
   let booking = $state(false);
@@ -86,7 +86,7 @@
     </h2>
 
     <div class="grid gap-8 md:grid-cols-3">
-      {#each clusters as cluster}
+      {#each getClusters() as cluster}
         {@const p = profiles[cluster.slug]}
         <a
           href={cluster.href}
