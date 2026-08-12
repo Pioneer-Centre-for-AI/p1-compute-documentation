@@ -136,9 +136,14 @@ export function renderTwin(path: string): string | null {
 
 /**
  * Title and description for the llms.txt index. Cluster and event pages carry
- * both in validated frontmatter; the standalone pages set them in
- * `<svelte:head>`, so read them back from there rather than keeping a second
- * hand-written list that could drift from what the page actually says.
+ * both in validated frontmatter; the standalone pages pass them to `<Meta>`,
+ * so read them back off that tag rather than keeping a second hand-written
+ * list that could drift from what the page actually says.
+ *
+ * Read off the COMPONENT CALL, not the rendered head: these are page sources,
+ * so `<title>` and `<meta name="description">` never appear in them. Matching
+ * on those silently produced the route slug as a title and no description at
+ * all, which is a valid llms.txt and a useless one.
  */
 export function twinMeta(path: string): { title: string; description: string } {
   const cluster = clusters.find((c) => c.href === `/${path}/`);
@@ -149,11 +154,17 @@ export function twinMeta(path: string): { title: string; description: string } {
   }
 
   const source = pages.get(path) ?? '';
-  const title = /<title>([\s\S]*?)<\/title>/.exec(source)?.[1]?.trim();
-  const description = /<meta\s+name="description"\s+content="([\s\S]*?)"/.exec(source)?.[1];
+  const tag = /<Meta\b[\s\S]*?\/>/.exec(source)?.[0] ?? '';
+  const title = /\btitle="([^"]*)"/.exec(tag)?.[1]?.trim();
+  const description = /\bdescription="([^"]*)"/.exec(tag)?.[1];
+  if (!title) {
+    throw new Error(
+      `No <Meta title="…"> in src/routes/${path}/+page.svx, so llms.txt would index it as "${path}".`
+    );
+  }
   return {
-    title: title ?? path,
-    // Collapse the line wrapping the source uses inside the content attribute.
+    title,
+    // Collapse the line wrapping the source uses inside the attribute.
     description: description?.replace(/\s+/g, ' ').trim() ?? ''
   };
 }
