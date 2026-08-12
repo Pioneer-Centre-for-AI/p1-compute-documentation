@@ -44,9 +44,14 @@
       onclick={() => (open = false)}
       class="absolute inset-0 h-full w-full cursor-default bg-slate-950/50 backdrop-blur-sm"
     ></button>
+    <!-- Cal lays the booker out in three columns (details, month, slots) only
+         when the iframe is wide enough; below roughly 1024px it stacks them and
+         the dialog reads as a tall scroller. Hence 6xl rather than the 3xl the
+         form dialogs use, and a height capped in rem: at a bare 85vh on a tall
+         display the three columns float in empty space. -->
     <div
       bind:this={panel}
-      class="relative flex h-[85vh] w-full max-w-3xl flex-col overflow-hidden rounded-xl bg-white shadow-2xl dark:bg-slate-900"
+      class="relative flex h-[85vh] max-h-[46rem] w-full max-w-6xl flex-col overflow-hidden rounded-xl bg-white shadow-2xl dark:bg-slate-900"
     >
       <div class="flex items-center justify-between gap-3 border-b border-slate-200 px-4 py-3 dark:border-slate-700">
         <p class="min-w-0 truncate text-sm font-semibold text-slate-900 dark:text-slate-100">{title}</p>
