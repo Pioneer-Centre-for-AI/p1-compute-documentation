@@ -87,8 +87,9 @@ export const FORMS: FormInfo[] = [
     url: ACCESS_EXCEPTION_FORM_URL
   },
   {
-    title: 'Temporary GPU allowance increase',
-    purpose: 'Request a temporary raise of your GPU limit while a cluster is underutilized.',
+    title: 'Planned GPU allocation',
+    purpose:
+      'Request a raised GPU limit for a run that also needs protecting from cancellation: a multi-day training, a deadline, or a workload that cannot checkpoint.',
     provider: 'Microsoft Forms',
     url: GPU_ALLOWANCE_URL
   },

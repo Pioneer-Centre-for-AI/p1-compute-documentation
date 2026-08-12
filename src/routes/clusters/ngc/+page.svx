@@ -52,14 +52,24 @@ with large datasets. For details on the underlying infrastructure, see
 
 ## Getting Access
 
-### Talk to the compute coordinator
+### Who's eligible?
+
+**Requirements:** PhD or higher (exceptions may apply), valid Danish university email, and
+registered P1 affiliation.
+
+Each project needs to bring a record (a signed Data Processing Agreement) that explicitly
+mentions NGC as a data processor and that the data is allowed to be stored there. If the project
+poses a high risk to individuals whose personal data is being processed, a Data Protection Impact
+Assessment (DPIA) is also required.
+
+### Should I talk to someone first?
 
 You are welcome to go straight to the sign-up steps below. If you would like a hand, the
 [workload survey](p1:surveyPage) tells the P1 compute coordinator about your needs, expectations, and
 workload. For NGC it is worth doing early, since GDPR projects need their data-processing
 paperwork lined up.
 
-### Sign-up Form
+### How do I sign up?
 
 Before accessing the P1 NGC HPC, you must be a P1 affiliate. Sign in to
 [your P1 profile](p1:profile) (also reachable via **Update Profile** in the header), update your
@@ -83,23 +93,13 @@ You will be added to the NGC Slack channel once you gain access.
   description="Requires an approved P1 affiliation and a Data Processing Agreement naming NGC."
 />
 
-### Access Exception
+### What if I don't qualify?
 
 <AccessException />
 
-### Who's eligible?
-
-**Requirements:** PhD or higher (exceptions may apply), valid Danish university email, and
-registered P1 affiliation.
-
-Each project needs to bring a record (a signed Data Processing Agreement) that explicitly
-mentions NGC as a data processor and that the data is allowed to be stored there. If the project
-poses a high risk to individuals whose personal data is being processed, a Data Protection Impact
-Assessment (DPIA) is also required.
-
 ## Getting Started
 
-### How to connect
+### How do I connect?
 
 The P1 NGC HPC is an air-gapped system requiring multi-factor authentication and a remote desktop
 client. Once registered, you'll receive specific access instructions including an Omnissa Remote
@@ -116,7 +116,7 @@ cld076-0004.cld076.vmc              # Internal SFTP
 sftp.spc.ngc.dk                     # External Ingress/Egress (SFTP)
 ```
 
-### How to transfer data
+### How do I transfer data?
 
 The P1 NGC HPC is air-gapped, so `rsync` and `rclone` from outside aren't available end-to-end:
 every transfer goes through approved SFTP staging under admin supervision. Request access to
@@ -205,22 +205,15 @@ directory through the Omnissa Remote Desktop client, which an NGC admin has to e
 Public repositories available through the internal GitHub proxy can also be cloned directly, as
 described under [Code from git](#code-from-git).
 
-### Software environment
+#### Dependencies (packages and images)
 
-The air gap shapes everything here: `pip install`, `conda`, and `apt` cannot reach the public
-internet, so an environment that builds itself on first run will fail. Plan on one of three routes.
+The air gap covers package managers too: `pip install`, `conda`, and `apt` cannot reach the public
+internet, so an environment that builds itself on first run fails here. Dependencies arrive the
+same way data does.
 
-Environment modules cover what is already installed:
-
-```bash
-module avail
-module load <module>
-module list
-module purge
-```
-
-Otherwise, bring the dependencies in the same way you bring data. Resolve them on a machine with
-network access, then stage the result through `/data/upload`:
+Check `module avail` first, since environment modules cover what is already installed. Otherwise
+resolve the dependencies on a machine with network access and stage the result through
+`/data/upload`:
 
 ```bash
 pip download -r requirements.txt -d wheels/     # on your own machine
@@ -236,7 +229,7 @@ For anything with awkward system libraries, build a container image outside and 
 file instead. That also makes the environment reproducible, which matters more here than on the
 open clusters, since you cannot simply reinstall later.
 
-### How to start an interactive job
+### How do I start an interactive job?
 
 Quick interactive session:
 
@@ -251,7 +244,7 @@ group and account, which you receive when your access is approved:
 qsub -I -X -W group_list=<group> -A <account> -l nodes=1:ppn=4,mem=20gb,walltime=02:00:00
 ```
 
-### How to submit a batch job
+### How do I submit a batch job?
 
 ```bash file=train.sh
 #!/bin/bash
@@ -280,7 +273,7 @@ qsub train.sh
 Refer to NGC's internal documentation (linked from the status page) for the full list of
 scheduler flags and worked examples.
 
-### Monitoring and cancelling jobs
+### How do I monitor jobs?
 
 ```bash
 qstat -u $USER          # your jobs and their state
@@ -294,7 +287,7 @@ that the requested nodes, memory, or wall time are not free yet.
 
 ## Policy & Support
 
-### Usage Rules
+### What are the limits?
 
 <ClusterQuotas slug="ngc" />
 
@@ -302,7 +295,7 @@ that the requested nodes, memory, or wall time are not free yet.
 - Each project must carry a signed Data Processing Agreement naming NGC as data processor
 - High-risk projects additionally require a Data Protection Impact Assessment (DPIA)
 
-### Storage, quotas, and backups
+### How much storage do I get?
 
 Your quota is set when your project is onboarded. Check what you are using before staging a large
 dataset:
@@ -319,11 +312,11 @@ Retention is governed by your project's Data Processing Agreement rather than by
 personal data may not simply be left in place once the project ends. Agree the deletion or
 archiving steps with your NGC admin and the compute coordinator well before that date.
 
-### Temporary GPU Increase
+### What if I need more GPUs?
 
 <GpuAllowance />
 
-### Who to contact
+### Who do I contact?
 
 <Support
   technicalSupportEmail="support@ngc.dk"

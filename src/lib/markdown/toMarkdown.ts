@@ -88,9 +88,9 @@ const WRAPPERS: Record<string, () => string> = {
     ),
   GpuAllowance: () =>
     formLine(
-      'Temporary GPU allowance increase',
+      'Planned GPU allocation',
       URLS.gpuAllowance,
-      'Request a temporary raise of your GPU limit while a cluster is underutilized.'
+      'Request a raised GPU limit for a run that also needs protecting from cancellation: a multi-day training, a deadline, or a workload that cannot checkpoint.'
     ),
   ComputeBudget: () =>
     formLine(

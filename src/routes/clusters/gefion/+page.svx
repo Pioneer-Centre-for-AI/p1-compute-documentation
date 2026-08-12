@@ -13,7 +13,7 @@ quotas:
   # Quoted: a bare 2 is a YAML number, and the schema wants the string it will
   # print, so that a value can always carry its own unit or caveat.
   gpusPerJob: '2'
-  gpusAtOnce: 4, as 2 concurrent jobs of 2 GPUs
+  gpusAtOnce: 4, as 2 concurrent jobs of 2 GPUs, more while GPUs sit idle
   homeDirectory: 25 GB
   projectStorage: 500 GB default
   sharedPool: 300 TB
@@ -59,14 +59,19 @@ puts you in a position to apply for one with something that already works.
 
 ## Getting Access
 
-### Talk to the compute coordinator
+### Who's eligible?
+
+**Requirements:** PhD or higher (exceptions may apply), valid Danish university email, and
+registered P1 affiliation.
+
+### Should I talk to someone first?
 
 You are welcome to go straight to the sign-up form below. If you would like a hand, the
 [workload survey](p1:surveyPage) tells the P1 compute coordinator about your needs, expectations, and
 workload. For the sandbox it also helps us plan the step up to full production nodes if your
 project scales.
 
-### Sign-up Form
+### How do I sign up?
 
 Before accessing the P1 Gefion sandbox, you must be a P1 affiliate. Sign in to
 [your P1 profile](p1:profile) (also reachable via **Update Profile** in the header), update your
@@ -83,18 +88,13 @@ then contact you to get you set up with a DCAI username and initial-setup-passwo
   description="Requires an approved P1 affiliation."
 />
 
-### Access Exception
+### What if I don't qualify?
 
 <AccessException />
 
-### Who's eligible?
-
-**Requirements:** PhD or higher (exceptions may apply), valid Danish university email, and
-registered P1 affiliation.
-
 ## Getting Started
 
-### How to connect
+### How do I connect?
 
 Gefion uses [Teleport](https://goteleport.com/) for secure SSH access. Install the
 [Teleport CLI client (`tsh`)](https://goteleport.com/docs/connect-your-client/tsh/) and
@@ -132,7 +132,7 @@ With the SSH config in place you can use the
 [VS Code Remote SSH extension](https://code.visualstudio.com/docs/remote/ssh) to connect to
 `gefion` via the command palette (Ctrl+Shift+P, then "Remote-SSH: Connect to Host").
 
-### How to transfer data
+### How do I transfer data?
 
 Use `rsync` for source code and small datasets, and [rclone](https://rclone.org/) for large
 datasets. Both work over the Teleport-backed SSH access and are more ergonomic than a plain SFTP
@@ -275,39 +275,7 @@ Then use `gefion-jump:` instead of `gefion:` in your rclone commands.
 
 </details>
 
-### Software environment
-
-Software comes from environment modules rather than being installed system-wide. `module spider`
-searches the whole tree, including modules that stay hidden until a dependency is loaded:
-
-```bash
-module avail            # what is loadable right now
-module spider CUDA      # search everything, including hidden modules
-module load CUDA/12.8
-module list
-module purge            # start clean
-```
-
-Load the same modules inside your job script as you did when testing interactively. A login shell
-and a batch job do not share an environment.
-
-For Python, [uv](https://docs.astral.sh/uv/) is the quickest route to a reproducible environment
-and is what the batch example below uses:
-
-```bash
-uv venv
-uv pip install -r requirements.txt
-uv run train.py
-```
-
-Containers are the more reproducible option when your stack is awkward to install. Apptainer runs
-them without root, and `--nv` exposes the node's GPUs inside the container:
-
-```bash
-apptainer exec --nv ~/images/pytorch.sif python train.py
-```
-
-### How to start an interactive job
+### How do I start an interactive job?
 
 Request an interactive session with GPUs via `srun`:
 
@@ -320,7 +288,7 @@ Which will open an interactive session with 2 H100 GPUs and 64 GB of RAM. Size `
 data you are loading rather than the GPUs: the nodes carry 2 TB, and asking for a few GB is the
 usual reason a job dies partway through with an out-of-memory error.
 
-### How to submit a batch job
+### How do I submit a batch job?
 
 ```bash file=train.sh
 #!/bin/bash
@@ -349,7 +317,7 @@ sbatch train.sh              # submit above script 1 time
 sbatch --array=0-7 train.sh  # submit above script 8 times
 ```
 
-### Monitoring and cancelling jobs
+### How do I monitor jobs?
 
 ```bash
 squeue --me                                            # your jobs and their state
@@ -365,7 +333,7 @@ fastest way to see whether a job was killed for exceeding its memory or time req
 
 ## Policy & Support
 
-### Usage Rules
+### What are the limits?
 
 <ClusterQuotas slug="gefion" />
 
@@ -383,7 +351,7 @@ DCAI and the compute coordinator before uploading any personal data.
 
 </Aside>
 
-### Storage, quotas, and backups
+### How much storage do I get?
 
 Your home directory holds 25 GB, so datasets and checkpoints belong in your project space against
 the 500 GB default quota. Check what you are using before a large transfer:
@@ -400,11 +368,25 @@ Treat cluster storage as working space rather than an archive. Keep code in git 
 copy of anything you cannot regenerate, either on institutional storage or on your own machine.
 Before a project winds down, talk to the compute coordinator about what needs to be moved off.
 
-### Temporary GPU Increase
+### What if I need more GPUs?
 
-<GpuAllowance />
+You can allocate beyond the default limit of 2 concurrent jobs at a maximum of 2 GPUs per job when
+GPUs are idle on the two NVIDIA DGX H100 nodes in our group `iu_0096`. Submit the larger job
+directly; no request is needed. Check what is free with `sinfo` first.
 
-### Who to contact
+<Aside type="caution">
+
+A job submitted beyond the default limits is subject to cancellation when demand picks up. If you
+take that option, checkpointing your workload is your responsibility, so a cancelled job resumes
+rather than starts over.
+
+</Aside>
+
+Where a run has to finish by a date, or cannot checkpoint at all, ask for it to be planned instead.
+
+<GpuAllowance selfServeDocumented />
+
+### Who do I contact?
 
 <Support
   technicalSupportEmail="support@dcai.dk"

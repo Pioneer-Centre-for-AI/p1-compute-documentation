@@ -1,8 +1,8 @@
 <script lang="ts">
   import { getCluster, QUOTA_GROUPS } from '$lib/content';
 
-  // Rendered inside each cluster page's "Usage Rules" section. Takes the slug
-  // rather than the values so a page cannot state a limit that disagrees with
+  // Rendered inside each cluster page's "What are the limits?" section. Takes
+  // the slug rather than the values so a page cannot state a limit that disagrees with
   // its own frontmatter, and so the row ORDER and the labels are identical on
   // all three clusters: the point of the table is that the same six questions
   // are answered in the same places every time.

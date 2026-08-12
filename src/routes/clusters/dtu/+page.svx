@@ -54,13 +54,18 @@ experiments and research projects.
 
 ## Getting Access
 
-### Talk to the compute coordinator
+### Who's eligible?
+
+**Requirements:** PhD or higher (exceptions may apply), valid Danish university email, and
+registered P1 affiliation.
+
+### Should I talk to someone first?
 
 You are welcome to go straight to the sign-up forms below. If you would like a hand, the
 [workload survey](p1:surveyPage) tells the P1 compute coordinator about your needs, expectations, and
 workload. We use it to point you to the right resource and to help you get the most out of it.
 
-### Sign-up Form
+### How do I sign up?
 
 Two forms get you onto the cluster: start with P1 affiliation, then request a DTU account.
 
@@ -80,18 +85,13 @@ official university email address are accepted. The form is processed by Henning
   description="Use your official university email address."
 />
 
-### Access Exception
+### What if I don't qualify?
 
 <AccessException />
 
-### Who's eligible?
-
-**Requirements:** PhD or higher (exceptions may apply), valid Danish university email, and
-registered P1 affiliation.
-
 ## Getting Started
 
-### How to connect
+### How do I connect?
 
 The cluster is reachable at `login9.hpc.dtu.dk` via SSH. From outside DTU's network, first connect
 through Cisco AnyConnect to `vpn.dtu.dk`. See
@@ -113,7 +113,7 @@ Then connect:
 ssh -i ~/.ssh/keyname username@login9.hpc.dtu.dk
 ```
 
-### How to transfer data
+### How do I transfer data?
 
 Use `rsync` for source code and small datasets, and [rclone](https://rclone.org/) for large
 datasets. Both work over the standard SSH connection and are more ergonomic than a plain SFTP
@@ -181,38 +181,7 @@ with the SFTP client directly:
 sftp username@transfer.gbar.dtu.dk
 ```
 
-### Software environment
-
-Software comes from environment modules rather than being installed system-wide, so nothing is
-loaded until you ask for it:
-
-```bash
-module avail            # everything on offer
-module load cuda/12.4
-module list             # what is loaded right now
-module purge            # start clean
-```
-
-Load the same modules inside your job script as you did when testing interactively. A login shell
-and a batch job do not share an environment.
-
-For Python, build a virtual environment in your project directory rather than your home directory,
-so package installs do not eat the 30 GB home quota:
-
-```bash
-python3 -m venv /dtu/p1/username/venvs/myproject
-source /dtu/p1/username/venvs/myproject/bin/activate
-pip install -r requirements.txt
-```
-
-Containers are the more reproducible option when your stack is awkward to install. Apptainer runs
-them without root, and `--nv` exposes the node's GPUs inside the container:
-
-```bash
-apptainer exec --nv /dtu/p1/username/images/pytorch.sif python train.py
-```
-
-### How to start an interactive job
+### How do I start an interactive job?
 
 Interactive sessions run on the `p1i` queue, intended for package installation, test runs, and
 short debugging sessions:
@@ -223,7 +192,7 @@ bsub -q p1i -gpu "num=1:mode=exclusive_process" -W 1:00 -Is /bin/bash
 
 Refer to the [DTU LSF guide](https://www.hpc.dtu.dk/?page_id=2698) for queue and resource flags.
 
-### How to submit a batch job
+### How do I submit a batch job?
 
 Batch jobs go to the `p1` queue:
 
@@ -249,7 +218,7 @@ mkdir -p logs
 bsub < train.sh
 ```
 
-### Monitoring and cancelling jobs
+### How do I monitor jobs?
 
 ```bash
 bjobs                   # your jobs and their state
@@ -264,7 +233,7 @@ requested GPUs, memory, or wall time are not free yet. Asking for less tends to 
 
 ## Policy & Support
 
-### Usage Rules
+### What are the limits?
 
 <ClusterQuotas slug="dtu" />
 
@@ -272,7 +241,7 @@ If your project requires more storage, contact the governance group at
 [compute-governance-p1@aicentre.dk](mailto:compute-governance-p1@aicentre.dk) to discuss your
 needs.
 
-### Storage, quotas, and backups
+### How much storage do I get?
 
 Your 500 GB project allowance is a slice of the cluster's 60 TiB shared pool. Check what you are
 using before a large transfer:
@@ -295,13 +264,13 @@ If your project involves personal data, talk to the compute coordinator before y
 
 </Aside>
 
-### Temporary GPU Increase
+### What if I need more GPUs?
 
 <GpuAllowance />
 
 <Citation />
 
-### Who to contact
+### Who do I contact?
 
 <Support
   technicalSupportEmail="support@hpc.dtu.dk"
