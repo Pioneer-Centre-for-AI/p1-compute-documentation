@@ -27,7 +27,10 @@ export const nav: NavEntry[] = [
     items: [
       { label: 'About', href: '/about/' },
       { label: 'Your Compute Needs', href: '/survey/' },
-      { label: 'Forms & Surveys', href: '/forms/' }
+      // The route stays /forms/: renaming it would move the nav entry, the
+      // llms.txt link, the sitemap URL and anything anyone has bookmarked, to
+      // change a word in a label.
+      { label: 'Forms & Bookings', href: '/forms/' }
     ]
   },
   {
