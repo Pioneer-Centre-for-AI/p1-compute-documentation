@@ -17,7 +17,8 @@
 # Forms & Surveys
 
 Every form and survey used for P1 compute in one place, listed in the order a new researcher
-typically meets them. Each opens in a new tab; the cluster pages embed the same forms in context.
+typically meets them, with the coordinator's calendar first because it is the one that asks least
+of you. Each opens in a new tab; the cluster pages embed the same forms in context.
 
 <!-- md:replace forms-table -->
 <div class="not-prose my-8 overflow-x-auto">

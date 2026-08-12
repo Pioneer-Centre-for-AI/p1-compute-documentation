@@ -1,11 +1,14 @@
 <script lang="ts">
   import Button from '$lib/components/Button.svelte';
+  import BookingDialog from '$lib/components/BookingDialog.svelte';
   import Meta from '$lib/components/Meta.svelte';
   import { LANDING_DESCRIPTION, SITE_NAME } from '$lib/site';
   import DigitalObjectIdentifier from '$lib/components/DigitalObjectIdentifier.svelte';
   import LandscapeDiagram from '$lib/components/LandscapeDiagram.svelte';
   import { clusters } from '$lib/content';
   import { SURVEY_PAGE } from '$lib/links';
+
+  let booking = $state(false);
 
   const profiles: Record<string, { profile: string; image: string; imageAlt: string }> = {
     dtu: {
@@ -143,15 +146,30 @@
           <a href="/ecosystem/" class="font-semibold text-[var(--color-brand)] no-underline hover:underline">compute ecosystem</a>
           is the next step, and we help you choose.
         </p>
-        <Button
-          href={SURVEY_PAGE}
-          variant="primary"
-        >
-          {#snippet children()}
-            Tell us about your workload
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M10 14L21 3M21 14v7H3V3h7" /></svg>
-          {/snippet}
-        </Button>
+        <!-- Two ways out of a section that offers a conversation: the survey,
+             which is the durable record, and the conversation itself. -->
+        <div class="flex flex-wrap items-center gap-3">
+          <Button
+            href={SURVEY_PAGE}
+            variant="primary"
+          >
+            {#snippet children()}
+              Tell us about your workload
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M10 14L21 3M21 14v7H3V3h7" /></svg>
+            {/snippet}
+          </Button>
+          <Button variant="ghost" onclick={() => (booking = true)}>
+            {#snippet children()}
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="4" width="18" height="18" rx="2" />
+                <line x1="16" y1="2" x2="16" y2="6" />
+                <line x1="8" y1="2" x2="8" y2="6" />
+                <line x1="3" y1="10" x2="21" y2="10" />
+              </svg>
+              Book a consultation
+            {/snippet}
+          </Button>
+        </div>
       </div>
       <ul class="flex flex-wrap gap-2 lg:max-w-xs lg:justify-end">
         {#each ecosystem as name}
@@ -165,3 +183,5 @@
     </div>
   </section>
 </main>
+
+<BookingDialog bind:open={booking} />

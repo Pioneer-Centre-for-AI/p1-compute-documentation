@@ -47,7 +47,7 @@
 
 <Meta
   title="About P1 Compute Resources"
-  description="Learn more about the P1AI's HPC resources."
+  description="What P1 is, the tiers of compute it funds and helps run, who sits on the HPC governance board, and how to spend a compute budget."
   type="article"
 />
 

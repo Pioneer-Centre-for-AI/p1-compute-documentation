@@ -29,7 +29,19 @@ export type FormInfo = {
 
 // Every form and survey referenced on the site, in the order a new
 // researcher typically meets them. Rendered as a table on /forms/.
+//
+// The booking page is here despite not being a form: the page is the one
+// place a researcher looks for "what do I have to fill in", and leaving the
+// consultation out of it would hide the entry point that needs the least
+// filling in of all.
 export const FORMS: FormInfo[] = [
+  {
+    title: 'Book a consultation',
+    purpose:
+      'Meet the compute coordinator in person or online. Bring a workload, a cluster choice, a slow job, or a budget you have not committed yet.',
+    provider: 'book.starostka.io',
+    url: URLS.booking
+  },
   {
     title: 'Your Compute Needs survey',
     purpose: 'Tell the compute coordinator about your workload, needs, and expectations. Optional, and the easiest way to get help choosing.',

@@ -2,6 +2,7 @@
   import { nav, isGroup, type NavItem } from '$lib/nav';
   import {
     SURVEY_PAGE,
+    BOOKING_URL,
     PROFILE_URL,
     GITHUB_URL,
     COORDINATOR_EMAIL,
@@ -27,7 +28,10 @@
   const contact: FooterLink[] = [
     { label: 'Compute coordinator', href: `mailto:${COORDINATOR_EMAIL}`, title: COORDINATOR_EMAIL },
     { label: 'Governance and policy', href: `mailto:${GOVERNANCE_EMAIL}`, title: GOVERNANCE_EMAIL },
-    { label: 'Tell us about your workload', href: SURVEY_PAGE }
+    { label: 'Tell us about your workload', href: SURVEY_PAGE },
+    // A link rather than the dialog: the footer is where someone lands after
+    // reading a page, and a new tab there costs them nothing.
+    { label: 'Book a consultation', href: BOOKING_URL, external: true }
   ];
 
   // P1 properties that are not this site.
