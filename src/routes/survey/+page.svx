@@ -55,26 +55,28 @@ from HPC, and where the current systems get in your way. Entirely optional.
 
 I read every response myself. They shape what I raise with the HPC teams at DTU, NGC, and Gefion,
 what we prioritise when partitions are renewed, and which topics turn into
-[events](/events/) and training.
+[events](/events/) and training. The survey exists because patterns across many researchers tell me
+things a single conversation cannot.
 
-If your answers suggest a conversation would help more than a form, I will get in touch and we can
-talk it through. That consultation is part of the role, and it costs you nothing.
+If your answers suggest a conversation would help more than a form, I will get in touch.
 
-## Rather talk than write
+## Other ways to reach me
+
+The survey is one door, not the only one, and none of them is a gate in front of support. You do
+not have to fill in anything to get help.
+
+### Book a conversation
 
 Book a slot in my calendar and we meet in person or online, whichever suits you. Bring anything:
 what you are trying to run, which cluster fits, why your jobs are slower than they should be, or
-how to spend a hardware budget before you commit it.
+how to spend a hardware budget before you commit it. The consultation is part of the role, and it
+costs you nothing.
 
 <BookConsultation />
 
+### Email or Slack
 
-## Prefer to just ask
-
-You do not have to fill in anything to get help. Mail me at
-[bstja@dtu.dk](mailto:bstja@dtu.dk), or find the compute community in
-`#compute` and `#ask-compute` on the P1 Slack. The survey exists because patterns across many
-researchers tell me things a single conversation cannot, not because it is a gate in front of
-support.
+Mail me at [bstja@dtu.dk](mailto:bstja@dtu.dk), or find the compute community in
+`#compute` and `#ask-compute` on the P1 Slack.
 
 </article>
