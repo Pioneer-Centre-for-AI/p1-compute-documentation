@@ -83,7 +83,7 @@ export const FORMS: FormInfo[] = [
   {
     title: 'Access exception request',
     purpose: 'For MSc students, research assistants, and similar roles who need cluster access with a written approval from a responsible P1 co-lead or faculty member.',
-    provider: 'Google Forms',
+    provider: 'Microsoft Forms',
     url: ACCESS_EXCEPTION_FORM_URL
   },
   {

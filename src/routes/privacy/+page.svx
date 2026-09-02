@@ -27,9 +27,9 @@ server logs; see
 
 ### Embedded forms
 
-Some pages embed sign-up forms from Microsoft Forms and Google Forms. Loading those pages fetches
-content from Microsoft and Google, and anything you submit through a form is processed by the
-respective provider under its own privacy policy. We only receive the answers you submit.
+Some pages embed sign-up forms from Microsoft Forms. Loading those pages fetches content from
+Microsoft, and anything you submit through a form is processed by Microsoft under its own privacy
+policy. We only receive the answers you submit.
 
 ## Cluster accounts
 

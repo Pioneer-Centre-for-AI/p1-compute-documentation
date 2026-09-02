@@ -15,7 +15,7 @@
 
 <EmbedForm
   title="P1 HPC Access Exception Form"
-  src="{ACCESS_EXCEPTION_FORM_URL}?embedded=true"
+  src="{ACCESS_EXCEPTION_FORM_URL}?embed=true"
   href={ACCESS_EXCEPTION_FORM_URL}
   description="Requires sign-off from a P1 co-lead or faculty member."
 />

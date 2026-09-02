@@ -31,7 +31,6 @@ export const URLS = {
   // instructions for obtaining it.
   ngcHowToApply:
     'https://www.eng.ngc.dk/research-and-international-collaboration/dngc-research-services/how-to-apply-for-access',
-  accessException:
-    'https://docs.google.com/forms/d/e/1FAIpQLSciaOm-CYwl48LGGZC7qlmCSPU7kfEitjGy4kvZXAXEPbo_eA/viewform',
+  accessException: 'https://forms.cloud.microsoft/e/1L2DJVZhib',
   researchNetwork: 'https://www.deic.dk/en/danish-research-network'
 };
