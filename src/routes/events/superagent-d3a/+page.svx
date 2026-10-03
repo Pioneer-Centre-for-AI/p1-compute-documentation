@@ -1,29 +1,30 @@
 ---
-title: 'Supercomputing: Agents & Challenges'
+title: 'Supercomputing: Challenges & Agents'
 description: 'A 90-minute interactive session on keeping shared HPC productive for researchers, and where agentic GenAI opens new possibilities.'
 order: 1
 navLabel: SuperAgent D3A
 eyebrow: D3A 4.0 2026
-startDate: '2026-10-08'
-dateLabel: Thursday 8 October 2026
-shortLabel: 8 Oct · SuperAgent D3A
+startDate: '2026-10-08T11:00:00+02:00'
+dateLabel: Thursday 8 October 2026, 11:00–12:30
+shortLabel: 8 Oct 11:00 · Salon 26+27 · SuperAgent D3A
 duration: PT90M
-venue: Room to be announced
+venue: Salon 26+27, Hotel Nyborg Strand, Nyborg
+address: Østerøvej 2, 5800 Nyborg, Denmark
 ---
 
 <script>
   import People from '$lib/components/People.svelte';
+  import Programme from '$lib/components/Programme.svelte';
   import {
     superAgentAtAGlance,
-    sessionTypes,
-    sessionTypeColor,
     superAgentProgramme,
     superAgentOrganizers,
     superAgentCollaborations
   } from '$lib/events';
 </script>
 
-**Thursday 8 October 2026** · 90 minutes · D3A 4.0 2026, room to be announced.
+**Thursday 8 October 2026, 11:00–12:30** · Salon 26+27, Hotel Nyborg Strand · D3A 4.0 2026
+([session page](https://d3aconference.dk/supercomputing-challenges-agents/)).
 
 Shared HPC only pays off when researchers can get their work done on it. This session puts HPC
 providers and researchers in the same room to name the frictions that are in the way, and to
@@ -50,64 +51,12 @@ investigate where agentic GenAI opens new possibilities.
 
 ## Programme
 
-Three short talks set the stage. The rest of the session is breakouts, plenum, and synthesis.
+Three short talks set the stage. The rest belongs to the room: groups name challenges on a
+Discussion form, review and rate each other's on a Review form, and a plenary closes on the
+top-rated issues and questions from the audience.
 
 <!-- md:replace programme -->
-<div class="not-prose mt-6 mb-4 flex flex-wrap gap-x-6 gap-y-2 text-xs text-slate-600 dark:text-slate-400">
-  {#each sessionTypes as t}
-    <span class="flex items-center gap-2">
-      <span class="inline-block h-3 w-3 rounded-sm" style:background-color={t.color}></span>
-      {t.label}
-    </span>
-  {/each}
-</div>
-
-<div class="not-prose mb-8 overflow-x-auto">
-  <table class="w-full border-collapse text-sm">
-    <thead>
-      <tr class="bg-slate-100 text-left dark:bg-slate-800">
-        <th class="border border-slate-200 px-4 py-3 font-semibold dark:border-slate-700">Time</th>
-        <th class="border border-slate-200 px-4 py-3 font-semibold dark:border-slate-700">Session</th>
-        <th class="border border-slate-200 px-4 py-3 font-semibold dark:border-slate-700">Speaker</th>
-      </tr>
-    </thead>
-    <tbody>
-      {#each superAgentProgramme as row}
-        <tr>
-          <td class="border border-slate-200 px-4 py-3 align-top dark:border-slate-700">
-            <span class="flex items-center gap-3">
-              <span
-                class="h-5 w-[3px] shrink-0 rounded-sm"
-                style:background-color={sessionTypeColor[row.type]}
-              ></span>
-              <span class="whitespace-nowrap font-medium tabular-nums text-slate-900 dark:text-slate-100">
-                {row.time}
-              </span>
-            </span>
-          </td>
-          <td class="border border-slate-200 px-4 py-3 align-top text-slate-700 dark:border-slate-700 dark:text-slate-300">
-            {row.session}
-          </td>
-          <td class="border border-slate-200 px-4 py-3 align-top text-slate-700 dark:border-slate-700 dark:text-slate-300">
-            {#if row.speakerUrl}
-              <a
-                href={row.speakerUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="font-semibold text-[var(--color-brand)] no-underline hover:underline"
-              >{row.speaker}</a>
-            {:else}
-              {row.speaker}
-            {/if}
-            {#if row.affiliation}
-              <span class="block text-xs text-slate-500 dark:text-slate-400">{row.affiliation}</span>
-            {/if}
-          </td>
-        </tr>
-      {/each}
-    </tbody>
-  </table>
-</div>
+<Programme rows={superAgentProgramme} />
 <!-- md:end -->
 
 ## Outcomes

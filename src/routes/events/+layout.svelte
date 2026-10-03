@@ -12,7 +12,7 @@
   const event = $derived(getEvents().find((e) => e.href === $page.url.pathname) ?? null);
 
   // schema.org Event, so calendars and search surfaces can read the session.
-  // The room is not fixed yet, so location carries the conference name only.
+  // Location is the venue when the page names one, else the conference.
   const jsonLd = $derived(
     event
       ? JSON.stringify({
@@ -23,7 +23,11 @@
           startDate: event.meta.startDate,
           ...(event.meta.duration ? { duration: event.meta.duration } : {}),
           eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
-          location: { '@type': 'Place', name: event.meta.eyebrow },
+          location: {
+            '@type': 'Place',
+            name: event.meta.venue ?? event.meta.eyebrow,
+            ...(event.meta.address ? { address: event.meta.address } : {})
+          },
           organizer: {
             '@type': 'Organization',
             name: 'Pioneer Centre for Artificial Intelligence',

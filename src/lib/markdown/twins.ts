@@ -104,7 +104,8 @@ const BLOCKS: Record<string, () => Record<string, string>> = {
       ['Time', 'Session', 'Speaker'],
       superAgentProgramme.map((row) => {
         const name = row.speakerUrl ? `[${row.speaker}](${row.speakerUrl})` : row.speaker;
-        return [row.time, row.session, row.affiliation ? `${name}, ${row.affiliation}` : name];
+        const session = row.form ? `${row.session} ([${row.form.label}](${row.form.href}))` : row.session;
+        return [row.time, session, row.affiliation ? `${name}, ${row.affiliation}` : name];
       })
     ),
     organizers: superAgentOrganizers

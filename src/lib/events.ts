@@ -11,7 +11,7 @@ export const EventFrontmatter = z.object({
   navLabel: z.string().optional(),
   /** Context line above the title, e.g. the conference the session belongs to. */
   eyebrow: z.string(),
-  /** ISO date. Drives the schema.org startDate. */
+  /** ISO date or date-time. Drives the schema.org startDate. */
   startDate: z.string(),
   /** Human-readable date shown in the page body. */
   dateLabel: z.string(),
@@ -19,7 +19,9 @@ export const EventFrontmatter = z.object({
   shortLabel: z.string().optional(),
   /** ISO 8601 duration for schema.org, e.g. PT90M. */
   duration: z.string().optional(),
-  venue: z.string().optional()
+  venue: z.string().optional(),
+  /** Postal address of the venue, for the schema.org location. */
+  address: z.string().optional()
 });
 
 export type EventMeta = z.infer<typeof EventFrontmatter>;
@@ -57,7 +59,7 @@ export function upcomingEvent(today = new Date().toISOString().slice(0, 10)): Ev
   );
 }
 
-// --- Supercomputing: Agents & Challenges (D3A 4.0 2026) ---------------------
+// --- Supercomputing: Challenges & Agents (D3A 4.0 2026) ---------------------
 //
 // The programme, organizers, and collaboration rows live here rather than in
 // the page, so the HTML and the .md twin render the same content from one
@@ -89,11 +91,13 @@ export type ProgrammeRow = {
   speakerUrl?: string;
   /** Institution shown after the speaker name. */
   affiliation?: string;
+  /** Form the room fills in during this session, linked after the speaker. */
+  form?: { label: string; href: string };
   type: SessionType;
 };
 
 export const sessionTypes: { type: SessionType; label: string; color: string }[] = [
-  { type: 'framing', label: 'Framing and synthesis', color: 'var(--color-slate-400)' },
+  { type: 'framing', label: 'Framing and plenary', color: 'var(--color-slate-400)' },
   { type: 'talk', label: 'Talk', color: 'var(--color-plum)' },
   { type: 'interactive', label: 'Interactive', color: 'var(--color-coral)' }
 ];
@@ -102,18 +106,17 @@ export const sessionTypeColor: Record<SessionType, string> = Object.fromEntries(
   sessionTypes.map((t) => [t.type, t.color])
 ) as Record<SessionType, string>;
 
-// Times are offsets from the start of the 90-minute slot. Swap to absolute
-// clock times once the conference fixes the slot.
+// Clock times for the 11:00-12:30 slot.
 export const superAgentProgramme: ProgrammeRow[] = [
   {
-    time: '00:00-00:05',
+    time: '11:00-11:05',
     session: 'Welcome and framing',
     speaker: 'Benjamin Starostka Jakobsen',
     speakerUrl: 'https://starostka.io/',
     type: 'framing'
   },
   {
-    time: '00:05-00:15',
+    time: '11:05-11:15',
     session: 'Agentic HPC: GenAI and sustainability',
     speaker: 'Claudio Pica',
     speakerUrl: 'https://portal.findresearcher.sdu.dk/en/persons/pica/',
@@ -121,7 +124,7 @@ export const superAgentProgramme: ProgrammeRow[] = [
     type: 'talk'
   },
   {
-    time: '00:15-00:25',
+    time: '11:15-11:25',
     session: 'Operating HPC: Hosting research at scale',
     speaker: 'Ulrik N. de Lichtenberg',
     speakerUrl: 'https://www.linkedin.com/in/ulrik-nicolai-de-lichtenberg',
@@ -129,7 +132,7 @@ export const superAgentProgramme: ProgrammeRow[] = [
     type: 'talk'
   },
   {
-    time: '00:25-00:35',
+    time: '11:25-11:35',
     session: 'Shared HPC: Effective sharing of GPUs',
     speaker: 'Pınar Tözün',
     speakerUrl: 'https://www.pinartozun.com/',
@@ -137,21 +140,28 @@ export const superAgentProgramme: ProgrammeRow[] = [
     type: 'talk'
   },
   {
-    time: '00:35-00:55',
-    session: 'Breakout discussions: HPC providers and researchers',
+    time: '11:35-11:55',
+    session: 'Group discussion: challenges with shared compute',
     speaker: 'All participants',
+    form: {
+      label: 'Discussion form',
+      href: 'https://airtable.com/appEvtQfcHN4IT6pH/pagIX2Dzeux4pE5Hr/form'
+    },
     type: 'interactive'
   },
   {
-    time: '00:55-01:15',
-    session: 'Plenum: report-back from breakouts',
-    speaker: 'Benjamin Starostka Jakobsen',
-    speakerUrl: 'https://starostka.io/',
+    time: '11:55-12:15',
+    session: "Group review: rate other groups' issues",
+    speaker: 'All participants',
+    form: {
+      label: 'Review form',
+      href: 'https://airtable.com/appEvtQfcHN4IT6pH/pagsYYDE9rGsHD0e0/form'
+    },
     type: 'interactive'
   },
   {
-    time: '01:15-01:30',
-    session: 'Synthesis: common findings and next steps',
+    time: '12:15-12:30',
+    session: 'Plenary: top-rated issues and audience Q&A',
     speaker: 'Nicki Skafte Detlefsen',
     speakerUrl: 'https://www.linkedin.com/in/nicki-skafte-detlefsen',
     type: 'framing'
