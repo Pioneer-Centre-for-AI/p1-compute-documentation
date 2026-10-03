@@ -17,9 +17,9 @@
 
 # Your Compute Needs
 
-I am Benjamin Starostka Jakobsen, the P1 compute coordinator, and this survey is how I get to know
-the people using our partitions. I want to hear what you are actually trying to run, what you need
-from HPC, and where the current systems get in your way. Entirely optional.
+Hi, I'm the P1 compute coordinator. This survey is mostly my way of getting to know the people
+using our partitions: what you're trying to run, what you need from HPC, and where things get in
+your way. It's entirely optional.
 
 <!-- md:replace embed -->
 <div class="not-prose my-8">
@@ -45,38 +45,37 @@ from HPC, and where the current systems get in your way. Entirely optional.
     ></iframe>
   </div>
   <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">
-    Form not loading, or being asked to sign in? Some browsers block embedded forms. Use the
-    new tab link above and it will work the same way.
+    Form not loading, or asking you to sign in? Some browsers block embedded forms, but the new
+    tab link above works just the same.
   </p>
 </div>
 <!-- md:end -->
 
 ## What I do with your answers
 
-I read every response myself. They shape what I raise with the HPC teams at DTU, NGC, and Gefion,
-what we prioritise when partitions are renewed, and which topics turn into
-[events](/events/) and training. The survey exists because patterns across many researchers tell me
-things a single conversation cannot.
+I read every response myself. Your answers shape what I bring up with the HPC teams at DTU, NGC,
+and Gefion, what we prioritise when partitions are renewed, and which topics we turn into
+[events](/events/) and training. One conversation tells me about one person's work; lots of answers
+together show me what many of you are running into.
 
-If your answers suggest a conversation would help more than a form, I will get in touch.
+If it sounds like a chat would help more than a form, I'll reach out.
 
 ## Other ways to reach me
 
-The survey is one door, not the only one, and none of them is a gate in front of support. You do
-not have to fill in anything to get help.
+You never have to fill in a form to get help. The survey is just one way to reach me.
 
 ### Book a conversation
 
-Book a slot in my calendar and we meet in person or online, whichever suits you. Bring anything:
-what you are trying to run, which cluster fits, why your jobs are slower than they should be, or
-how to spend a hardware budget before you commit it. The consultation is part of the role, and it
-costs you nothing.
+Grab a slot in my calendar and we'll meet in person or online, whichever suits you. Bring whatever
+is on your mind: what you're trying to run, which cluster fits, why your jobs are slower than they
+should be, or how to spend a hardware budget before you commit to it. It's part of my job, and it's
+free.
 
 <BookConsultation />
 
 ### Email or Slack
 
-Mail me at [bstja@dtu.dk](mailto:bstja@dtu.dk), or find the compute community in
+Email me at [bstja@dtu.dk](mailto:bstja@dtu.dk), or find the compute community in
 `#compute` and `#ask-compute` on the P1 Slack.
 
 </article>
