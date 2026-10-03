@@ -15,20 +15,22 @@ address: Østerøvej 2, 5800 Nyborg, Denmark
 <script>
   import People from '$lib/components/People.svelte';
   import Programme from '$lib/components/Programme.svelte';
+  import ScaledEmbed from '$lib/components/ScaledEmbed.svelte';
   import {
     superAgentAtAGlance,
     superAgentProgramme,
     superAgentOrganizers,
-    superAgentCollaborations
+    superAgentCollaborations,
+    superAgentImpactBoard
   } from '$lib/events';
 </script>
 
 **Thursday 8 October 2026, 11:00–12:30** · Salon 26+27, Hotel Nyborg Strand · D3A 4.0 2026
 ([session page](https://d3aconference.dk/supercomputing-challenges-agents/)).
 
-Shared HPC only pays off when researchers can get their work done on it. This session puts HPC
-providers and researchers in the same room to name the frictions that are in the way, and to
-investigate where agentic GenAI opens new possibilities.
+Shared HPC is only worth it if researchers can actually get their work done on it. So we're
+bringing HPC providers and researchers into the same room to talk about what gets in the way, and
+to look at where agentic GenAI might help.
 
 ## About this session
 
@@ -51,9 +53,9 @@ investigate where agentic GenAI opens new possibilities.
 
 ## Programme
 
-Three short talks set the stage. The rest belongs to the room: groups name challenges on a
-Discussion form, review and rate each other's on a Review form, and a plenary closes on the
-top-rated issues and questions from the audience.
+We start with three short talks, and then it's over to you. In groups, you write down the
+challenges you run into on the Discussion form, then read and rate what the other groups came up
+with on the Review form. We finish together with the issues you rated highest, and your questions.
 
 <!-- md:replace programme -->
 <Programme rows={superAgentProgramme} />
@@ -68,6 +70,42 @@ Questions we hope to answer together.
    each other in the meantime?
 3. As agents take over cluster work, will researchers still need cluster knowledge, and who debugs
    it when the agent gets it wrong?
+
+Everything the groups write down ends up on the board below, and your ratings sort it into low,
+medium, and high impact. In the plenary we go through the high-impact issues together. The board
+fills up during the session, so it's worth keeping an eye on.
+
+<!-- md:replace impact-board -->
+<div class="not-prose my-8">
+  <div class="mb-2 flex items-center justify-end">
+    <a
+      href={superAgentImpactBoard.href}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="inline-flex items-center gap-1.5 text-xs font-medium text-slate-500 no-underline hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
+    >
+      Open in a new tab
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M15 3h6v6M10 14L21 3M21 14v7H3V3h7" />
+      </svg>
+    </a>
+  </div>
+  <!-- Airtable's kanban columns have a fixed width, so the board is scaled to
+       fit the column rather than cut off at the second column. -->
+  <div class="overflow-hidden rounded-xl border border-slate-200 bg-white dark:border-slate-700">
+    <ScaledEmbed
+      src={superAgentImpactBoard.embed}
+      title="Impact board: reported issues by impact"
+      width={1180}
+      height={900}
+    />
+  </div>
+  <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">
+    Board not loading? Some browsers block embedded content, but the new tab link above always
+    works.
+  </p>
+</div>
+<!-- md:end -->
 
 ## Organizers
 

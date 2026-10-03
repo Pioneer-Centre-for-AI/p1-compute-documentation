@@ -78,12 +78,12 @@
               <span class="font-medium text-slate-700 dark:text-slate-300">{row.speaker}</span>
             {/if}{#if row.affiliation}<span class="text-slate-400 dark:text-slate-500"
                 >{" · " + row.affiliation}</span
-              >{/if}{#if row.form}<span class="text-slate-400 dark:text-slate-500">{" · "}</span><a
-                href={row.form.href}
+              >{/if}{#if row.link}<span class="text-slate-400 dark:text-slate-500">{" · "}</span><a
+                href={row.link.href}
                 target="_blank"
                 rel="noopener noreferrer"
                 class="font-medium text-[var(--color-brand)] no-underline hover:underline"
-                >{row.form.label}</a
+                >{row.link.label}</a
               >{/if}
           </p>
         </div>

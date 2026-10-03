@@ -65,11 +65,20 @@ export function upcomingEvent(today = new Date().toISOString().slice(0, 10)): Ev
 // the page, so the HTML and the .md twin render the same content from one
 // source. Same reasoning as clusterDecisions in $lib/content.
 
+/**
+ * Kanban of the reported issues, sorted into low, medium, and high impact by
+ * the averaged discussion and review ratings. The plenary presents it.
+ */
+export const superAgentImpactBoard = {
+  href: 'https://airtable.com/appEvtQfcHN4IT6pH/shrUhqWeT0s421yLc',
+  embed: 'https://airtable.com/embed/appEvtQfcHN4IT6pH/shrUhqWeT0s421yLc?viewControls=on'
+};
+
 /** The three at-a-glance panels above the programme. */
 export const superAgentAtAGlance: { label: string; items: string[] }[] = [
   {
     label: 'Format',
-    items: ['90 minutes, interactive', 'Talks 33% or less', 'Discussion 61% or more']
+    items: ['90 minutes, interactive', 'About a third talks', 'The rest is group work and discussion']
   },
   {
     label: 'Level',
@@ -91,8 +100,8 @@ export type ProgrammeRow = {
   speakerUrl?: string;
   /** Institution shown after the speaker name. */
   affiliation?: string;
-  /** Form the room fills in during this session, linked after the speaker. */
-  form?: { label: string; href: string };
+  /** What the room opens during this session (a form, the impact board), linked after the speaker. */
+  link?: { label: string; href: string };
   type: SessionType;
 };
 
@@ -143,7 +152,7 @@ export const superAgentProgramme: ProgrammeRow[] = [
     time: '11:35-11:55',
     session: 'Group discussion: challenges with shared compute',
     speaker: 'All participants',
-    form: {
+    link: {
       label: 'Discussion form',
       href: 'https://airtable.com/appEvtQfcHN4IT6pH/pagIX2Dzeux4pE5Hr/form'
     },
@@ -153,7 +162,7 @@ export const superAgentProgramme: ProgrammeRow[] = [
     time: '11:55-12:15',
     session: "Group review: rate other groups' issues",
     speaker: 'All participants',
-    form: {
+    link: {
       label: 'Review form',
       href: 'https://airtable.com/appEvtQfcHN4IT6pH/pagsYYDE9rGsHD0e0/form'
     },
@@ -164,6 +173,7 @@ export const superAgentProgramme: ProgrammeRow[] = [
     session: 'Plenary: top-rated issues and audience Q&A',
     speaker: 'Nicki Skafte Detlefsen',
     speakerUrl: 'https://www.linkedin.com/in/nicki-skafte-detlefsen',
+    link: { label: 'Impact board', href: 'https://airtable.com/appEvtQfcHN4IT6pH/shrUhqWeT0s421yLc' },
     type: 'framing'
   }
 ];

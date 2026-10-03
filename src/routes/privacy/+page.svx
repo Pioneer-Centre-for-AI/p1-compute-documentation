@@ -25,11 +25,12 @@ The site is hosted on GitHub Pages; GitHub may collect technical data such as IP
 server logs; see
 [GitHub's privacy statement](https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement).
 
-### Embedded forms
+### Embedded forms and boards
 
-Some pages embed sign-up forms from Microsoft Forms. Loading those pages fetches content from
-Microsoft, and anything you submit through a form is processed by Microsoft under its own privacy
-policy. We only receive the answers you submit.
+Some pages embed sign-up forms from Microsoft Forms, and event pages may embed a read-only Airtable
+view or link to Airtable forms. Loading those pages fetches content from Microsoft or Airtable, and
+anything you submit through a form is processed by that provider under its own privacy policy. We
+only receive the answers you submit.
 
 ## Cluster accounts
 

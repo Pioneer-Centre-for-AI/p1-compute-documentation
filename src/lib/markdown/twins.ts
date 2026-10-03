@@ -9,6 +9,7 @@ import {
   getEvents,
   superAgentAtAGlance,
   superAgentCollaborations,
+  superAgentImpactBoard,
   superAgentOrganizers,
   superAgentProgramme
 } from '$lib/events';
@@ -104,10 +105,12 @@ const BLOCKS: Record<string, () => Record<string, string>> = {
       ['Time', 'Session', 'Speaker'],
       superAgentProgramme.map((row) => {
         const name = row.speakerUrl ? `[${row.speaker}](${row.speakerUrl})` : row.speaker;
-        const session = row.form ? `${row.session} ([${row.form.label}](${row.form.href}))` : row.session;
+        const session = row.link ? `${row.session} ([${row.link.label}](${row.link.href}))` : row.session;
         return [row.time, session, row.affiliation ? `${name}, ${row.affiliation}` : name];
       })
     ),
+    // The page embeds the board in an iframe, which is meaningless in markdown.
+    'impact-board': `**Impact board:** [low, medium, and high impact issues](${superAgentImpactBoard.href})`,
     organizers: superAgentOrganizers
       .map((p) => `- [${p.name}](${p.profileUrl}), ${p.institution}: ${p.email}`)
       .join('\n'),
