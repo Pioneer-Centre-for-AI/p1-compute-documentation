@@ -128,7 +128,7 @@ export const superAgentProgramme: ProgrammeRow[] = [
     time: '11:05-11:15',
     session: 'Agentic HPC: GenAI and sustainability',
     speaker: 'Claudio Pica',
-    speakerUrl: 'https://portal.findresearcher.sdu.dk/en/persons/pica/',
+    speakerUrl: 'https://www.linkedin.com/in/claudio-pica',
     affiliation: 'SDU eScience Center',
     type: 'talk'
   },
