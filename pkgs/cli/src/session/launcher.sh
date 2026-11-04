@@ -79,7 +79,7 @@ printf %s "$token" >"$token_file"
 log=$data/logs/${LSB_JOBID:-${SLURM_JOB_ID:-login-$$}}-$app.log
 
 pid=
-# shellcheck disable=SC2329 # called by the EXIT trap
+# shellcheck disable=SC2317,SC2329 # called by the EXIT trap
 cleanup() {
 	[ -n "$pid" ] && kill "$pid" 2>/dev/null
 	rm -f "$token_file"
