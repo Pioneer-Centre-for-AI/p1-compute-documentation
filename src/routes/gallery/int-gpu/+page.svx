@@ -1,0 +1,33 @@
+---
+title: "Interactive session with a GPU"
+description: "A GPU on DTU's interactive p1i queue with aicentre: a shell, or marimo or VS Code in your browser."
+order: 1
+navLabel: "Interactive GPU"
+summary: "One command to a GPU on DTU's interactive queue, as a shell or as marimo or VS Code in your browser. For installing packages, test runs and debugging."
+tags: [interactive, notebook, ide, pytorch]
+clusters: [dtu]
+commands:
+  - "aicentre marimo examples/int-gpu/notebook.py --gpu"
+  - "aicentre shell examples/int-gpu --gpu"
+  - "aicentre code examples/int-gpu --gpu"
+---
+
+[Download the files](/gallery/int-gpu.tar.gz) · [Source on GitHub](https://github.com/Pioneer-Centre-for-AI/p1-compute-documentation/tree/main/pkgs/gallery/int-gpu)
+
+A marimo notebook on one GPU on the P1 DTU HPC. It shows the GPU it got, times a matrix
+multiply on CPU and GPU, and trains a small classifier. `gpu.py` runs the same check as a
+script, and `pyproject.toml` and `uv.lock` pin the packages. It suits installing packages, test
+runs and debugging on `p1i`, the P1 queue for interactive GPU work.
+
+## With aicentre
+
+```bash
+aicentre gallery get int-gpu                           # the example, onto the cluster
+aicentre marimo examples/int-gpu/notebook.py --gpu    # the notebook on a GPU, in your browser
+aicentre shell examples/int-gpu --gpu                  # or a shell on the GPU node
+```
+
+- `gallery get` has the login node download the example into your project directory, so there
+  is nothing to clone or copy.
+- `--gpu` asks `p1i` for a GPU, starts marimo with the example's own packages, and opens it in
+  your browser through the login node. Ctrl-C ends the job; `--time 2h` asks for longer.

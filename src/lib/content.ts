@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-// Typed collection over the cluster pages. Each /clusters/<slug>/+page.svx
+// Typed collection over the cluster pages. Each /providers/<slug>/+page.svx
 // carries its metadata (nav label, badge, hardware specs) in YAML frontmatter,
 // validated here at build time.
 
@@ -78,7 +78,7 @@ export const ClusterFrontmatter = z.object({
 export type ClusterMeta = z.infer<typeof ClusterFrontmatter>;
 export type ClusterEntry = { slug: string; href: string; meta: ClusterMeta };
 
-const modules = import.meta.glob('/src/routes/clusters/*/+page.svx', {
+const modules = import.meta.glob('/src/routes/providers/*/+page.svx', {
   eager: true
 }) as Record<string, { metadata?: unknown }>;
 
@@ -103,7 +103,7 @@ export function getClusters(): ClusterEntry[] {
   parsed ??= Object.entries(modules)
     .map(([path, mod]) => {
       const slug = path.split('/').at(-2)!;
-      return { slug, href: `/clusters/${slug}/`, meta: ClusterFrontmatter.parse(mod.metadata) };
+      return { slug, href: `/providers/${slug}/`, meta: ClusterFrontmatter.parse(mod.metadata) };
     })
     .sort((a, b) => a.meta.order - b.meta.order);
   return parsed;
@@ -113,7 +113,7 @@ export function getCluster(slug: string): ClusterEntry | undefined {
   return getClusters().find((c) => c.slug === slug);
 }
 
-// The "which cluster fits me" decision table on /clusters/. Lives here rather
+// The "which cluster fits me" decision table on /providers/. Lives here rather
 // than in the page so the page and its .md twin render the same rows.
 export type ClusterDecision = { need: string; slug: string; why: string };
 

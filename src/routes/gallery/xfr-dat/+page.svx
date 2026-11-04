@@ -1,0 +1,28 @@
+---
+title: "Moving code and data to and from the clusters"
+description: "Datasets and results between your laptop and DTU and Gefion with aicentre push and pull, and staged files for the air-gapped NGC."
+order: 3
+navLabel: "Moving data"
+summary: "aicentre push and pull for data on DTU and Gefion, git for code, and the staging area for the air-gapped NGC."
+tags: [data, transfer, git, storage]
+clusters: [dtu, gefion, ngc]
+commands:
+  - "aicentre push datasets"
+  - "aicentre pull results"
+---
+
+Datasets and results between your laptop and the P1 clusters. Code goes with git, cloned on
+the login node. Data goes through the login node, and a stopped copy picks up where it left off. The air-gapped P1 NGC HPC takes files only through its staging area, as its
+[provider page](/providers/ngc/) describes.
+
+## With aicentre
+
+```bash
+aicentre push datasets       # datasets/ into your project directory on the cluster
+aicentre pull results        # results/ back to this folder
+```
+
+- `push` and `pull` use the same login as every other aicentre command, so a provider that asks
+  for a password asks once.
+- Paths on the cluster start in your project directory, `/dtu/p1/<username>` on DTU and your
+  home directory on Gefion. `-p gefion` picks another provider than the first you use.

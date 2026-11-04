@@ -41,6 +41,13 @@
       institution: 'Aarhus University',
       email: 'akhil.arora@cs.au.dk',
       profileUrl: 'https://www.au.dk/en/akhil.arora@cs.au.dk'
+    },
+    {
+      name: 'Jacob Nielsen',
+      role: 'SDU',
+      institution: 'University of Southern Denmark',
+      email: 'jacn@imada.sdu.dk',
+      profileUrl: 'https://jacobbitlabs.github.io/'
     }
   ];
 </script>
@@ -57,112 +64,87 @@
 
 # About P1 Compute Resources
 
-The **Pioneer Centre for Artificial Intelligence** (P1) is a Danish cross-university research
-centre and consortium dedicated to advancing AI research through collaboration with partnering
-institutions.
-
-This documentation aims to centralize practical knowledge and provide a concise guide for P1
-affiliates on how to access and use the high-performance computing (HPC) facilities available to
-them.
+The Pioneer Centre for Artificial Intelligence (P1) is a Danish cross-university AI research
+centre and consortium. This site shows P1 affiliates how to access and use the high-performance
+computing (HPC) facilities open to them.
 
 <NeedsCallout />
 
 <img src="/assets/PCAI_HQ.avif" alt="Pioneer Centre for AI headquarters" class="my-6 w-full rounded-lg" loading="lazy" />
 
-A central mission of P1 is to foster broad research collaboration, both within the centre and
-across its affiliated universities. We fund dedicated partitions at partner HPC facilities and help
-run them, with the compute coordinator holding admin on the systems and working alongside the
-providers' HPC teams, so that P1 researchers across partner institutions can take on projects of
-varying scale and complexity.
+P1 funds and helps run dedicated partitions at partner HPC facilities for researchers across its
+partner universities. The compute coordinator holds admin on the systems and works with each
+provider's HPC team.
 
-For more information, visit the [P1 Homepage](https://www.aicentre.dk/) or
+More at the [P1 homepage](https://www.aicentre.dk/) and
 [P1 Computing](https://www.aicentre.dk/computing).
 
 ## Available Compute Resources
 
-While we prioritize smaller projects as they represent the majority of research needs, we also
-support larger projects through our
-[tiered compute resources](#hierarchy-of-compute-resources), including the capability to train
-very large models and support European-level workloads on Tier 2/1 facilities. But, very large
-scale projects might be better supported within their own funding.
-
-In practical terms this means that while training a large language or vision model from scratch
-might not be suitable for our Tier 3 facilities, such projects can be accommodated on a Tier 2
-national facility (ex. Gefion HPC), which is specifically designed for large-scale model training
-and can even support some European-level (Tier 1) workloads.
+P1 prioritizes smaller projects, which make up most research needs. Larger projects can move up
+the [tiered compute resources](#hierarchy-of-compute-resources) to Tier 2 and Tier 1 facilities.
+Training a large language or vision model from scratch may not fit our Tier 3 facilities, but it
+can fit Gefion, a Tier 2 national facility built for large-scale model training. Very large
+projects may be better served by their own funding.
 
 ## Support
 
-In general the P1 does not have official support staff. Instead we rely on the community to help
-each other. However, for questions regarding the cluster, we have the following two contact
-e-mails:
+P1 has no official support staff; the community helps each other. For the cluster, write to:
 
-- For technical issues, like broken or missing packages, contact [support@hpc.dtu.dk](mailto:support@hpc.dtu.dk)
-- For policy issues, like priority access, queuing system etc. contact [compute-governance-p1@aicentre.dk](mailto:compute-governance-p1@aicentre.dk)
+- Technical issues, such as broken or missing packages: [support@hpc.dtu.dk](mailto:support@hpc.dtu.dk)
+- Policy issues, such as priority access or queueing: [compute-governance-p1@aicentre.dk](mailto:compute-governance-p1@aicentre.dk)
 
-If your signup has been pending for more than a week, you can contact the member of the P1 HPC
-governance board of your institution. General announcements are made in the
-[#compute](https://pioneercentreforai.slack.com/channels/compute) channel on the official
-P1-slack. Similarly if you have general questions regarding compute, including using the P1
-partitions, feel free to post those questions in the
-[#ask-compute](https://pioneercentreforai.slack.com/channels/ask-compute) channel.
+On the P1 Slack, [#compute](https://pioneercentreforai.slack.com/channels/compute) has
+announcements and [#ask-compute](https://pioneercentreforai.slack.com/channels/ask-compute) takes
+compute questions, including about the P1 partitions.
 
 ## HPC Governance Board
 
-The board has one representative per partner university. If your cluster signup has been pending
-for more than a week, or you have governance questions specific to your institution, contact your
-university's representative.
+One representative per partner university. The board sets the policies for the P1 compute
+resources and holds the mandate over them. Contact yours if your cluster signup has been pending
+for more than a week, or for governance questions about your institution.
 
 <People people={board} />
 
 ## Investing Your Compute Budget
 
-Generally, P1 can help purchasing hardware for you if it is to become part of a P1 partition. In
-this setup you would have priority access to the hardware that you purchase, but if it is unused
-other researchers at P1 can use it as well. Most HPC hardware has an expected utilization time of
-approximately 5 years.
+P1 can help you buy hardware that becomes part of a P1 partition. You get priority access to it,
+and other P1 researchers can use it when it is idle. Most HPC hardware lasts about 5 years.
 
-An example of a compute budget expenditure:
+An example:
 
-> A researcher might have 400k DKK for non-GDPR computing. In that case P1 can purchase a 2xA100
-> node, with the researcher getting priority access. With the last 100k DKK, we recommend a
-> diversification of the researcher's compute portfolio: some of it on personal computers with
-> powerful GPUs, and a significant portion reserved for later. That reserve could go to storage or
-> cloud compute. Having the budget to spring for cloud compute if peak pressure on other computing
-> resources makes training a model in time for a submission deadline infeasible can be necessary.
+> A researcher has 400k DKK for non-GDPR computing. P1 buys a 2xA100 node with priority access
+> for the researcher. Of the last 100k DKK, we recommend some on personal computers with powerful
+> GPUs and a large share held back for storage or cloud compute. Cloud budget covers a submission
+> deadline when the shared clusters are too busy.
 
 <ComputeBudget />
 
 ## Hierarchy of Compute Resources
 
-Depending on what you are doing, you will need different levels of compute. The following table
-gives an overview of the different levels of compute and what they are suitable for.
+Each tier suits a different scale of work.
 
 <!-- md:replace tier-table -->
 <ComputeTiers />
 <!-- md:end -->
 
-The P1 DTU and NGC HPCs sit at Tier 3 in the hierarchy. Gefion itself operates at Tier 2 and can
-support some Tier 1 workloads, but the P1 sandbox on it is Tier 3 capacity: enough to develop and
-mature a workload on the hardware it will eventually run on. Running at Tier 2 scale on Gefion is a
-funded step of its own, and the sandbox exists to make you ready to take it.
+The P1 DTU and NGC HPCs are Tier 3. Gefion is Tier 2 and can support some Tier 1 workloads, but
+the P1 sandbox on it is Tier 3 capacity, for maturing a workload on the hardware it will later run
+on. Tier 2 scale on Gefion needs its own funding.
 
 ## Reading these docs with an AI agent
 
-If you work with a coding agent or a chat assistant, you can hand it this site rather than pasting
-pages in by hand. Three routes, in increasing order of how much they load:
+Give this site to a coding agent or chat assistant instead of pasting pages by hand:
 
-- `https://hpc.aicentre.dk/llms.txt` is an index of every page with a one-line summary, following
-  the [llms.txt convention](https://llmstxt.org/). Point an agent here and it can fetch only the
-  pages it needs.
-- `https://hpc.aicentre.dk/llms-full.txt` is the entire site as one markdown file, for pasting
-  straight into a context window.
-- Any page works as plain markdown by adding `.md` to its path, so
-  `https://hpc.aicentre.dk/clusters/dtu.md` is the DTU page without the site chrome. The
-  **View as Markdown** link in the page outline does the same thing.
+- `https://hpc.aicentre.dk/llms.txt` lists every page with a one-line summary, per the
+  [llms.txt convention](https://llmstxt.org/), so an agent fetches only what it needs.
+- `https://hpc.aicentre.dk/llms-full.txt` is the whole site as one markdown file.
+- Any page path plus `.md` gives that page as plain markdown, such as
+  `https://hpc.aicentre.dk/providers/dtu.md`. The **View as Markdown** link in the page outline
+  does the same.
 
-These are generated from the same source as the pages you are reading, so they cannot drift out of
-date. Treat them as a snapshot of guidance rather than live system state: queue limits and hardware
-change, and the provider documentation linked on each cluster page is always the authority.
+These are built from the same source as the pages. They are guidance, not live system state: queue
+limits and hardware change, and the provider documentation linked on each cluster page is the
+authority.
 
 </article>

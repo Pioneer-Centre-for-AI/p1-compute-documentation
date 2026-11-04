@@ -1,0 +1,96 @@
+<script>
+  import Meta from '$lib/components/Meta.svelte';
+  import ClusterIllustration from '$lib/components/ClusterIllustration.svelte';
+  import { getClusters, getClusterDecisionEntries } from '$lib/content';
+  import { headingAnchors } from '$lib/actions/headingAnchors';
+  import { SURVEY_PAGE } from '$lib/links';
+</script>
+
+<Meta
+  title="Providers"
+  description="Three P1 partitions at Danish HPC facilities, three research profiles, and how to choose between them."
+  type="website"
+/>
+
+<article class="prose mx-auto w-full max-w-3xl" use:headingAnchors>
+
+<p class="eyebrow not-prose mb-4">P1 Compute</p>
+
+# Providers
+
+P1 funds and helps run dedicated partitions at three Danish HPC facilities, each matched to a
+research profile. The P1 compute coordinator holds admin on them alongside each provider's HPC
+team. Use the table to pick one. Each provider page covers what the partition offers, who it suits
+and how to get access, and the [gallery](/gallery/) shows how to work on each.
+
+<!-- md:replace decision-table -->
+<div class="not-prose my-8 overflow-x-auto">
+  <table class="w-full border-collapse text-sm">
+    <thead>
+      <tr class="bg-slate-100 text-left dark:bg-slate-800">
+        <th class="border border-slate-200 px-4 py-3 font-semibold dark:border-slate-700">If you need</th>
+        <th class="border border-slate-200 px-4 py-3 font-semibold dark:border-slate-700">Go to</th>
+        <th class="border border-slate-200 px-4 py-3 font-semibold dark:border-slate-700">Why</th>
+      </tr>
+    </thead>
+    <tbody>
+      {#each getClusterDecisionEntries() as d}
+        <tr>
+          <td class="border border-slate-200 px-4 py-3 align-top text-slate-700 dark:border-slate-700 dark:text-slate-300">{d.need}</td>
+          <td class="border border-slate-200 px-4 py-3 align-top whitespace-nowrap dark:border-slate-700">
+            <a href={d.cluster.href} class="font-semibold text-[var(--color-brand)] no-underline hover:underline">
+              {d.cluster.meta.navLabel ?? d.cluster.meta.title}
+            </a>
+          </td>
+          <td class="border border-slate-200 px-4 py-3 align-top text-slate-700 dark:border-slate-700 dark:text-slate-300">{d.why}</td>
+        </tr>
+      {/each}
+    </tbody>
+  </table>
+</div>
+<!-- md:end -->
+
+<!-- md:replace guidance -->
+<div class="not-prose mb-8 rounded-xl border border-slate-200 bg-slate-50 p-5 dark:border-slate-700 dark:bg-slate-800/40">
+  <p class="eyebrow mb-2">Guidance</p>
+  <p class="text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+    Unsure which fits?
+    <a
+      href={SURVEY_PAGE}
+      class="font-semibold text-[var(--color-brand)] no-underline hover:underline"
+    >Tell us about your workload →</a>
+    and the compute coordinator will help you find and use the right one. Optional: you can go
+    straight to a provider page.
+  </p>
+</div>
+<!-- md:end -->
+
+Open to researchers at any Danish university. For compute beyond P1, see the
+[compute ecosystem](/ecosystem/).
+
+<!-- md:replace cluster-cards -->
+<div class="not-prose grid gap-6 sm:grid-cols-3">
+  {#each getClusters() as cluster}
+    <a
+      href={cluster.href}
+      class="group flex flex-col rounded-xl border border-slate-200 p-5 no-underline transition-colors hover:border-slate-300 hover:bg-slate-50 dark:border-slate-700 dark:hover:border-slate-600 dark:hover:bg-slate-800/50"
+    >
+      <ClusterIllustration slug={cluster.slug} class="mx-auto mb-4 w-full max-w-[150px]" />
+      <div class="mb-3 h-[3px] w-10 rounded-sm" style:background-color={cluster.meta.brandColor}></div>
+      <div class="mb-1 flex items-center gap-2">
+        <span class="font-semibold text-slate-900 dark:text-slate-100">{cluster.meta.title}</span>
+        {#if cluster.meta.badge}
+          <span class="rounded bg-slate-200 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-slate-700 dark:bg-slate-700 dark:text-slate-200">
+            {cluster.meta.badge.text}
+          </span>
+        {/if}
+      </div>
+      <p class="text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+        {cluster.meta.description}
+      </p>
+    </a>
+  {/each}
+</div>
+<!-- md:end -->
+
+</article>

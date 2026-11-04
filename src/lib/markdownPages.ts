@@ -7,16 +7,21 @@
 // silently advertising a URL that 404s.
 export const MARKDOWN_PAGES = [
   'about',
-  'clusters',
-  'clusters/dtu',
-  'clusters/gefion',
-  'clusters/ngc',
+  'cli',
   'ecosystem',
   'events',
   'events/superagent-d3a',
   'forms',
+  'gallery',
+  'gallery/int-gpu',
+  'gallery/rem-lgn',
+  'gallery/xfr-dat',
   'learn',
   'privacy',
+  'providers',
+  'providers/dtu',
+  'providers/gefion',
+  'providers/ngc',
   'survey',
   'terms'
 ];

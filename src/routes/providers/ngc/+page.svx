@@ -1,0 +1,151 @@
+---
+title: P1 NGC HPC
+description: GDPR-compliant HPC at the National Genome Centre for P1 projects handling sensitive or personal data.
+order: 2
+navLabel: NGC HPC
+brandColor: var(--color-brand-ngc)
+providerDocs:
+  provider: NGC
+  note: Until it is published, the internal documentation linked from the status page inside the environment is the reference, and the compute coordinator can help with anything it does not cover.
+quotas:
+  wallTime: Not published; ask your NGC admin or the compute coordinator
+  gpusPerJob: Not published; ask your NGC admin or the compute coordinator
+  gpusAtOnce: Not published; ask your NGC admin or the compute coordinator
+  homeDirectory: Set per project at onboarding
+  projectStorage: Set per project at onboarding
+  sharedPool: About 2 PB (245 TB SSD, 368 TB HDD, 1.44 PB cold)
+hardware:
+  - label: Nodes
+    value: 8 compute (Lenovo VX665) + 3 storage (VX650)
+  - label: CPU per compute node
+    value: 2× AMD EPYC 9354 (32 cores each)
+  - label: RAM per compute node
+    value: 768 GB
+  - label: GPUs
+    value: 14× NVIDIA H100 PCIe (80 GB)
+  - label: Storage
+    value: About 2 PB total (245 TB SSD, 368 TB HDD, 1.44 PB cold)
+  - label: Topology
+    value: Air-gapped, per-project isolation through VMware vSphere
+  - label: Compliance
+    value: GDPR-compliant infrastructure
+  - label: Operating system
+    value: Rocky Linux
+  - label: Scheduler
+    value: TORQUE (PBS)
+---
+
+<script>
+  import AccessException from '$lib/components/AccessException.svelte';
+  import ClusterQuotas from '$lib/components/ClusterQuotas.svelte';
+  import EmbedForm from '$lib/components/EmbedForm.svelte';
+  import { NGC_SIGNUP_FORM_URL } from '$lib/links';
+  import GpuAllowance from '$lib/components/GpuAllowance.svelte';
+  import Support from '$lib/components/Support.svelte';
+</script>
+
+The P1 NGC HPC is hosted at the National Genome Centre, for GDPR-compliant work on sensitive data
+and large datasets. VMware vSphere isolates projects from one another, and storage is
+petabyte-scale. [NGC's supercomputer page](https://www.ngc.dk/infrastrukturen-for-personlig-medicin/supercomputer)
+describes the infrastructure.
+
+## Getting Access
+
+### Who's eligible?
+
+**Requirements:** PhD or higher (exceptions may apply), valid Danish university email, and
+registered P1 affiliation.
+
+Each project must bring a signed Data Processing Agreement as its record. It must name NGC as a
+data processor and allow the data to be stored there. A project that poses a high risk to the people
+whose personal data it processes also needs a Data Protection Impact Assessment (DPIA).
+
+### Do I need to talk to someone first?
+
+No. The optional [workload survey](p1:surveyPage) tells the P1 compute coordinator about your
+workload. Fill it in early for NGC, since GDPR projects need their data-processing paperwork lined
+up.
+
+### How do I sign up?
+
+1. Request P1 affiliation in [your P1 profile](p1:profile) (**Update Profile** in the header). P1
+   staff approve it.
+2. Get the user application form from NGC. Only NGC issues it; their
+   [how to apply for access](p1:ngcHowToApply) page explains how.
+3. Complete and sign it, then email it to the [compute coordinator](mailto:bstja@dtu.dk).
+4. Fill in the access request below. The coordinator then knows the paperwork is coming and
+   raises the request with NGC.
+
+You join the NGC Slack channel once you have access.
+
+<EmbedForm
+  title="P1 NGC HPC Access Request"
+  src="{NGC_SIGNUP_FORM_URL}?embed=true"
+  href={NGC_SIGNUP_FORM_URL}
+  description="Requires an approved P1 affiliation and a Data Processing Agreement naming NGC."
+/>
+
+### What if I don't qualify?
+
+<AccessException />
+
+## Connecting
+
+The P1 NGC HPC is air-gapped. Access needs multi-factor authentication and the Omnissa Remote
+Desktop client, and you get instructions once registered. From the remote desktop,
+`ssh -X <your-username>@login` reaches the login node.
+
+Useful hosts:
+
+```text
+https://console.cld076.vmc/status   # Internal status page
+cld076-0004.cld076.vmc              # Internal SFTP
+sftp.spc.ngc.dk                     # External Ingress/Egress (SFTP)
+```
+
+## Using the Cluster
+
+The cluster runs PBS, and `iqsub` opens a quick interactive session. Jobs name your project's
+group and account, which you get when access is approved. Scheduler flags are in NGC's internal
+documentation, linked from the status page.
+
+The cluster has no internet access, so `git clone` from a public forge, `pip install` and `conda`
+do not work. Code, data, packages and results pass through the SFTP staging area at `/data/upload`
+under admin supervision, and anything leaving needs your NGC admin's approval. Ask your NGC admin
+for access to `/data/upload` as your project's data gateway.
+
+The gallery shows how to move [code, data and dependencies](/gallery/xfr-dat/) through the staging
+area. See [every example that runs on P1 NGC HPC](/gallery/?provider=ngc).
+
+## Policy & Support
+
+### What are the limits?
+
+<ClusterQuotas slug="ngc" />
+
+- Only use this GDPR-compliant cluster for projects that need it
+- Each project needs a signed Data Processing Agreement naming NGC as data processor
+- High-risk projects also need a DPIA
+
+### How much storage do I get?
+
+Your quota is set when your project is onboarded. The staging area at `/data/upload` is a gateway
+only. Clear your files from it once they have landed, so the next transfer does not compete with
+them.
+
+Your Data Processing Agreement governs retention, and personal data may not stay once the project
+ends. Agree deletion or archiving with your NGC admin and the compute coordinator well before
+then.
+
+### What if I need more GPUs?
+
+<GpuAllowance />
+
+### Who do I contact?
+
+<Support
+  technicalSupportEmail="support@ngc.dk"
+  technicalSupportLabel="NGC HPC Support Team"
+  computeCoordinatorEmail="bstja@dtu.dk"
+  emailSubjectPrefix="P1 NGC HPC:"
+/>

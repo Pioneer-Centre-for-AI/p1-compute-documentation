@@ -25,9 +25,9 @@
   {/if}
 
   <div class="not-prose mt-8 flex flex-wrap gap-3">
-    <Button href="/clusters/" variant="primary">
+    <Button href="/providers/" variant="primary">
       {#snippet children()}
-        Browse the clusters
+        Browse the providers
       {/snippet}
     </Button>
     <Button href="/" variant="ghost">

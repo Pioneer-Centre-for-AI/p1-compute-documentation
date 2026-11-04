@@ -63,12 +63,17 @@ jobs:
       # Fail loudly rather than deploying a site missing its own entry points.
       - name: Verify output
         run: |
-          for f in index.html 404.html sitemap.xml robots.txt CNAME; do
+          for f in index.html 404.html sitemap.xml robots.txt CNAME install gallery/index.json gallery/int-gpu.tar.gz; do
             if [ ! -f "site/$f" ]; then
               echo "::error::expected site/$f in the build output"
               exit 1
             fi
           done
+          # `curl -fsSL https://hpc.aicentre.dk/install | sh` runs this file.
+          if [ "$(head -n 1 site/install)" != "#!/bin/sh" ]; then
+            echo "::error::site/install is not the aicentre install script"
+            exit 1
+          fi
           echo "Pages: $(find site -name '*.html' | wc -l), size: $(du -sh site | cut -f1)"
 
       - name: Configure Pages

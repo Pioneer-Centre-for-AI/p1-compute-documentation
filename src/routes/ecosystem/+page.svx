@@ -22,7 +22,7 @@ landscape is bigger than P1. As a consortium we know it well: we understand the 
 getting compute for research, we have experience across the systems below, and when your needs fit
 better elsewhere we point you in the right direction.
 
-**We consult and guide. We don't broker access.** Getting onto the systems below goes through
+**We consult and guide. We don't broker access unless its our own resources.** Getting onto the systems below goes through
 their own institutions and application processes, but if you are unsure where your project
 belongs, [talk to us](/about/) first.
 
@@ -66,8 +66,8 @@ further, covering the other Danish universities and research institutions.
 ## Where P1 fits
 
 The P1 partitions are the entry point for P1-affiliated researchers: start on the
-[DTU HPC](/clusters/dtu/) for general work, the [NGC HPC](/clusters/ngc/) for sensitive data, and
-the [Gefion sandbox](/clusters/gefion/) to get a workload ready for large-scale runs. When your
+[DTU HPC](/providers/dtu/) for general work, the [NGC HPC](/providers/ngc/) for sensitive data, and
+the [Gefion sandbox](/providers/gefion/) to get a workload ready for large-scale runs. When your
 needs outgrow them, the systems above are the next step, and we are happy to help you choose.
 
 </article>

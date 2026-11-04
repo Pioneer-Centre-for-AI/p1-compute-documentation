@@ -1,0 +1,35 @@
+// Tasks for submitting and following jobs from VS Code on a P1 login node.
+// Copy this file to .vscode/tasks.json in your project on the cluster, open a
+// job script, then run "Tasks: Run Task". They call aicentre on the login
+// node, which it keeps installed there; #BSUB or #SBATCH lines in the script
+// decide where the job goes.
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Submit this job script",
+      "type": "shell",
+      "command": "$HOME/.local/bin/aicentre submit ${file} --dir ${fileDirname}",
+      "problemMatcher": []
+    },
+    {
+      "label": "My jobs",
+      "type": "shell",
+      "command": "$HOME/.local/bin/aicentre list jobs",
+      "problemMatcher": []
+    },
+    {
+      "label": "Follow a job's output",
+      "type": "shell",
+      "command": "$HOME/.local/bin/aicentre logs ${input:job} -f",
+      "problemMatcher": []
+    }
+  ],
+  "inputs": [
+    {
+      "id": "job",
+      "type": "promptString",
+      "description": "The job id, as aicentre list jobs shows it"
+    }
+  ]
+}

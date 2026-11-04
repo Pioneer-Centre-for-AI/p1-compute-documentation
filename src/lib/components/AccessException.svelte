@@ -1,6 +1,6 @@
 <script lang="ts">
   import EmbedForm from './EmbedForm.svelte';
-  import { ACCESS_EXCEPTION_FORM_URL } from '$lib/links';
+  import { ACCESS_EXCEPTION_EMBED_URL, ACCESS_EXCEPTION_FORM_URL } from '$lib/links';
 </script>
 
 <p>
@@ -15,7 +15,7 @@
 
 <EmbedForm
   title="P1 HPC Access Exception Form"
-  src="{ACCESS_EXCEPTION_FORM_URL}?embed=true"
+  src={ACCESS_EXCEPTION_EMBED_URL}
   href={ACCESS_EXCEPTION_FORM_URL}
   description="Requires sign-off from a P1 co-lead or faculty member."
 />

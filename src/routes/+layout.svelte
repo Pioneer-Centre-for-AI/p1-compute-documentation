@@ -8,9 +8,13 @@
   import PageToc from '$lib/components/PageToc.svelte';
   import Footer from '$lib/components/Footer.svelte';
   import { markdownHref } from '$lib/markdownPages';
+  import { GALLERY_HREF } from '$lib/gallery';
 
   let { children } = $props();
   let isLanding = $derived($page.url.pathname === '/');
+  // Full-width pages skip the sidebar and TOC shell and lay themselves out.
+  // The gallery overview is one, so its card grid can span the window.
+  let isWide = $derived(isLanding || $page.url.pathname === GALLERY_HREF);
   let mdHref = $derived(markdownHref($page.url.pathname));
   let mobileNavOpen = $state(false);
 
@@ -72,7 +76,7 @@
   <Header variant={isLanding ? 'landing' : 'solid'} onMenuClick={() => (mobileNavOpen = true)} />
   <NavDrawer bind:open={mobileNavOpen} />
 
-  {#if isLanding}
+  {#if isWide}
     <div class="flex-1">
       {@render children()}
     </div>

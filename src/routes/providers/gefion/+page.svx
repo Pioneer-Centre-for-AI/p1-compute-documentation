@@ -1,0 +1,168 @@
+---
+title: P1 Gefion HPC
+description: A sandbox on Gefion for developing and maturing workloads until they are ready for large-scale runs.
+order: 3
+navLabel: Gefion HPC
+brandColor: var(--color-brand-gefion)
+providerDocs:
+  provider: DCAI
+  url: https://doc-open-ai.secureremote.dcai.dk
+  note: Requires signing in to DCAI before the link resolves.
+quotas:
+  wallTime: Not published; ask the compute coordinator before planning a long run
+  # Quoted: a bare 2 is a YAML number, and the schema wants the string it will
+  # print, so that a value can always carry its own unit or caveat.
+  gpusPerJob: '2'
+  gpusAtOnce: 4, as 2 concurrent jobs of 2 GPUs, more while GPUs sit idle
+  homeDirectory: 25 GB
+  projectStorage: 500 GB default
+  sharedPool: 300 TB
+hardware:
+  - label: Nodes
+    value: 2× NVIDIA DGX H100 (8 GPUs each)
+  - label: GPUs
+    value: 16× H100 SXM, 640 GB GPU memory, around 32 petaFLOPS FP8
+  - label: CPU per node
+    value: 2× Intel Xeon Platinum 8480C (56 cores each)
+  - label: RAM per node
+    value: 2 TB
+  - label: Interconnect
+    value: NVLink at 900 GB/s GPU to GPU, InfiniBand up to 400 Gbps
+  - label: Shared storage
+    value: 300 TB, 500 GB default quota
+  - label: Home directory
+    value: 25 GB
+  - label: Operating system
+    value: NVIDIA DGX OS (Ubuntu based)
+  - label: Scheduler
+    value: Slurm
+---
+
+<script>
+  import Aside from '$lib/components/Aside.svelte';
+  import AccessException from '$lib/components/AccessException.svelte';
+  import ClusterQuotas from '$lib/components/ClusterQuotas.svelte';
+  import EmbedForm from '$lib/components/EmbedForm.svelte';
+  import GpuAllowance from '$lib/components/GpuAllowance.svelte';
+  import Support from '$lib/components/Support.svelte';
+  import { GEFION_SIGNUP_FORM_URL } from '$lib/links';
+</script>
+
+The P1 Gefion HPC is a sandbox with on-demand H100 GPUs on [Gefion](https://dcai.dk/gefion). Use
+it to develop, test and pilot a workload on the hardware generation it will scale up on. Full 8-GPU
+production nodes need separate funding, such as a Novo Nordisk Foundation (NNF) compute voucher or
+another allocation. A workload that already runs here is what you apply with.
+
+## Getting Access
+
+### Who's eligible?
+
+**Requirements:** PhD or higher (exceptions may apply), valid Danish university email, and
+registered P1 affiliation.
+
+### Do I need to talk to someone first?
+
+No. The optional [workload survey](p1:surveyPage) tells the P1 compute coordinator about your
+workload, and helps us plan production nodes if your project scales.
+
+### How do I sign up?
+
+1. Request P1 affiliation in [your P1 profile](p1:profile) (**Update Profile** in the header). P1
+   staff approve it.
+2. Fill in the sandbox sign-up form below. A DCAI team member then contacts you with a DCAI
+   username and initial-setup-password.
+
+<EmbedForm
+  title="P1 Gefion Sandbox Sign-up Form"
+  src="{GEFION_SIGNUP_FORM_URL}?embed=true"
+  href={GEFION_SIGNUP_FORM_URL}
+  description="Requires an approved P1 affiliation."
+/>
+
+### What if I don't qualify?
+
+<AccessException />
+
+## Connecting
+
+```bash
+aicentre check -p gefion --connect
+```
+
+`aicentre check` shows what your machine needs for Gefion: the Host block for `~/.ssh/config`
+and when to sign in to DCAI again. Then it tests the login. DCAI's documentation has the
+details.
+
+## Using the Cluster
+
+The sandbox runs Slurm. Submit GPU work as batch jobs instead of holding an interactive session
+open.
+
+- Every job names the Slurm account it is charged to. P1's default account is `iu_0096`
+  (`--account=iu_0096`). A project with its own account uses that one instead.
+- Nodes have 2 TB of memory, so size `--mem` for the data a job loads, not its GPUs.
+- The P1 partition is on Gefion's open system. The login node reaches public git hosts and package
+  indexes.
+- Large transfers use the SFTP endpoint `xfer.dcai.dk`. To get your public IP whitelisted, send
+  [DCAI support](mailto:support@dcai.dk) the output of `curl ifconfig.io`.
+
+From the gallery:
+
+- [VS Code on the login node](/gallery/rem-lgn/)
+- [moving code and data](/gallery/xfr-dat/) on and off the cluster
+
+See [every example that runs on P1 Gefion HPC](/gallery/?provider=gefion).
+
+## Policy & Support
+
+### What are the limits?
+
+<ClusterQuotas slug="gefion" />
+
+- 16 H100 GPUs in total, shared by all sandbox users
+- User accounts are individual and non-transferable
+- An account can belong to one or more Gefion projects
+
+Limits may change to meet the needs of P1 students and faculty.
+
+<Aside type="note" title="GDPR Compliance">
+
+The P1 Gefion HPC is GDPR-compliant, so projects with personal data can run here. Have the
+data-processing paperwork in place, and agree the details with DCAI and the compute coordinator,
+before you upload any.
+
+</Aside>
+
+### How much storage do I get?
+
+Home directories hold 25 GB, so keep datasets and checkpoints in your project space (500 GB
+default). Data sent to the SFTP endpoint lands in a staging area first and counts twice until you
+delete the staged copy.
+
+Use cluster storage as working space, not an archive. Keep code in git and a second copy of
+anything you cannot regenerate on institutional storage or your own machine. Before a project
+ends, ask the compute coordinator what to move off.
+
+### What if I need more GPUs?
+
+The default limit is 2 concurrent jobs of at most 2 GPUs each. When GPUs are idle on P1's two
+NVIDIA DGX H100 nodes (account `iu_0096`), you can go past it. Check what is free with `sinfo` and
+submit the larger job. No request is needed.
+
+<Aside type="caution">
+
+Jobs beyond the default limits can be cancelled when demand picks up. You are responsible for
+checkpointing, so a cancelled job resumes instead of starting over.
+
+</Aside>
+
+<GpuAllowance selfServeDocumented />
+
+### Who do I contact?
+
+<Support
+  technicalSupportEmail="support@dcai.dk"
+  technicalSupportLabel="DCAI Support Team"
+  computeCoordinatorEmail="bstja@dtu.dk"
+  emailSubjectPrefix="P1 Gefion HPC:"
+/>

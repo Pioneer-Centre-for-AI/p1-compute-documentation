@@ -3,9 +3,10 @@
 // Plain JS (not TS) because svelte.config.js is loaded directly by Node and
 // imports this through the `p1:` remark plugin — same reason markdown/highlight.js
 // is plain JS. `links.ts` re-exports these as named constants for Svelte code.
-// Every form is institution-hosted (Microsoft Forms), so each one outlives
-// whoever holds the coordinator role. The one deliberate exception is
-// `booking`: a calendar belongs to a person, not to an institution, so it
+// Every form but the access exception request is institution-hosted
+// (Microsoft Forms), so each one outlives whoever holds the coordinator role.
+// The access exception request is on Google Forms. `booking` is a deliberate
+// exception too: a calendar belongs to a person, not to an institution, so it
 // cannot be role-hosted. Whoever holds the role next replaces the URL.
 export const URLS = {
   // The raw form. Only the /survey/ page and the /forms/ directory link here
@@ -31,6 +32,10 @@ export const URLS = {
   // instructions for obtaining it.
   ngcHowToApply:
     'https://www.eng.ngc.dk/research-and-international-collaboration/dngc-research-services/how-to-apply-for-access',
-  accessException: 'https://forms.cloud.microsoft/e/1L2DJVZhib',
+  // Google Forms. The short link is the one to share and open; the embed
+  // takes the full form URL it redirects to, with Google's embed parameter.
+  accessException: 'https://forms.gle/jSp12oBU2BcM6GJR7',
+  accessExceptionEmbed:
+    'https://docs.google.com/forms/d/e/1FAIpQLSciaOm-CYwl48LGGZC7qlmCSPU7kfEitjGy4kvZXAXEPbo_eA/viewform?embedded=true',
   researchNetwork: 'https://www.deic.dk/en/danish-research-network'
 };

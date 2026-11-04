@@ -16,6 +16,7 @@ export const GOVERNANCE_EMAIL = URLS.governanceEmail;
 
 export const DTU_SIGNUP_FORM_URL = URLS.dtuSignup;
 export const ACCESS_EXCEPTION_FORM_URL = URLS.accessException;
+export const ACCESS_EXCEPTION_EMBED_URL = URLS.accessExceptionEmbed;
 export const GEFION_SIGNUP_FORM_URL = URLS.gefionSignup;
 export const NGC_SIGNUP_FORM_URL = URLS.ngcSignup;
 export const NGC_HOW_TO_APPLY_URL = URLS.ngcHowToApply;
@@ -83,7 +84,7 @@ export const FORMS: FormInfo[] = [
   {
     title: 'Access exception request',
     purpose: 'For MSc students, research assistants, and similar roles who need cluster access with a written approval from a responsible P1 co-lead or faculty member.',
-    provider: 'Microsoft Forms',
+    provider: 'Google Forms',
     url: ACCESS_EXCEPTION_FORM_URL
   },
   {

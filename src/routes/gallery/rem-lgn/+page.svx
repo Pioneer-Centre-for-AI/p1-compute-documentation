@@ -1,0 +1,32 @@
+---
+title: "VS Code on the login node over Remote-SSH"
+description: "Desktop VS Code on a DTU or Gefion login node over Remote-SSH, set up and checked with aicentre."
+order: 2
+navLabel: "VS Code Remote-SSH"
+summary: "Desktop VS Code on a DTU or Gefion login node, for editing code, git and submitting jobs, with settings that keep the shared node light."
+tags: [ide, ssh, editing]
+clusters: [dtu, gefion]
+commands:
+  - "aicentre check --connect"
+---
+
+[Download the files](/gallery/rem-lgn.tar.gz) · [Source on GitHub](https://github.com/Pioneer-Centre-for-AI/p1-compute-documentation/tree/main/pkgs/gallery/rem-lgn)
+
+Desktop VS Code connected to a DTU or Gefion login node with Microsoft's
+[Remote - SSH](https://code.visualstudio.com/docs/remote/ssh) extension, for editing code, git
+and submitting jobs on the cluster. `settings.json` keeps VS Code light on the shared node and,
+on DTU, installs its server in project storage. `tasks.json` submits and follows jobs from
+inside VS Code.
+
+## With aicentre
+
+```bash
+aicentre check --connect      # the ~/.ssh/config Host block VS Code connects with, and a test login
+aicentre gallery get rem-lgn  # tasks.json onto the cluster, for .vscode/ in a project
+aicentre code                 # or VS Code in your browser, with nothing to install
+```
+
+- `check` prints the Host block each provider needs and tests the login, so "Remote-SSH: Connect
+  to Host" works on the first try. Any Host name works.
+- The tasks call `aicentre submit`, `list jobs` and `logs` on the login node, where aicentre
+  keeps itself installed, so the same tasks work on DTU and Gefion.

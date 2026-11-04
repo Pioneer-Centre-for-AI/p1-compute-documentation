@@ -27,10 +27,10 @@ server logs; see
 
 ### Embedded forms and boards
 
-Some pages embed sign-up forms from Microsoft Forms, and event pages may embed a read-only Airtable
-view or link to Airtable forms. Loading those pages fetches content from Microsoft or Airtable, and
-anything you submit through a form is processed by that provider under its own privacy policy. We
-only receive the answers you submit.
+Some pages embed sign-up forms from Microsoft Forms and Google Forms, and event pages may embed a
+read-only Airtable view or link to Airtable forms. Loading those pages fetches content from
+Microsoft, Google or Airtable, and anything you submit through a form is processed by that
+provider under its own privacy policy. We only receive the answers you submit.
 
 ## Cluster accounts
 
@@ -44,7 +44,7 @@ or DCAI), which operates the system and acts as your point of technical support.
 
 Data you store or process on the clusters is governed by the hosting institution's policies, not
 by this site. For projects involving personal or sensitive data, use the
-[P1 NGC HPC](/clusters/ngc/), and note that each project must carry a signed Data Processing
+[P1 NGC HPC](/providers/ngc/), and note that each project must carry a signed Data Processing
 Agreement naming NGC as data processor. See the [terms](/terms/) and the per-cluster pages for
 details. Data retention and deletion after account expiry follow the
 [data retention policy](/terms/#data-retention-policy).

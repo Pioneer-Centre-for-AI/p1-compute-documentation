@@ -5,6 +5,7 @@
 // descriptions. Server-only — the glob below pulls every page source into the
 // bundle, which must never reach the client.
 import { getClusters, getClusterDecisionEntries, computeTiers } from '$lib/content';
+import { GALLERY_INTRO, GALLERY_SOURCE, getGallery } from '$lib/gallery';
 import {
   getEvents,
   superAgentAtAGlance,
@@ -21,7 +22,9 @@ import { markdownTable, svxToMarkdown } from './toMarkdown';
 // Raw sources, keyed by route path. adapter-static runs with strict: true and
 // no fallback, and the crawler cannot discover an unlinked endpoint, so the
 // same glob feeds both the entry lists and the response bodies.
-const sources = import.meta.glob('/src/routes/**/+page.svx', {
+// Gallery drafts are left out: they exist only in `bun run dev`. Parentheses
+// are glob syntax, hence the character classes around "drafts".
+const sources = import.meta.glob(['/src/routes/**/+page.svx', '!/src/routes/gallery/[(]drafts[)]/**'], {
   query: '?raw',
   import: 'default',
   eager: true
@@ -67,7 +70,7 @@ const BLOCKS: Record<string, () => Record<string, string>> = {
       ])
     )
   }),
-  clusters: () => ({
+  providers: () => ({
     'decision-table': markdownTable(
       ['If you need', 'Go to', 'Why'],
       getClusterDecisionEntries().map((d) => {
@@ -75,7 +78,7 @@ const BLOCKS: Record<string, () => Record<string, string>> = {
         return [d.need, `[${label}](${d.cluster.href})`, d.why];
       })
     ),
-    guidance: `**Guidance:** unsure which fits, or want a second opinion? The compute coordinator is glad to help: [tell us about your workload](${URLS.surveyPage}). Entirely optional, and you are just as welcome to head straight to a cluster page.`,
+    guidance: `**Guidance:** unsure which fits? [Tell us about your workload](${URLS.surveyPage}) and the compute coordinator will help you find and use the right one. Optional: you can go straight to a provider page.`,
     'cluster-cards': getClusters()
       .map((c) => `- [${c.meta.title}](${c.href}): ${c.meta.description}`)
       .join('\n')
@@ -84,6 +87,20 @@ const BLOCKS: Record<string, () => Record<string, string>> = {
   // the twin gets the link instead.
   survey: () => ({
     embed: `**Form:** [Your Compute Needs survey](${URLS.survey})`
+  }),
+  // The hero and the filterable grid are layout, not prose: markdown gets the
+  // heading and a plain list with each example's tags.
+  gallery: () => ({
+    'gallery-hero':
+      `# Gallery\n\n${GALLERY_INTRO}\n\n` +
+      `Have a workflow others could use? Add it in a [pull request](${GALLERY_SOURCE}), ` +
+      `or [tell the compute coordinator](${URLS.surveyPage}).`,
+    'gallery-list': getGallery()
+      .map(
+        (e) =>
+          `- [${e.code}: ${e.meta.title}](${e.href}): ${e.meta.summary} Tags: ${e.meta.tags.join(', ')}.`
+      )
+      .join('\n')
   }),
   forms: () => ({
     'forms-table': markdownTable(
@@ -129,9 +146,10 @@ export function renderTwin(path: string): string | null {
   // body, and cluster pages their hardware table too, so both are reattached here.
   const cluster = getClusters().find((c) => c.href === `/${path}/`);
   const event = getEvents().find((e) => e.href === `/${path}/`);
+  const example = getGallery().find((e) => e.href === `/${path}/`);
 
   return svxToMarkdown(source, {
-    title: cluster?.meta.title ?? event?.meta.title,
+    title: cluster?.meta.title ?? event?.meta.title ?? example?.meta.title,
     providerDocs: cluster?.meta.providerDocs,
     quotas: cluster?.meta.quotas,
     hardware: cluster?.meta.hardware,
@@ -153,7 +171,8 @@ export function renderTwin(path: string): string | null {
 export function twinMeta(path: string): { title: string; description: string } {
   const cluster = getClusters().find((c) => c.href === `/${path}/`);
   const event = getEvents().find((e) => e.href === `/${path}/`);
-  const fromRegistry = cluster?.meta ?? event?.meta;
+  const example = getGallery().find((e) => e.href === `/${path}/`);
+  const fromRegistry = cluster?.meta ?? event?.meta ?? example?.meta;
   if (fromRegistry) {
     return { title: fromRegistry.title, description: fromRegistry.description };
   }

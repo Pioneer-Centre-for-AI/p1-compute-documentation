@@ -1,0 +1,153 @@
+---
+title: P1 DTU HPC
+description: General-purpose HPC at DTU for P1 members, with free compute and storage for medium-scale ML research.
+order: 1
+navLabel: DTU HPC
+brandColor: var(--color-brand-dtu)
+providerDocs:
+  provider: DTU DCC
+  url: https://www.hpc.dtu.dk/?page_id=5028
+quotas:
+  wallTime: 72 hours
+  gpusPerJob: 2 (one node)
+  gpusAtOnce: About half the cluster, so roughly 8 of the 16 H100s
+  homeDirectory: 30 GB
+  projectStorage: 500 GB default, under /dtu/p1/
+  sharedPool: 60 TiB
+hardware:
+  - label: Nodes
+    value: 8× Lenovo ThinkSystem SR665 V3 (7 batch, 1 interactive)
+  - label: CPU per node
+    value: 2× AMD EPYC 9354 (32 cores each)
+  - label: RAM per node
+    value: 768 GB
+  - label: GPUs
+    value: 16× NVIDIA H100 PCIe (80 GB), 2 per node
+  - label: Shared storage
+    value: 60 TiB at /dtu/p1, 500 GB default project quota
+  - label: Home directory
+    value: 30 GB
+  - label: Storage fabric
+    value: NFSv4.2 over 100 Gbit EDR InfiniBand with RDMA, 11× Micron 7450 NVMe (RAID 5)
+  - label: Operating system
+    value: AlmaLinux
+  - label: Scheduler
+    value: IBM Spectrum LSF
+  - label: Queues
+    value: p1 (batch, 7 nodes) / p1i (interactive, 1 node)
+---
+
+<script>
+  import Aside from '$lib/components/Aside.svelte';
+  import AccessException from '$lib/components/AccessException.svelte';
+  import ClusterQuotas from '$lib/components/ClusterQuotas.svelte';
+  import Citation from '$lib/components/Citation.svelte';
+  import EmbedForm from '$lib/components/EmbedForm.svelte';
+  import GpuAllowance from '$lib/components/GpuAllowance.svelte';
+  import Support from '$lib/components/Support.svelte';
+  import { DTU_SIGNUP_FORM_URL } from '$lib/links';
+</script>
+
+The P1 DTU HPC is P1's partition at DTU. It suits medium to large-scale machine learning research
+by P1 members (PhD and above).
+
+## Getting Access
+
+### Who's eligible?
+
+**Requirements:** PhD or higher (exceptions may apply), valid Danish university email, and
+registered P1 affiliation.
+
+### Do I need to talk to someone first?
+
+No. The optional [workload survey](p1:surveyPage) tells the P1 compute coordinator about your
+workload, so we can point you to the right resource.
+
+### How do I sign up?
+
+1. Request P1 affiliation in [your P1 profile](p1:profile) (**Update Profile** in the header). P1
+   staff approve it.
+2. Fill in the DTU account form below. It only accepts official university email addresses.
+   Henning Christiansen (head of DTU's compute centre) processes it, and you get the account
+   details by email.
+
+<EmbedForm
+  title="DTU Account Signup Form"
+  src="{DTU_SIGNUP_FORM_URL}?embed=true"
+  href={DTU_SIGNUP_FORM_URL}
+  description="Use your official university email address."
+/>
+
+### What if I don't qualify?
+
+<AccessException />
+
+## Connecting
+
+The login node is `login9.hpc.dtu.dk`. Off DTU's network, connect to the DTU VPN first;
+[DTU IT's VPN guide](https://www.hpc.dtu.dk/?page_id=2501) covers setup and MFA.
+
+```bash
+aicentre check -p dtu --connect
+```
+
+`aicentre check` shows the Host block for `~/.ssh/config` and whether your key is set up, then
+tests the login.
+
+## Using the Cluster
+
+The cluster runs IBM Spectrum LSF with two queues:
+
+- `p1`: batch jobs, seven nodes
+- `p1i`: interactive sessions, one node, for installing packages, test runs and short debugging
+
+`p1i` is the only P1 queue for interactive GPU work. Everything else runs as a batch job. Home
+directories hold 30 GB, so project data goes under `/dtu/p1/`. See DTU's
+[LSF guide](https://www.hpc.dtu.dk/?page_id=2698) for scheduler flags and its
+[transfer nodes](https://www.hpc.dtu.dk/?page_id=2671) for very large data moves.
+
+From the gallery:
+
+- [an interactive session with a GPU](/gallery/int-gpu/) on `p1i`
+- [VS Code on the login node](/gallery/rem-lgn/)
+- [moving code and data](/gallery/xfr-dat/) on and off the cluster
+
+See [every example that runs on P1 DTU HPC](/gallery/?provider=dtu).
+
+## Policy & Support
+
+### What are the limits?
+
+<ClusterQuotas slug="dtu" />
+
+For more storage, contact the governance group at
+[compute-governance-p1@aicentre.dk](mailto:compute-governance-p1@aicentre.dk).
+
+### How much storage do I get?
+
+Your 500 GB project allowance comes out of a 60 TiB shared pool. Use it as working space, not an
+archive. Keep code in git and a second copy of anything you cannot regenerate on institutional
+storage or your own machine. Before a project ends, ask the compute coordinator what to move off.
+
+<Aside type="caution" title="GDPR Compliance">
+
+Only non-GDPR data belongs here, such as public datasets and open benchmarks. Your home directory
+is private, but the cluster is not approved for personal data, whatever you do at file level. If
+your project involves personal data, talk to the compute coordinator before you start.
+
+</Aside>
+
+### What if I need more GPUs?
+
+<GpuAllowance />
+
+<Citation />
+
+### Who do I contact?
+
+<Support
+  technicalSupportEmail="support@hpc.dtu.dk"
+  technicalSupportLabel="DTU HPC Support Team"
+  computeCoordinatorEmail="bstja@dtu.dk"
+  emailSubjectPrefix="P1 DTU HPC:"
+/>

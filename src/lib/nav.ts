@@ -34,6 +34,7 @@ export function getNav(): NavEntry[] {
       items: [
         { label: 'About', href: '/about/' },
         { label: 'Your Compute Needs', href: '/survey/' },
+        { label: 'Command Line Tool', href: '/cli/', badge: { text: 'WIP', variant: 'caution' } },
         // The route stays /forms/: renaming it would move the nav entry, the
         // llms.txt link, the sitemap URL and anything anyone has bookmarked, to
         // change a word in a label.
@@ -41,9 +42,9 @@ export function getNav(): NavEntry[] {
       ]
     },
     {
-      label: 'Clusters',
+      label: 'Providers',
       items: [
-        { label: 'Overview', href: '/clusters/' },
+        { label: 'Overview', href: '/providers/' },
         ...getClusters().map((c) => ({
           label: c.meta.navLabel ?? c.meta.title,
           href: c.href,

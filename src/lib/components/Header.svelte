@@ -3,6 +3,7 @@
   import ThemeToggle from './ThemeToggle.svelte';
   import ComputeNeedsMenu from './ComputeNeedsMenu.svelte';
   import { PROFILE_URL, GITHUB_URL } from '$lib/links';
+  import { GALLERY_HREF } from '$lib/gallery';
 
   type Props = { variant?: 'solid' | 'landing'; onMenuClick: () => void };
   let { variant = 'solid', onMenuClick }: Props = $props();
@@ -49,6 +50,14 @@
       </a>
     </div>
     <div class="flex shrink-0 items-center gap-2">
+      <!-- Always visible, unlike Update Profile: the gallery is the shortest
+           path from an account to a GPU doing something, on every screen size. -->
+      <a
+        href={GALLERY_HREF}
+        class="inline-flex h-9 items-center rounded-full border border-slate-400 px-4 text-sm font-medium whitespace-nowrap text-slate-700 no-underline transition-colors hover:bg-slate-100 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-800"
+      >
+        Gallery
+      </a>
       <a
         href={PROFILE_URL}
         target="_blank"

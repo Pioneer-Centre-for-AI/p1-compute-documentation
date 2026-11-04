@@ -4,9 +4,12 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
+    # aicentre (pkgs/cli) needs bun 1.4, whose bun.lock format older bun cannot
+    # read. Its own pin keeps the website's nixpkgs, and its hashes, as they are.
+    nixpkgs-cli.url = "github:NixOS/nixpkgs/nixos-unstable";
   };
 
-  outputs = { self, nixpkgs, flake-utils }:
+  outputs = { self, nixpkgs, nixpkgs-cli, flake-utils }:
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs { inherit system; };
@@ -75,6 +78,10 @@
               ./tsconfig.json
               ./src
               ./static
+              # Served at /install by src/routes/install/+server.ts.
+              ./pkgs/cli/install.sh
+              # Served as /gallery/<code>.tar.gz by src/routes/gallery/[slug].tar.gz.
+              ./pkgs/gallery
             ];
           };
 
@@ -134,6 +141,9 @@
           '';
         };
 
+        # The aicentre command line tool, from pkgs/cli.
+        aicentre = nixpkgs-cli.legacyPackages.${system}.callPackage ./pkgs/cli/nix/package.nix { };
+
         serveScript = pkgs.writeShellScript "serve-p1-hpc" ''
           exec ${pkgs.miniserve}/bin/miniserve \
             --index index.html \
@@ -145,6 +155,7 @@
       {
         packages.website = website;
         packages.default = website;
+        packages.aicentre = aicentre;
 
         checks.typecheck = typecheck;
         checks.website = website;
@@ -154,11 +165,17 @@
           program = "${serveScript}";
         };
         apps.default = self.apps.${system}.website;
+        apps.aicentre = {
+          type = "app";
+          program = "${aicentre}/bin/aicentre";
+        };
 
         devShells.default = pkgs.mkShell {
           packages = with pkgs; [
             bun
             nodejs_22
+            # For pkgs/cli/install.sh: `bun run lint:sh` in pkgs/cli.
+            shellcheck
           ];
 
           shellHook = ''
@@ -167,5 +184,18 @@
         };
 
         formatter = pkgs.nixpkgs-fmt;
-      });
+      })
+    // {
+      # aicentre for Nix users: a Home Manager module with settings, a NixOS
+      # module that installs it for everyone, and an overlay with pkgs.aicentre.
+      homeManagerModules.default = import ./pkgs/cli/nix/home-manager.nix self;
+      homeManagerModules.aicentre = self.homeManagerModules.default;
+      nixosModules.default = import ./pkgs/cli/nix/nixos.nix self;
+      nixosModules.aicentre = self.nixosModules.default;
+      overlays.default = final: _prev: {
+        aicentre = final.callPackage ./pkgs/cli/nix/package.nix {
+          inherit (nixpkgs-cli.legacyPackages.${final.stdenv.hostPlatform.system}) bun;
+        };
+      };
+    };
 }

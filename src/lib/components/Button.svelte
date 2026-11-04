@@ -3,17 +3,19 @@
   import type { HTMLAnchorAttributes, HTMLButtonAttributes } from 'svelte/elements';
 
   type Variant = 'primary' | 'secondary' | 'ghost';
+  type Size = 'md' | 'sm';
 
   type Props = {
     variant?: Variant;
+    size?: Size;
     href?: string;
     children: Snippet;
   } & (Omit<HTMLAnchorAttributes, 'children'> & Omit<HTMLButtonAttributes, 'children'>);
 
-  let { variant = 'primary', href, children, ...rest }: Props = $props();
+  let { variant = 'primary', size = 'md', href, children, ...rest }: Props = $props();
 
   const base =
-    'inline-flex items-center justify-center gap-2 rounded-full px-5 py-2 text-sm font-semibold no-underline transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900';
+    'inline-flex items-center justify-center gap-2 rounded-full font-semibold no-underline transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900';
   const variants: Record<Variant, string> = {
     primary:
       'bg-slate-800 text-white hover:bg-slate-700 dark:bg-slate-200 dark:text-slate-900 dark:hover:bg-slate-300',
@@ -22,7 +24,11 @@
     ghost:
       'border border-slate-400 text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-800'
   };
-  const cls = $derived(`${base} ${variants[variant]}`);
+  const sizes: Record<Size, string> = {
+    md: 'px-5 py-2 text-sm',
+    sm: 'px-3 py-1 text-xs'
+  };
+  const cls = $derived(`${base} ${sizes[size]} ${variants[variant]}`);
 </script>
 
 {#if href}

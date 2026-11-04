@@ -1,0 +1,61 @@
+name: CLI
+
+# Typecheck, test and lint pkgs/cli on every change to it, on Linux and macOS.
+# Releases are built by release-cli.yaml.
+
+on:
+  push:
+    branches: [main]
+    paths: ['pkgs/cli/**', '.github/workflows/cli.yaml']
+  pull_request:
+    branches: [main]
+    paths: ['pkgs/cli/**', '.github/workflows/cli.yaml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cli-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  test:
+    name: Test (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-15]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: pkgs/cli
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: pkgs/cli/.bun-version
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Typecheck
+        run: bun run typecheck
+
+      - name: Check formatting
+        run: bun run lint
+
+      # The end-to-end test compiles two releases and installs them with
+      # install.sh, under dash on Ubuntu and the system sh on macOS.
+      - name: Test
+        run: bun test
+        env:
+          AICENTRE_E2E: '1'
+
+      - name: Lint shell scripts
+        if: runner.os == 'Linux'
+        run: bun run lint:sh

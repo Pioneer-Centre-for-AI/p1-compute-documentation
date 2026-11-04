@@ -1,0 +1,24 @@
+# Login-node hosts for ~/.ssh/config. Copy the blocks you need and replace the
+# <placeholders>. VS Code's Remote-SSH extension uses these names: connect to
+# `dtu` or `gefion`.
+
+# P1 DTU HPC. From outside DTU's network, connect to the DTU VPN first.
+Host dtu
+  HostName login9.hpc.dtu.dk
+  User <dtu-username>
+  # IdentityFile ~/.ssh/<keyname>    # if your key is not one ssh tries by default
+  ServerAliveInterval 60
+
+# P1 Gefion HPC, through Teleport. Run this first, and again when it expires:
+#   tsh login --proxy secureremote.dcai.dk --user <gefion-username>
+Host gefion
+  Port 3022
+  User <gefion-username>
+  HostName slurm-login-01.hpc.ite.dcai.dk
+  ProxyCommand tsh proxy ssh --cluster=secureremote.dcai.dk --proxy=secureremote.dcai.dk:443 %r@%h:%p
+  CertificateFile ~/.tsh/keys/secureremote.dcai.dk/<gefion-username>-ssh/secureremote.dcai.dk-cert.pub
+  ConnectTimeout 30
+  ControlMaster no
+  ControlPersist no
+  IdentityFile ~/.tsh/keys/secureremote.dcai.dk/<gefion-username>
+  UserKnownHostsFile ~/.tsh/known_hosts

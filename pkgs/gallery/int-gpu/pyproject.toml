@@ -1,0 +1,9 @@
+[project]
+name = "int-gpu"
+version = "0.1.0"
+requires-python = ">=3.13"
+dependencies = [
+    "marimo>=0.25",
+    "matplotlib>=3.10",
+    "torch>=2.9",
+]

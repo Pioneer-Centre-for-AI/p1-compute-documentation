@@ -6,6 +6,9 @@
   import DigitalObjectIdentifier from '$lib/components/DigitalObjectIdentifier.svelte';
   import LandscapeDiagram from '$lib/components/LandscapeDiagram.svelte';
   import { getClusters } from '$lib/content';
+  import GalleryCard from '$lib/components/GalleryCard.svelte';
+  import InstallCommand from '$lib/components/InstallCommand.svelte';
+  import { GALLERY_HREF, getGallery } from '$lib/gallery';
   import { SURVEY_PAGE } from '$lib/links';
 
   let booking = $state(false);
@@ -37,19 +40,15 @@
   <!-- Hero -->
   <section class="grid items-center gap-12 pb-14 pt-28 md:pt-36 lg:grid-cols-[1.05fr_1fr] lg:gap-10">
     <div class="flex flex-col items-start gap-6">
-      <p class="eyebrow">Overview · Guidance · Onboarding</p>
       <h1 class="text-balance text-5xl font-extrabold leading-[1.05] tracking-tight text-slate-900 md:text-6xl dark:text-slate-50">
         Your <mark>entry point</mark> to research compute.
       </h1>
       <p class="max-w-xl text-lg leading-relaxed text-slate-500 dark:text-slate-400">
-        Getting compute for research can be challenging. At P1 we are well aware. We fund and help
-        run dedicated partitions at three Danish HPC facilities, free to use for P1-affiliated
-        researchers, with our compute coordinator working alongside each provider's HPC team to keep
-        the service fit for research. When your needs fit better elsewhere, we know the landscape and
-        point you in the right direction.
+        P1 funds and helps run partitions at three Danish HPC providers, free for P1-affiliated
+        researchers. When your work fits better elsewhere, we point you there.
       </p>
       <div class="flex flex-wrap items-center gap-3">
-        <Button href="/clusters/" variant="primary">
+        <Button href="/providers/" variant="primary">
           {#snippet children()}
             Find your cluster
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12,5 19,12 12,19"/></svg>
@@ -61,6 +60,7 @@
           {/snippet}
         </Button>
       </div>
+      <InstallCommand />
       <div class="flex flex-wrap items-center gap-3 pt-2">
         <span class="text-xs text-slate-500 dark:text-slate-400">
           Did the P1 DTU HPC help your work? Please cite:
@@ -73,8 +73,7 @@
     <div class="mx-auto w-full max-w-md lg:max-w-none">
       <LandscapeDiagram variant="stacked" />
       <p class="mt-3 text-center text-sm text-slate-500 dark:text-slate-400">
-        We fund and help run partitions at partner facilities, and we point the way to the rest. We
-        consult and guide; we don't broker access.
+        We consult and guide; We don't broker access unless its our own resources.
       </p>
     </div>
   </section>
@@ -126,8 +125,32 @@
 
     <p class="mt-8 text-sm text-slate-500 dark:text-slate-400">
       Not sure which one fits your project?
-      <a href="/clusters/" class="font-semibold text-[var(--color-brand)] no-underline hover:underline">
-        Compare the clusters →
+      <a href="/providers/" class="font-semibold text-[var(--color-brand)] no-underline hover:underline">
+        Compare the providers →
+      </a>
+    </p>
+  </section>
+
+  <!-- Gallery: the fastest way from an account to a GPU doing something -->
+  <section class="border-t border-slate-200 py-14 dark:border-slate-800">
+    <div class="mb-8 flex max-w-2xl flex-col gap-3">
+      <h2 class="text-2xl font-semibold text-slate-900 md:text-3xl dark:text-slate-50">
+        Start from a working example.
+      </h2>
+      <p class="leading-relaxed text-slate-500 dark:text-slate-400">
+        Example workflows for P1-affiliated researchers, and how to run them on P1 compute.
+      </p>
+    </div>
+
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {#each getGallery() as entry}
+        <GalleryCard {entry} />
+      {/each}
+    </div>
+
+    <p class="mt-8 text-sm text-slate-500 dark:text-slate-400">
+      <a href={GALLERY_HREF} class="font-semibold text-[var(--color-brand)] no-underline hover:underline">
+        Browse the gallery →
       </a>
     </p>
   </section>
@@ -137,14 +160,12 @@
     <div class="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
       <div class="flex max-w-2xl flex-col items-start gap-4">
         <h2 class="text-2xl font-semibold text-slate-900 md:text-3xl dark:text-slate-50">
-          Happy to talk it through.
+          Talk to the compute coordinator.
         </h2>
         <p class="leading-relaxed text-slate-500 dark:text-slate-400">
-          The P1 compute coordinator is here whenever you want a hand. Tell us about your workload,
-          needs, and expectations and we can point you to the right resource and lift your ability
-          to use it well. If your project outgrows P1, the wider
-          <a href="/ecosystem/" class="font-semibold text-[var(--color-brand)] no-underline hover:underline">compute ecosystem</a>
-          is the next step, and we help you choose.
+          Tell us about your workload and we point you to the right resource. When a project
+          outgrows P1, we help you choose in the wider
+          <a href="/ecosystem/" class="font-semibold text-[var(--color-brand)] no-underline hover:underline">compute ecosystem</a>.
         </p>
         <!-- Two ways out of a section that offers a conversation: the survey,
              which is the durable record, and the conversation itself. -->

@@ -1,0 +1,33 @@
+// VS Code user settings for working on P1 login nodes. Open them with
+// "Preferences: Open User Settings (JSON)" and merge these entries in.
+{
+  // Install VS Code's server on the P1 filesystem on DTU. The default is
+  // ~/.vscode-server, and the DTU home directory holds 30 GB.
+  "remote.SSH.serverInstallPath": {
+    "dtu": "/dtu/p1/<dtu-username>"
+  },
+  "remote.SSH.remotePlatform": {
+    "dtu": "linux",
+    "gefion": "linux"
+  },
+  // The VPN and Teleport can make the first connection slow.
+  "remote.SSH.connectTimeout": 60,
+
+  // Login nodes are shared. Keep VS Code from watching, searching and
+  // indexing datasets, checkpoints, job output and environments.
+  "files.watcherExclude": {
+    "**/datasets/**": true,
+    "**/checkpoints/**": true,
+    "**/runs/**": true,
+    "**/logs/**": true,
+    "**/.venv/**": true
+  },
+  "search.exclude": {
+    "**/datasets": true,
+    "**/checkpoints": true,
+    "**/runs": true,
+    "**/logs": true,
+    "**/.venv": true
+  },
+  "python.analysis.exclude": ["**/datasets", "**/checkpoints", "**/runs", "**/logs", "**/.venv"]
+}

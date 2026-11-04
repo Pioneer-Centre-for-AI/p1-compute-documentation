@@ -1,0 +1,139 @@
+name: Release CLI
+
+# Push a tag cli-v<version>, with <version> equal to pkgs/cli/package.json,
+# and this builds aicentre for every platform and publishes a GitHub release:
+#
+#   aicentre-<os>-<arch>.tar.gz   for linux and darwin, x64 and arm64
+#   VERSION                       what `aicentre upgrade` compares against
+#   SHA256SUMS                    what install.sh and upgrade verify against
+#
+# install.sh (served at https://hpc.aicentre.dk/install) downloads from
+# releases/latest, so this repository publishes CLI releases only.
+
+on:
+  push:
+    tags: ['cli-v*']
+
+# Nothing by default; only the job that publishes gets to write.
+permissions: {}
+
+jobs:
+  verify:
+    name: Verify
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    defaults:
+      run:
+        working-directory: pkgs/cli
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Tag matches package.json
+        run: |
+          v="${GITHUB_REF_NAME#cli-v}"
+          p="$(jq -r .version package.json)"
+          if [ "$v" != "$p" ]; then
+            echo "::error::tag $GITHUB_REF_NAME does not match pkgs/cli/package.json version $p"
+            exit 1
+          fi
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: pkgs/cli/.bun-version
+      - run: bun install --frozen-lockfile
+      - run: bun run typecheck
+      - run: bun test
+      - run: bun run lint:sh
+
+  build:
+    name: Build ${{ matrix.os }}-${{ matrix.arch }}
+    needs: verify
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - { runner: ubuntu-24.04, os: linux, arch: x64 }
+          - { runner: ubuntu-24.04-arm, os: linux, arch: arm64 }
+          - { runner: macos-15, os: darwin, arch: arm64 }
+          - { runner: macos-15-intel, os: darwin, arch: x64 }
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    defaults:
+      run:
+        working-directory: pkgs/cli
+    steps:
+      - uses: actions/checkout@v7
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: pkgs/cli/.bun-version
+      - run: bun install --frozen-lockfile
+
+      # Built on its own platform rather than cross-compiled: bun's own ad-hoc
+      # signing of darwin binaries has been unreliable, and an unsigned arm64
+      # binary is killed by macOS on start.
+      - name: Build
+        run: bun run build --target "bun-${{ matrix.os }}-${{ matrix.arch }}" --outfile dist/aicentre
+
+      - name: Sign (macOS)
+        if: matrix.os == 'darwin'
+        run: |
+          codesign --force --sign - dist/aicentre
+          codesign --verify --strict --verbose=2 dist/aicentre
+
+      - name: Smoke test
+        run: |
+          v="${GITHUB_REF_NAME#cli-v}"
+          test "$(./dist/aicentre --version)" = "$v"
+          # No cluster set up in an empty home: check must run and say so, exit 0 or 1.
+          set +e
+          HOME="$(mktemp -d)" ./dist/aicentre check --json > /dev/null
+          code=$?
+          set -e
+          [ "$code" -eq 0 ] || [ "$code" -eq 1 ]
+
+      - name: Package
+        run: tar -C dist -czf "aicentre-${{ matrix.os }}-${{ matrix.arch }}.tar.gz" aicentre pi
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: aicentre-${{ matrix.os }}-${{ matrix.arch }}
+          path: pkgs/cli/aicentre-${{ matrix.os }}-${{ matrix.arch }}.tar.gz
+          if-no-files-found: error
+
+  release:
+    name: Publish
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: Checksums
+        working-directory: dist
+        run: |
+          printf '%s\n' "${GITHUB_REF_NAME#cli-v}" > VERSION
+          sha256sum aicentre-*.tar.gz VERSION > SHA256SUMS
+          cat SHA256SUMS
+
+      - name: Create release
+        working-directory: dist
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          v="${GITHUB_REF_NAME#cli-v}"
+          flags="--latest"
+          case "$v" in *-*) flags="--prerelease --latest=false" ;; esac
+          # shellcheck disable=SC2086
+          gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --verify-tag $flags \
+            --title "aicentre $v" \
+            --notes "Install or reinstall: \`curl -fsSL https://hpc.aicentre.dk/install | sh\`. Upgrade: \`aicentre upgrade\`." \
+            aicentre-*.tar.gz VERSION SHA256SUMS

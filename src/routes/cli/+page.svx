@@ -1,0 +1,269 @@
+<script>
+  import Meta from '$lib/components/Meta.svelte';
+  import Aside from '$lib/components/Aside.svelte';
+  import { headingAnchors } from '$lib/actions/headingAnchors';
+</script>
+
+<Meta
+  title="Command Line Tool"
+  description="aicentre, the command line tool for P1 compute: check that your machine is set up, see your jobs across every provider, and start GPU sessions."
+  type="website"
+/>
+
+<article class="prose mx-auto w-full max-w-3xl" use:headingAnchors>
+
+<p class="eyebrow not-prose mb-4">Getting Started</p>
+
+# Command Line Tool
+
+<Aside type="caution" title="Work in progress">
+
+This tool is mainly illustrative. An idea of what researchers might need for a more streamlined experience: one way to check setup, start sessions
+and follow jobs on any provider. Building the integrations, tooling and platforms is up to the
+providers. We can only really wrap stuff (unless maybe one day P1 gets its own control plane ofcs). Commands may change, and parts are not yet tried on the clusters. Send feedback to
+#ask-compute or the [compute needs survey](/survey/).
+
+</Aside>
+
+`aicentre` runs on your laptop and works with P1 compute in three modes:
+
+| Mode | Commands | Where it runs |
+| --- | --- | --- |
+| Interactive, CPU | `aicentre shell`, `marimo`, `code` | A login node, at once |
+| Interactive, GPU | the same, with `--gpu` | A GPU node, as an interactive job |
+| Batch | `aicentre submit`, `list jobs`, `logs`, `cancel` | The batch queue, without you |
+
+`aicentre check` checks your setup. Commands cover every provider you are set up for, and
+`--provider gefion` (or `-p gefion`) picks one.
+
+A provider that asks for more than your key, as DTU asks for a password, asks once on your
+terminal. The login then stays open for 30 minutes.
+
+## Install
+
+```bash
+curl -fsSL https://hpc.aicentre.dk/install | sh
+```
+
+It installs the [release](https://github.com/Pioneer-Centre-for-AI/p1-compute-documentation/releases)
+for your machine in your home directory, with no admin rights. It runs on Linux and macOS, and in
+WSL on Windows. Set `AICENTRE_VERSION` for a particular version:
+
+```bash
+curl -fsSL https://hpc.aicentre.dk/install | AICENTRE_VERSION=0.1.0 sh
+```
+
+With Nix, see [With Nix](#with-nix).
+
+## Check your setup
+
+```bash
+aicentre check              # the providers you are set up for
+aicentre check --all        # every provider
+aicentre check --connect    # also log in
+```
+
+It checks OpenSSH, `~/.ssh` and `~/.ssh/config`, then each provider:
+
+| Provider | What it checks |
+| --- | --- |
+| [P1 DTU HPC](/providers/dtu/) | A `Host dtu` block for `login9.hpc.dtu.dk`, your username, an SSH key ssh will use, the host key |
+| [P1 Gefion HPC](/providers/gefion/) | A Host block for the login node, and whether your DCAI sign-in login is still valid |
+| [P1 NGC HPC](/providers/ngc/) | Nothing to set up here: you work on it through its remote desktop |
+
+A provider is set up when `~/.ssh/config` has its Host block, or for Gefion when you have logged
+in to DCAI. `--all` also checks the rest and prints any missing Host block to paste in.
+
+`--connect` tests the VPN, your key and your sign-in. It never prompts, so a login that would ask
+fails with a reason. The exit code is 0 when nothing failed and 1 otherwise, and `--json` prints
+results for scripts.
+
+### Settings
+
+Settings are optional. Put names that differ from the defaults in
+`~/.config/aicentre/config.toml`. A provider listed there is always checked.
+
+```ini file=~/.config/aicentre/config.toml
+[dtu]
+user = "s123456"
+
+[gefion]
+user = "jdoe"
+alias = "gefion"       # the Host name in ~/.ssh/config
+# account = "..."      # a project's own Slurm account; P1's iu_0096 is the default
+```
+
+The queues are P1's and need no setting: batch jobs go to `p1` and `--gpu` sessions to `p1i` on
+DTU, and a script's own `#BSUB -q` wins.
+
+## Your jobs
+
+```bash
+aicentre list jobs
+```
+
+It shows your running, waiting and suspended jobs across P1 in one table, batch and interactive.
+NGC is air-gapped, so its jobs show only in `qstat` on its remote desktop.
+
+```text
+Your jobs on P1 compute  3 jobs
+  PROVIDER  JOB    STATE    QUEUE  NAME   NODE       ELAPSED  LEFT
+  DTU       123    running  p1     train  n-62-30-1  0:05:00  0:55:00
+  Gefion    98765  running  p1     eval   dgx-01     2:03:04  21:56:56
+  DTU       124    pending  p1     sweep  -          -        -        Not enough GPUs available
+```
+
+## Interactive sessions
+
+```bash
+aicentre shell                           # a shell on the login node
+aicentre marimo project/notebook.py      # marimo in your browser
+aicentre code project                    # VS Code in your browser
+aicentre code project --gpu --time 2h    # the same, on a GPU node
+```
+
+Without `--gpu`, a session starts at once on your first provider's login node. The login node is
+shared, so keep to editing, installs and light runs.
+
+With `--gpu`, it runs as an interactive job with one GPU on `p1i`, P1 DTU HPC's interactive
+queue. `--gpu` is for DTU only, since Gefion runs GPU work as batch jobs and NGC uses its remote
+desktop.
+
+Paths are on the cluster, relative to your project directory (`/dtu/p1/<username>` on DTU, your
+home on Gefion) unless absolute or under `~`. Nothing is copied from your machine.
+
+| Option | Default | What |
+| --- | --- | --- |
+| `--gpu` | | Run on a GPU node instead of the login node |
+| `--time 2h` | 1 hour | With `--gpu`: how long the job may run, as `90`, `2h` or `1:30` |
+| `--cpus 4` | 4 | With `--gpu`: CPU cores |
+| `--mem 8GB` | 8GB | With `--gpu`: memory per core |
+| `--server openvscode` | VS Code's own server | For `code`: openvscode-server, the open build, with extensions from Open VSX |
+| `--no-browser` | | Print the address without opening it |
+
+Ctrl-C ends the session and its job. The first marimo or VS Code session takes a minute to set
+up in `.aicentre` in your project directory.
+
+## Batch jobs
+
+```bash
+aicentre submit train.sh
+aicentre logs 4242 -f
+aicentre cancel 4242
+```
+
+`submit` sends a `#BSUB` script to P1 DTU HPC and an `#SBATCH` script to P1 Gefion HPC. A local
+script is copied up first.
+
+What the script leaves out gets P1's default: the `p1` queue on DTU, the Slurm account `iu_0096`
+on Gefion, and output in `.aicentre/logs`. Name another account in the script or in your
+settings.
+
+`logs` and `cancel` need only the job id. `logs -f` follows the output and `--err` shows the
+error file.
+
+## Moving data
+
+```bash
+aicentre push datasets              # datasets/ into your project directory
+aicentre pull results               # results/ back to this folder
+```
+
+Both resume a stopped copy. The [moving data](/gallery/xfr-dat/) example covers
+git, large transfers and NGC's staging area.
+
+## Examples
+
+```bash
+aicentre gallery                    # the examples in the gallery
+aicentre gallery get int-gpu        # one of them onto the cluster, in examples/int-gpu
+```
+
+`gallery get` downloads the example on the login node and prints what to run next.
+
+## Chat
+
+```bash
+aicentre chat
+aicentre chat --model <provider/id>
+aicentre chat -c                    # pick up the last conversation
+```
+
+`chat` starts an agent with tools that read this site, your setup, your jobs and
+their output. It has no shell, and it submits or cancels a job only after you say yes. Sign in
+with `/login` in the chat, or set a key such as `ANTHROPIC_API_KEY`.
+
+## On the clusters
+
+`aicentre` keeps itself on each provider you use, at your laptop's version, in
+`~/.local/bin/aicentre`. On a login node, the same commands use the scheduler directly:
+
+```bash
+aicentre list jobs
+aicentre submit train.sh
+aicentre logs 4242 -f
+aicentre shell --gpu        # a GPU shell, from the login node
+```
+
+marimo and VS Code open in a browser, so start them from your laptop. Set `sync = false` under a provider in your settings
+to keep `aicentre` off it.
+
+## Upgrade and uninstall
+
+```bash
+aicentre upgrade
+aicentre uninstall
+```
+
+`upgrade` switches to the latest release, and keeps your version if anything fails. `uninstall`
+asks before it removes your settings, and `--purge` skips the question. It ends with the command
+that removes `aicentre` from each cluster.
+
+## With Nix
+
+Run it from this site's flake without installing:
+
+```bash
+nix run github:Pioneer-Centre-for-AI/p1-compute-documentation#aicentre -- check
+```
+
+To keep it, use the flake's Home Manager module. `settings` becomes
+`~/.config/aicentre/config.toml`:
+
+```nix
+# flake.nix
+inputs.p1-compute.url = "github:Pioneer-Centre-for-AI/p1-compute-documentation";
+
+# your Home Manager configuration
+imports = [ inputs.p1-compute.homeManagerModules.default ];
+programs.aicentre = {
+  enable = true;
+  settings = {
+    dtu.user = "s123456";
+    gefion.user = "jdoe";
+  };
+};
+```
+
+On NixOS without Home Manager, use `nixosModules.default` with `programs.aicentre.enable = true`,
+or `overlays.default` for `pkgs.aicentre`. Nix then handles updates, so `upgrade` and
+`uninstall` leave it alone.
+
+## Where it keeps files
+
+
+| Path | What |
+| --- | --- |
+| `~/.local/bin/aicentre` | A link to the program |
+| `~/.local/share/aicentre/` | The program itself |
+| `~/.config/aicentre/` | Your settings, and chat's model logins in `agent/` |
+| `~/.local/state/aicentre/` | State it keeps between runs: job notes and chat conversations |
+| `~/.cache/aicentre/` | Downloads during an upgrade |
+| `$XDG_RUNTIME_DIR/aicentre/` | Open logins to the providers, and other files that only live while it runs |
+
+## Source
+
+The source is in [pkgs/cli](https://github.com/Pioneer-Centre-for-AI/p1-compute-documentation/tree/main/pkgs/cli).
+Send ideas to #ask-compute or as a pull request.
+
+</article>

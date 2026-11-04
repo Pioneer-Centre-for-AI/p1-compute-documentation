@@ -263,6 +263,10 @@ html.dark .prose th:not(.not-prose, .not-prose *) {
 }
 .prose code:not(pre code):not(.not-prose, .not-prose *) {
   @apply rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[0.85em];
+  /* Inline code that wraps keeps its padding and corners on every line,
+     instead of one box sliced in two at the line break. */
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
 }
 html.dark .prose code:not(pre code):not(.not-prose, .not-prose *) {
   @apply bg-slate-800;

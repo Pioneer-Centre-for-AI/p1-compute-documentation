@@ -55,7 +55,7 @@ asks least of you. Each opens in a new tab; the cluster pages embed the same for
 </div>
 <!-- md:end -->
 
-Unsure where to start? The [cluster overview](/clusters/) helps you pick the right one, and each
+Unsure where to start? The [cluster overview](/providers/) helps you pick the right one, and each
 cluster page lists the forms it needs in the order you need them.
 
 </article>
