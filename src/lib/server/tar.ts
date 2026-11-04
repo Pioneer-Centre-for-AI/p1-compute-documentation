@@ -1,6 +1,3 @@
-// A minimal ustar writer, for the gallery's example tarballs. Every entry gets
-// the same owner, mode and time, so the same files always give the same
-// bytes, as a reproducible site build needs.
 import { gzipSync } from 'node:zlib';
 
 const BLOCK = 512;
@@ -16,7 +13,6 @@ function octal(value: number, length: number): string {
 
 function header(name: string, size: number, mtime: number, dir = false): Uint8Array {
   const h = new Uint8Array(BLOCK);
-  // Names up to 100 bytes go in `name`; longer paths split into `prefix` and `name`.
   let prefix = '';
   let base = name;
   if (encoder.encode(name).length > 100) {
@@ -40,7 +36,6 @@ function header(name: string, size: number, mtime: number, dir = false): Uint8Ar
   return h;
 }
 
-/** A .tar.gz of `files` (path -> text), each under `root/`. */
 export function tarGz(root: string, files: Record<string, string>, mtime = 0): Uint8Array<ArrayBuffer> {
   const parts: Uint8Array[] = [header(`${root}/`, 0, mtime, true)];
   for (const [path, text] of Object.entries(files).sort(([a], [b]) => a.localeCompare(b))) {
@@ -58,6 +53,5 @@ export function tarGz(root: string, files: Record<string, string>, mtime = 0): U
     tar.set(p, at);
     at += p.length;
   }
-  // A plain Uint8Array, which Response takes as a body; Node's Buffer type it is not.
   return new Uint8Array(gzipSync(tar, { level: 9 }));
 }

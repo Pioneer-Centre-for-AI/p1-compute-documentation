@@ -1,14 +1,10 @@
 <script lang="ts">
-  // Line illustrations for the three P1 clusters, adapted from the
-  // compute-resources slide deck. Strokes follow currentColor so the
-  // parent controls light/dark ink; coral and plum come from the theme.
   type Props = { slug: string; class?: string };
   let { slug, class: className = '' }: Props = $props();
 </script>
 
 <span class="block text-slate-700 dark:text-slate-300 {className}" aria-hidden="true">
   {#if slug === 'dtu'}
-    <!-- Rack with GPU bays, laptop wired in for interactive access -->
     <svg viewBox="0 0 150 120" xmlns="http://www.w3.org/2000/svg" fill="none" class="h-auto w-full">
       <rect x="20" y="18" width="74" height="88" rx="3" stroke="currentColor" stroke-width="1.5" />
       <g stroke="currentColor" stroke-width="1.1">
@@ -39,7 +35,6 @@
       <path d="M112 40 L148 40 L146 44 L114 44 Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" />
     </svg>
   {:else if slug === 'ngc'}
-    <!-- Compute plus large storage, marked secure with a corner lock badge -->
     <svg viewBox="0 0 150 120" xmlns="http://www.w3.org/2000/svg" fill="none" class="h-auto w-full">
       <rect x="20" y="14" width="84" height="92" rx="3" stroke="currentColor" stroke-width="1.5" />
       <g stroke="currentColor" stroke-width="1.1">
@@ -73,7 +68,6 @@
       </g>
     </svg>
   {:else if slug === 'gefion'}
-    <!-- DGX-class chassis, NVLink-coupled GPUs, scale-out silhouettes, security badge -->
     <svg viewBox="0 0 150 120" xmlns="http://www.w3.org/2000/svg" fill="none" class="h-auto w-full">
       <rect x="12" y="14" width="80" height="92" rx="3" stroke="currentColor" stroke-width="1.6" />
       <line x1="12" y1="24" x2="92" y2="24" stroke="currentColor" stroke-width="1.1" />

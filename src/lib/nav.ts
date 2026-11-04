@@ -7,7 +7,6 @@ export type NavItem = {
   label: string;
   href: string;
   badge?: { text: string; variant: NavBadgeVariant };
-  /** Small colored dot in front of the label, e.g. a cluster brand color. */
   dot?: string;
   external?: boolean;
   newTab?: boolean;
@@ -20,13 +19,6 @@ export type NavGroup = {
 
 export type NavEntry = NavItem | NavGroup;
 
-// A function, not a const: the cluster entries come from $lib/content, which
-// sits in an import cycle with the cluster pages it globs. Building this list
-// at module evaluation reached into that cycle before it had settled and took
-// every page down with a 500. Callers ask for it while rendering, by which
-// point the cycle is resolved.
-//
-// Terms and Privacy intentionally live only in the footer.
 export function getNav(): NavEntry[] {
   return [
     {
@@ -35,9 +27,6 @@ export function getNav(): NavEntry[] {
         { label: 'About', href: '/about/' },
         { label: 'Your Compute Needs', href: '/survey/' },
         { label: 'Command Line Tool', href: '/cli/', badge: { text: 'WIP', variant: 'caution' } },
-        // The route stays /forms/: renaming it would move the nav entry, the
-        // llms.txt link, the sitemap URL and anything anyone has bookmarked, to
-        // change a word in a label.
         { label: 'Forms & Bookings', href: '/forms/' }
       ]
     },

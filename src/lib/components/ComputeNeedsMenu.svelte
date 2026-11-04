@@ -4,9 +4,6 @@
   import BookingDialog from './BookingDialog.svelte';
   import { SURVEY_PAGE, BOOKING_URL } from '$lib/links';
 
-  // A split button, not a plain dropdown: the survey was the header's one-click
-  // action long before booking existed, so the label keeps navigating there and
-  // the caret is what reveals the second way to reach the coordinator.
   let open = $state(false);
   let booking = $state(false);
   let wrapper = $state<HTMLElement | null>(null);
@@ -15,8 +12,6 @@
   $effect(() => {
     if (!open) return;
     menu?.querySelector<HTMLElement>('a, button')?.focus();
-    // Pointerdown rather than click, so the menu is gone before the underlying
-    // element reacts, and capture so a stopPropagation elsewhere cannot trap it.
     const onPointerDown = (e: PointerEvent) => {
       if (!wrapper?.contains(e.target as Node)) open = false;
     };
@@ -36,8 +31,6 @@
       close();
       return;
     }
-    // Arrow keys are what a role="menu" promises; without them the menu is a
-    // list of links wearing the wrong role.
     if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
     if (!open) {
       open = true;
@@ -52,9 +45,6 @@
     items[(at + step + items.length) % items.length].focus();
   }
 
-  // Both halves of the pill are the same surface, so the hover tint is an
-  // overlay rather than a second background colour: two slate shades meeting at
-  // the divider read as two buttons that happen to touch.
   const segment =
     'relative cursor-pointer transition-colors before:absolute before:inset-0 before:bg-white/0 before:transition-colors hover:before:bg-white/12 dark:before:bg-slate-900/0 dark:hover:before:bg-slate-900/10 focus-visible:outline-none focus-visible:before:bg-white/12 dark:focus-visible:before:bg-slate-900/10';
 

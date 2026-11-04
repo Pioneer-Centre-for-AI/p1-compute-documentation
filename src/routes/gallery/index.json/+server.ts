@@ -1,4 +1,3 @@
-// /gallery/index.json: the published examples, for `aicentre gallery`.
 import { getGallery } from '$lib/gallery';
 import { hasFiles } from '$lib/server/gallery-files';
 import { SITE_URL } from '$lib/site';

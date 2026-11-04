@@ -1,5 +1,3 @@
-// Shiki rendering for mdsvex fenced code blocks (build time, via svelte.config.js).
-// Plain JS because svelte.config.js is loaded by Node.
 import { createHighlighter } from 'shiki';
 
 /** @type {Promise<import('shiki').Highlighter> | null} */
@@ -45,12 +43,9 @@ const COPY_ICON =
 const CHECK_ICON =
   '<svg class="copy-icon-done" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20,6 9,17 4,12" /></svg>';
 
-// The button carries no event handler: this HTML is injected with {@html},
-// so a delegated listener in the root layout wires every block at once.
 const COPY_BUTTON = `<button type="button" class="copy-btn" data-copy aria-label="Copy code">${COPY_ICON}${CHECK_ICON}</button>`;
 
 /**
- * Full code block chrome for fenced blocks in .svx files.
  * @param {string} code
  * @param {string} [lang]
  * @param {string} [file]
@@ -58,10 +53,6 @@ const COPY_BUTTON = `<button type="button" class="copy-btn" data-copy aria-label
  */
 export async function renderCodeBlock(code, lang = 'text', file) {
   const inner = await renderCode(code, lang);
-  // The header bar is always rendered, even with nothing to label, so the copy
-  // button has a row of its own. Absolutely positioning it over the code meant
-  // it covered the first line on narrow screens, where the line scrolls under
-  // it rather than reflowing.
   const label = file
     ? `${FILE_ICON}<span>${escapeHtml(file)}</span>`
     : lang && lang !== 'text'

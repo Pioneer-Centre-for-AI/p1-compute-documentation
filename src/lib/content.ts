@@ -1,15 +1,7 @@
 import { z } from 'zod';
 
-// Typed collection over the cluster pages. Each /providers/<slug>/+page.svx
-// carries its metadata (nav label, badge, hardware specs) in YAML frontmatter,
-// validated here at build time.
-
 const HardwareItem = z.object({ label: z.string(), value: z.string() });
 
-// Where the real technical documentation lives. This site covers overview and
-// onboarding; the provider hosting the system owns the deep documentation, so
-// every cluster page opens by saying so and pointing there. `url` is omitted
-// when the provider has not published anything yet.
 const ProviderDocs = z.object({
   provider: z.string(),
   url: z.string().optional(),
@@ -18,16 +10,6 @@ const ProviderDocs = z.object({
 
 export type ProviderDocsMeta = z.infer<typeof ProviderDocs>;
 
-// What a researcher is actually allowed to use. Fixed keys rather than a
-// free-form label/value list, and every one of them REQUIRED: the limits used
-// to live in three places per page (a hardware row, a usage-limits bullet, a
-// sentence of prose), stated in a different shape on each cluster, and NGC
-// answered barely any of them. A required key cannot be quietly skipped — a
-// cluster that does not publish a limit has to say so in words, which is
-// itself the useful answer.
-//
-// Labels live in ClusterQuotas.svelte so all three pages read identically;
-// only the values belong here.
 const Quotas = z.object({
   wallTime: z.string(),
   gpusPerJob: z.string(),
@@ -39,8 +21,6 @@ const Quotas = z.object({
 
 export type ClusterQuotaMeta = z.infer<typeof Quotas>;
 
-// The rendering order and the human labels, shared by ClusterQuotas.svelte and
-// the .md twin so the two cannot drift into naming the same limit differently.
 export const QUOTA_GROUPS: {
   title: string;
   rows: { key: keyof ClusterQuotaMeta; label: string }[];
@@ -82,21 +62,6 @@ const modules = import.meta.glob('/src/routes/providers/*/+page.svx', {
   eager: true
 }) as Record<string, { metadata?: unknown }>;
 
-// Parsed on first call, never at module evaluation. The glob pulls in the
-// cluster pages, and those pages import ClusterQuotas.svelte, which imports
-// this module back — a cycle. Vite's dev SSR runner walks that cycle live, so
-// a page's `metadata` export is still undefined while its own module is mid
-// evaluation, and an eager parse here threw a ZodError that took the whole nav
-// down. Reading through a function defers the access until every module in the
-// cycle has finished, where the live bindings are populated.
-//
-// `var`, not `let`, and this is the one place in the codebase that wants it.
-// The dev runner evaluates route modules concurrently and hands a module that
-// re-enters this cycle the PARTIAL namespace rather than waiting, so a caller
-// can reach getClusters() before this line has run. `var` hoists as undefined
-// and `??=` treats that as unset; `let` is in the temporal dead zone and throws
-// "Cannot access 'parsed' before initialization" instead. Callers should still
-// not invoke this at module scope — see getNav() in $lib/nav.
 var parsed: ClusterEntry[] | null | undefined;
 
 export function getClusters(): ClusterEntry[] {
@@ -113,8 +78,6 @@ export function getCluster(slug: string): ClusterEntry | undefined {
   return getClusters().find((c) => c.slug === slug);
 }
 
-// The "which cluster fits me" decision table on /providers/. Lives here rather
-// than in the page so the page and its .md twin render the same rows.
 export type ClusterDecision = { need: string; slug: string; why: string };
 
 export const clusterDecisions: ClusterDecision[] = [
@@ -135,13 +98,6 @@ export const clusterDecisions: ClusterDecision[] = [
   }
 ];
 
-// The compute hierarchy shown on /about/. Kept here rather than as a markdown
-// table in the page so the same rows feed the responsive component, which
-// stacks into cards on a phone, and the .md twin.
-//
-// `description` carries authored inline HTML (links to example facilities). It
-// is repo content rather than user input, so the component renders it with
-// {@html}; do not wire this type to anything externally supplied.
 export type ComputeTier = { tier: string; level: string; description: string };
 
 export const computeTiers: ComputeTier[] = [
@@ -177,8 +133,6 @@ export const computeTiers: ComputeTier[] = [
   }
 ];
 
-// Joined against the cluster registry here rather than in the page, because
-// .svx script blocks are plain JS and cannot carry the type assertions.
 export type ClusterDecisionEntry = ClusterDecision & { cluster: ClusterEntry };
 
 export function getClusterDecisionEntries(): ClusterDecisionEntry[] {

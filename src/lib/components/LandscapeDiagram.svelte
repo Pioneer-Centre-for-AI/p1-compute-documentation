@@ -1,10 +1,4 @@
 <script lang="ts">
-  // The compute-landscape fan-out from the P1 slide deck: a researcher
-  // enters through P1, which consults, guides, and points to the three
-  // tiers of the wider HPC landscape.
-  //
-  // `wide` is the original slide composition (760x210), `stacked` is a
-  // squarer arrangement for narrow columns like the landing hero.
   type Props = { variant?: 'wide' | 'stacked'; class?: string };
   let { variant = 'wide', class: className = '' }: Props = $props();
 </script>
@@ -91,7 +85,6 @@
       <text x="212" y="111" text-anchor="middle" class="diagram-mono">ENTRY POINT</text>
       <text x="320" y="152" text-anchor="middle" class="diagram-note">consult and guide</text>
 
-      <!-- Trunk from P1 down, branching into the three tiers -->
       <circle cx="212" cy="130" r="3" fill="var(--color-coral)" />
       <path d="M212 130 V190 Q212 202 224 202" stroke="var(--color-coral)" stroke-width="2" stroke-linecap="round" fill="none" />
       <path d="M212 130 V260 Q212 272 224 272" stroke="var(--color-coral)" stroke-width="2" stroke-linecap="round" fill="none" />
@@ -157,8 +150,6 @@
     fill: var(--color-slate-500);
   }
 
-  /* slate-500 is the muted tone on white, but only reaches ~3.4:1 on the
-     slate-900 page background, and this text is 10-12px. */
   :global(html.dark) .diagram-mono,
   :global(html.dark) .diagram-note {
     fill: var(--color-slate-400);

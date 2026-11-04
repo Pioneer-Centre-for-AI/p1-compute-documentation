@@ -2,14 +2,6 @@
   import EmbedForm from './EmbedForm.svelte';
   import { GPU_ALLOWANCE_URL } from '$lib/links';
 
-  // The copy is framed around protection rather than size. Where a cluster lets
-  // you submit past the default limit yourself (Gefion), that path is faster
-  // and this form would only duplicate it; what it cannot give you is a run
-  // that survives the moment demand returns.
-  //
-  // selfServeDocumented is set by a cluster whose page already spells out its
-  // own way past the default, so the generic "check whether your cluster allows
-  // it" pointer is not printed directly underneath the answer.
   let { selfServeDocumented = false }: { selfServeDocumented?: boolean } = $props();
 </script>
 

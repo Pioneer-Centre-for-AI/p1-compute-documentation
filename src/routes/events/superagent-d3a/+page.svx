@@ -90,8 +90,6 @@ fills up during the session, so it's worth keeping an eye on.
       </svg>
     </a>
   </div>
-  <!-- Airtable's kanban columns have a fixed width, so the board is scaled to
-       fit the column rather than cut off at the second column. -->
   <div class="overflow-hidden rounded-xl border border-slate-200 bg-white dark:border-slate-700">
     <ScaledEmbed
       src={superAgentImpactBoard.embed}

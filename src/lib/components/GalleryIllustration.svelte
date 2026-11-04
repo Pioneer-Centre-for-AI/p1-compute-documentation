@@ -1,12 +1,7 @@
 <script lang="ts">
-  // Line illustrations for the gallery cards, drawn in the same hand as
-  // ClusterIllustration: strokes follow currentColor so the parent controls
-  // light/dark ink, coral is decorative and --color-brand flips with the
-  // theme. A card shows one of these until its example has a screenshot.
   type Props = { slug: string; class?: string };
   let { slug, class: className = '' }: Props = $props();
 
-  // Three interleaved spirals, the toy dataset INT-GPU's notebook trains on.
   const arms = ['var(--color-coral)', 'var(--color-brand)', 'currentColor'];
   const spiral = arms.flatMap((fill, k) =>
     Array.from({ length: 14 }, (_, i) => {
@@ -21,7 +16,6 @@
 <span class="block text-slate-700 dark:text-slate-300 {className}" aria-hidden="true">
   <svg viewBox="0 0 160 120" xmlns="http://www.w3.org/2000/svg" fill="none" class="h-auto w-full">
     {#if slug === 'int-gpu'}
-      <!-- Notebook window: code cells on the left, the spiral classifier's data on the right -->
       <rect x="10" y="12" width="140" height="96" rx="4" stroke="currentColor" stroke-width="1.5" />
       <line x1="10" y1="24" x2="150" y2="24" stroke="currentColor" stroke-width="1.1" />
       <g fill="currentColor" opacity="0.5">
@@ -53,7 +47,6 @@
         <circle cx={p.x} cy={p.y} r="1.5" fill={p.fill} />
       {/each}
     {:else if slug === 'rem-lgn'}
-      <!-- An editor on your laptop, connected over SSH to a login node that submits to the queue -->
       <rect x="6" y="26" width="64" height="42" rx="2" stroke="currentColor" stroke-width="1.4" />
       <path d="M2 68 L74 68 L71 74 L5 74 Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" />
       <line x1="20" y1="26" x2="20" y2="68" stroke="currentColor" stroke-width="1" />
@@ -89,7 +82,6 @@
       </g>
       <rect x="100" y="88" width="14" height="12" rx="1.5" fill="var(--color-brand)" opacity="0.35" />
     {:else if slug === 'xfr-dat'}
-      <!-- Laptop, staging area and cluster, with data moving in and results back -->
       <rect x="8" y="38" width="36" height="24" rx="1.5" stroke="currentColor" stroke-width="1.4" />
       <path d="M4 62 L48 62 L46 67 L6 67 Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" />
       <g stroke="currentColor" stroke-width="0.7" opacity="0.45" stroke-linecap="round">
@@ -124,7 +116,6 @@
       </g>
       <rect x="78" y="88" width="8" height="10" rx="1" stroke="var(--color-brand)" stroke-width="1" />
     {:else}
-      <!-- Any example without its own drawing yet: one GPU -->
       <rect x="56" y="36" width="48" height="48" rx="4" stroke="currentColor" stroke-width="1.5" />
       <rect x="67" y="47" width="26" height="26" rx="2" stroke="currentColor" stroke-width="1.1" />
       <circle cx="80" cy="60" r="3" fill="var(--color-coral)" />

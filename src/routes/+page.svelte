@@ -69,7 +69,6 @@
       </div>
     </div>
 
-    <!-- The compute landscape: P1 as entry point -->
     <div class="mx-auto w-full max-w-md lg:max-w-none">
       <LandscapeDiagram variant="stacked" />
       <p class="mt-3 text-center text-sm text-slate-500 dark:text-slate-400">
@@ -131,7 +130,6 @@
     </p>
   </section>
 
-  <!-- Gallery: the fastest way from an account to a GPU doing something -->
   <section class="border-t border-slate-200 py-14 dark:border-slate-800">
     <div class="mb-8 flex max-w-2xl flex-col gap-3">
       <h2 class="text-2xl font-semibold text-slate-900 md:text-3xl dark:text-slate-50">
@@ -167,8 +165,6 @@
           outgrows P1, we help you choose in the wider
           <a href="/ecosystem/" class="font-semibold text-[var(--color-brand)] no-underline hover:underline">compute ecosystem</a>.
         </p>
-        <!-- Two ways out of a section that offers a conversation: the survey,
-             which is the durable record, and the conversation itself. -->
         <div class="flex flex-wrap items-center gap-3">
           <Button
             href={SURVEY_PAGE}

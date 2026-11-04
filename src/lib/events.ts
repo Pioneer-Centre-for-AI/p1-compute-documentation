@@ -1,26 +1,16 @@
 import { z } from 'zod';
 
-// Typed collection over the event pages, mirroring $lib/content for clusters.
-// Each /events/<slug>/+page.svx carries its metadata in YAML frontmatter,
-// validated here at build time.
-
 export const EventFrontmatter = z.object({
   title: z.string(),
   description: z.string(),
   order: z.number().int(),
   navLabel: z.string().optional(),
-  /** Context line above the title, e.g. the conference the session belongs to. */
   eyebrow: z.string(),
-  /** ISO date or date-time. Drives the schema.org startDate. */
   startDate: z.string(),
-  /** Human-readable date shown in the page body. */
   dateLabel: z.string(),
-  /** Compact form for the site-wide notice bar on narrow screens. */
   shortLabel: z.string().optional(),
-  /** ISO 8601 duration for schema.org, e.g. PT90M. */
   duration: z.string().optional(),
   venue: z.string().optional(),
-  /** Postal address of the venue, for the schema.org location. */
   address: z.string().optional()
 });
 
@@ -31,10 +21,6 @@ const modules = import.meta.glob('/src/routes/events/*/+page.svx', {
   eager: true
 }) as Record<string, { metadata?: unknown }>;
 
-// Deferred exactly as getClusters() in $lib/content is, and for the same
-// reason: the event pages import this module back (the D3A page reads its
-// programme from here), so parsing at module evaluation reads frontmatter that
-// the cycle has not populated yet. See the note there for why this is `var`.
 var parsed: EventEntry[] | null | undefined;
 
 export function getEvents(): EventEntry[] {
@@ -47,10 +33,6 @@ export function getEvents(): EventEntry[] {
   return parsed;
 }
 
-/**
- * Soonest event that has not happened yet, or null. ISO dates compare
- * correctly as strings, so no Date parsing is needed.
- */
 export function upcomingEvent(today = new Date().toISOString().slice(0, 10)): EventEntry | null {
   return (
     getEvents()
@@ -59,22 +41,11 @@ export function upcomingEvent(today = new Date().toISOString().slice(0, 10)): Ev
   );
 }
 
-// --- Supercomputing: Challenges & Agents (D3A 4.0 2026) ---------------------
-//
-// The programme, organizers, and collaboration rows live here rather than in
-// the page, so the HTML and the .md twin render the same content from one
-// source. Same reasoning as clusterDecisions in $lib/content.
-
-/**
- * Kanban of the reported issues, sorted into low, medium, and high impact by
- * the averaged discussion and review ratings. The plenary presents it.
- */
 export const superAgentImpactBoard = {
   href: 'https://airtable.com/appEvtQfcHN4IT6pH/shrUhqWeT0s421yLc',
   embed: 'https://airtable.com/embed/appEvtQfcHN4IT6pH/shrUhqWeT0s421yLc?viewControls=on'
 };
 
-/** The three at-a-glance panels above the programme. */
 export const superAgentAtAGlance: { label: string; items: string[] }[] = [
   {
     label: 'Format',
@@ -90,7 +61,6 @@ export const superAgentAtAGlance: { label: string; items: string[] }[] = [
   }
 ];
 
-/** Row kind, which picks the stripe colour and the legend entry. */
 export type SessionType = 'framing' | 'talk' | 'interactive';
 
 export type ProgrammeRow = {
@@ -98,9 +68,7 @@ export type ProgrammeRow = {
   session: string;
   speaker: string;
   speakerUrl?: string;
-  /** Institution shown after the speaker name. */
   affiliation?: string;
-  /** What the room opens during this session (a form, the impact board), linked after the speaker. */
   link?: { label: string; href: string };
   type: SessionType;
 };
@@ -115,7 +83,6 @@ export const sessionTypeColor: Record<SessionType, string> = Object.fromEntries(
   sessionTypes.map((t) => [t.type, t.color])
 ) as Record<SessionType, string>;
 
-// Clock times for the 11:00-12:30 slot.
 export const superAgentProgramme: ProgrammeRow[] = [
   {
     time: '11:00-11:05',
@@ -178,7 +145,6 @@ export const superAgentProgramme: ProgrammeRow[] = [
   }
 ];
 
-/** Shaped to the Person type that People.svelte expects. */
 export const superAgentOrganizers = [
   {
     name: 'Nicki Skafte Detlefsen',

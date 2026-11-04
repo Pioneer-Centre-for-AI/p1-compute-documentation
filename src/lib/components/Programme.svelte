@@ -4,9 +4,6 @@
   type Props = { rows: ProgrammeRow[] };
   let { rows }: Props = $props();
 
-  // Times are "HH:MM-HH:MM" clock times, so the start is what the timeline
-  // hangs off and the length is what makes the shape of the session readable
-  // (a third talks, the rest discussion).
   const at = (range: string) => range.split('-')[0];
   const until = (range: string) => range.split('-')[1];
   const asMinutes = (clock: string) => {
@@ -34,8 +31,6 @@
   <ol class="relative">
     {#each rows as row, i}
       <li class="grid grid-cols-[3.5rem_1.25rem_1fr] gap-x-3 sm:grid-cols-[5rem_1.5rem_1fr] sm:gap-x-4">
-        <!-- Start time; the end is the next row's start, so only the length is
-             repeated here. -->
         <div class="pt-3.5 text-end">
           <span
             class="block font-mono text-sm font-medium tabular-nums text-slate-900 dark:text-slate-100"
@@ -46,7 +41,6 @@
           >
         </div>
 
-        <!-- Rail: one continuous line, a dot per session, coloured by type. -->
         <div class="relative flex justify-center" aria-hidden="true">
           <span
             class="absolute bottom-0 left-1/2 w-px -translate-x-1/2 bg-slate-200 dark:bg-slate-700"
@@ -90,7 +84,6 @@
       </li>
     {/each}
 
-    <!-- Terminus, so the last block reads as closed rather than cut off. -->
     <li class="grid grid-cols-[3.5rem_1.25rem_1fr] gap-x-3 sm:grid-cols-[5rem_1.5rem_1fr] sm:gap-x-4">
       <div class="text-end">
         <span class="block font-mono text-sm tabular-nums text-slate-400 dark:text-slate-500"

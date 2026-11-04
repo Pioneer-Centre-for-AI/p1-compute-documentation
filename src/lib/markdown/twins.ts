@@ -1,9 +1,3 @@
-// The markdown twin of every .svx page, and the metadata needed to index them.
-//
-// Three endpoints share this: `[...path].md` serves one twin, `llms-full.txt`
-// concatenates all of them, and `llms.txt` lists them with titles and
-// descriptions. Server-only — the glob below pulls every page source into the
-// bundle, which must never reach the client.
 import { getClusters, getClusterDecisionEntries, computeTiers } from '$lib/content';
 import { GALLERY_INTRO, GALLERY_SOURCE, getGallery } from '$lib/gallery';
 import {
@@ -19,11 +13,6 @@ import { MARKDOWN_PAGES } from '$lib/markdownPages';
 import { URLS } from '$lib/urls';
 import { markdownTable, svxToMarkdown } from './toMarkdown';
 
-// Raw sources, keyed by route path. adapter-static runs with strict: true and
-// no fallback, and the crawler cannot discover an unlinked endpoint, so the
-// same glob feeds both the entry lists and the response bodies.
-// Gallery drafts are left out: they exist only in `bun run dev`. Parentheses
-// are glob syntax, hence the character classes around "drafts".
 const sources = import.meta.glob(['/src/routes/**/+page.svx', '!/src/routes/gallery/[(]drafts[)]/**'], {
   query: '?raw',
   import: 'default',
@@ -37,9 +26,6 @@ const pages = new Map<string, string>(
   ])
 );
 
-// MARKDOWN_PAGES drives the rel=alternate links and the "View as Markdown"
-// affordance. It is hand-written so the layout does not pull page sources into
-// the client bundle, so guard it against drift here, where the real set lives.
 const actual = [...pages.keys()].sort().join(',');
 const advertised = [...MARKDOWN_PAGES].sort().join(',');
 if (actual !== advertised) {
@@ -51,16 +37,10 @@ if (actual !== advertised) {
   );
 }
 
-/** Every route path that has a `.md` twin, in MARKDOWN_PAGES order. */
 export const twinPaths = MARKDOWN_PAGES;
 
-// Index pages build their tables from a registry with a Svelte loop, which no
-// source-level transform can follow. They mark those regions with
-// `<!-- md:replace name -->` and the same registry renders them as markdown here.
 const BLOCKS: Record<string, () => Record<string, string>> = {
   about: () => ({
-    // The component renders cards or a table depending on width; markdown gets
-    // the table. Descriptions carry inline <a> tags, rewritten to markdown here.
     'tier-table': markdownTable(
       ['Tier', 'Organization level', 'Description'],
       computeTiers.map((t) => [
@@ -83,13 +63,9 @@ const BLOCKS: Record<string, () => Record<string, string>> = {
       .map((c) => `- [${c.meta.title}](${c.href}): ${c.meta.description}`)
       .join('\n')
   }),
-  // The page embeds the form in an iframe, which is meaningless in markdown;
-  // the twin gets the link instead.
   survey: () => ({
     embed: `**Form:** [Your Compute Needs survey](${URLS.survey})`
   }),
-  // The hero and the filterable grid are layout, not prose: markdown gets the
-  // heading and a plain list with each example's tags.
   gallery: () => ({
     'gallery-hero':
       `# Gallery\n\n${GALLERY_INTRO}\n\n` +
@@ -114,7 +90,6 @@ const BLOCKS: Record<string, () => Record<string, string>> = {
       .join('\n')
   }),
   'events/superagent-d3a': () => ({
-    // Columns on the page; markdown has no columns, so each panel becomes a heading.
     'about-cards': superAgentAtAGlance
       .map((p) => `### ${p.label}\n\n${p.items.map((i) => `- ${i}`).join('\n')}`)
       .join('\n\n'),
@@ -126,7 +101,6 @@ const BLOCKS: Record<string, () => Record<string, string>> = {
         return [row.time, session, row.affiliation ? `${name}, ${row.affiliation}` : name];
       })
     ),
-    // The page embeds the board in an iframe, which is meaningless in markdown.
     'impact-board': `**Impact board:** [low, medium, and high impact issues](${superAgentImpactBoard.href})`,
     organizers: superAgentOrganizers
       .map((p) => `- [${p.name}](${p.profileUrl}), ${p.institution}: ${p.email}`)
@@ -137,13 +111,10 @@ const BLOCKS: Record<string, () => Record<string, string>> = {
   })
 };
 
-/** The markdown twin of one route path, or null when the path has no source. */
 export function renderTwin(path: string): string | null {
   const source = pages.get(path);
   if (!source) return null;
 
-  // Cluster and event pages get their H1 from the layout rather than the .svx
-  // body, and cluster pages their hardware table too, so both are reattached here.
   const cluster = getClusters().find((c) => c.href === `/${path}/`);
   const event = getEvents().find((e) => e.href === `/${path}/`);
   const example = getGallery().find((e) => e.href === `/${path}/`);
@@ -157,17 +128,6 @@ export function renderTwin(path: string): string | null {
   });
 }
 
-/**
- * Title and description for the llms.txt index. Cluster and event pages carry
- * both in validated frontmatter; the standalone pages pass them to `<Meta>`,
- * so read them back off that tag rather than keeping a second hand-written
- * list that could drift from what the page actually says.
- *
- * Read off the COMPONENT CALL, not the rendered head: these are page sources,
- * so `<title>` and `<meta name="description">` never appear in them. Matching
- * on those silently produced the route slug as a title and no description at
- * all, which is a valid llms.txt and a useless one.
- */
 export function twinMeta(path: string): { title: string; description: string } {
   const cluster = getClusters().find((c) => c.href === `/${path}/`);
   const event = getEvents().find((e) => e.href === `/${path}/`);
@@ -188,7 +148,6 @@ export function twinMeta(path: string): { title: string; description: string } {
   }
   return {
     title,
-    // Collapse the line wrapping the source uses inside the attribute.
     description: description?.replace(/\s+/g, ' ').trim() ?? ''
   };
 }

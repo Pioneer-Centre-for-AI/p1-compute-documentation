@@ -1,10 +1,4 @@
 <script lang="ts">
-  // The gallery's search box, provider and tag filters, and card grid. The
-  // prerendered page shows every card, so it reads fine before hydration and
-  // without JS; the filters only narrow it. The chosen provider and tag ride in
-  // ?provider= and ?tag= so links from other pages land here pre-filtered.
-  // They are read after mount, because a prerendered page has no query string
-  // to read at build time.
   import { onMount } from 'svelte';
   import { replaceState } from '$app/navigation';
   import GalleryCard from './GalleryCard.svelte';
@@ -20,8 +14,6 @@
 
   const runsOn = (e: GalleryEntry, slug: string) => (e.meta.clusters as string[]).includes(slug);
 
-  // Every cluster, in registry order, including those no example runs on yet:
-  // an empty one shows as disabled with a zero rather than disappearing.
   const clusters = $derived(
     getClusters().map((c) => ({
       slug: c.slug,
@@ -94,8 +86,6 @@
     'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700';
   const chipOn = 'bg-[var(--color-brand)] text-white dark:text-slate-900';
 
-  // Outlined rather than filled, so the provider row reads as a different kind
-  // of filter from the tags below it.
   const pill =
     'inline-flex items-center gap-2 rounded-full border px-3 py-1 text-sm transition-colors disabled:cursor-not-allowed disabled:opacity-40';
   const pillOff =

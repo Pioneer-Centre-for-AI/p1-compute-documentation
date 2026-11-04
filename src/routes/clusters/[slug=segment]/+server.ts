@@ -1,5 +1,3 @@
-// /clusters/<slug>/ became /providers/<slug>/. One forwarding page per
-// provider, so a provider added later gets its old-style URL too.
 import { error } from '@sveltejs/kit';
 import { getClusters } from '$lib/content';
 import { movedPage } from '$lib/server/moved';

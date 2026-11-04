@@ -1,20 +1,9 @@
 name: Release CLI
 
-# Push a tag cli-v<version>, with <version> equal to pkgs/cli/package.json,
-# and this builds aicentre for every platform and publishes a GitHub release:
-#
-#   aicentre-<os>-<arch>.tar.gz   for linux and darwin, x64 and arm64
-#   VERSION                       what `aicentre upgrade` compares against
-#   SHA256SUMS                    what install.sh and upgrade verify against
-#
-# install.sh (served at https://hpc.aicentre.dk/install) downloads from
-# releases/latest, so this repository publishes CLI releases only.
-
 on:
   push:
     tags: ['cli-v*']
 
-# Nothing by default; only the job that publishes gets to write.
 permissions: {}
 
 jobs:
@@ -72,9 +61,6 @@ jobs:
           bun-version-file: pkgs/cli/.bun-version
       - run: bun install --frozen-lockfile
 
-      # Built on its own platform rather than cross-compiled: bun's own ad-hoc
-      # signing of darwin binaries has been unreliable, and an unsigned arm64
-      # binary is killed by macOS on start.
       - name: Build
         run: bun run build --target "bun-${{ matrix.os }}-${{ matrix.arch }}" --outfile dist/aicentre
 
@@ -88,7 +74,6 @@ jobs:
         run: |
           v="${GITHUB_REF_NAME#cli-v}"
           test "$(./dist/aicentre --version)" = "$v"
-          # No cluster set up in an empty home: check must run and say so, exit 0 or 1.
           set +e
           HOME="$(mktemp -d)" ./dist/aicentre check --json > /dev/null
           code=$?

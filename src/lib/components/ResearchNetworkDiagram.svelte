@@ -1,10 +1,4 @@
 <script lang="ts">
-  // Forskningsnettet drawn as what it physically is: one high-bandwidth wire
-  // with facilities tied into it. The facilities hosting a P1 partition sit
-  // above the wire in their brand colours, the other documented ones below.
-  //
-  // Membership is deliberately limited to systems this site already documents.
-  // To add or remove a facility, edit these two lists and nothing else.
   type Node = { label: string; x: number; color?: string };
 
   const above: Node[] = [
@@ -37,7 +31,6 @@
   >
     <text x="40" y="16" class="wire-label">FORSKNINGSNETTET · DeiC</text>
 
-    <!-- Facilities above the wire: those hosting a P1 partition -->
     {#each above as node}
       <g>
         <rect
@@ -116,7 +109,6 @@
     fill: currentColor;
   }
 
-  /* Same contrast lift as LandscapeDiagram: slate-500 is too dim on slate-900. */
   :global(html.dark) .wire-label,
   :global(html.dark) .wire-note {
     fill: var(--color-slate-400);

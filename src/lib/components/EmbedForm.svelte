@@ -2,7 +2,6 @@
   type Props = {
     title: string;
     src: string;
-    /** Clean URL for opening the form in its own tab; defaults to `src` with embed params stripped. */
     href?: string;
     description?: string;
   };
@@ -15,16 +14,8 @@
         .replace(/\?$/, '')
   );
 
-  // A native <dialog> with showModal(), NOT a `fixed inset-0` div. Any ancestor
-  // with a transform, filter or backdrop-filter becomes the containing block
-  // for `fixed` descendants, which is what put the booking modal half off the
-  // top of the page when it opened from the blurred sticky header. Nothing
-  // renders this component from inside such an ancestor today; using the top
-  // layer means nothing has to keep checking.
   let open = $state(false);
   let dialog = $state<HTMLDialogElement | null>(null);
-  // Empty until first open: the element is always in the DOM (showModal needs
-  // it there), and an eager src would load the form on every page view.
   let frameSrc = $state('');
 
   $effect(() => {
@@ -35,7 +26,6 @@
         frameSrc = src;
         el.showModal();
       }
-      // showModal blocks interaction with the page but not always its scroll.
       const prev = document.body.style.overflow;
       document.body.style.overflow = 'hidden';
       return () => {
@@ -77,8 +67,6 @@
   </div>
 </div>
 
-<!-- Escape is the dialog's own `cancel`, so `close` is the single place the
-     state is reset, whichever way it was dismissed. -->
 <dialog
   bind:this={dialog}
   aria-label={title}

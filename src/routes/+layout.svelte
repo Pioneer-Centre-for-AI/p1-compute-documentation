@@ -12,8 +12,6 @@
 
   let { children } = $props();
   let isLanding = $derived($page.url.pathname === '/');
-  // Full-width pages skip the sidebar and TOC shell and lay themselves out.
-  // The gallery overview is one, so its card grid can span the window.
   let isWide = $derived(isLanding || $page.url.pathname === GALLERY_HREF);
   let mdHref = $derived(markdownHref($page.url.pathname));
   let mobileNavOpen = $state(false);
@@ -21,7 +19,6 @@
   onMount(() => {
     const mq = window.matchMedia('(prefers-color-scheme: dark)');
     const onSystemChange = (e: MediaQueryListEvent) => {
-      // Only auto-follow when the user hasn't set an explicit override.
       if (localStorage.getItem('theme')) return;
       document.documentElement.classList.toggle('dark', e.matches);
       window.dispatchEvent(new CustomEvent('themechange', { detail: { isDark: e.matches } }));
@@ -31,9 +28,6 @@
   });
 
   onMount(() => {
-    // Code block chrome is raw HTML injected with {@html}, so it cannot carry a
-    // Svelte handler. One delegated listener covers every block on every page,
-    // including blocks that appear after client-side navigation.
     const timers = new WeakMap<HTMLElement, ReturnType<typeof setTimeout>>();
 
     async function onClick(e: MouseEvent) {
@@ -46,7 +40,7 @@
       try {
         await navigator.clipboard.writeText(code);
       } catch {
-        return; // Clipboard denied or unavailable; leave the button untouched.
+        return;
       }
 
       btn.setAttribute('data-copied', '');
@@ -90,8 +84,6 @@
       <div class="min-w-0 flex-1">
         {@render children()}
       </div>
-      <!-- Hides itself on pages with fewer than two headings, so index-style
-           pages (clusters overview, forms) get no TOC. -->
       <aside class="hidden w-48 shrink-0 lg:block">
         <div class="sticky top-24">
           <PageToc {mdHref} />

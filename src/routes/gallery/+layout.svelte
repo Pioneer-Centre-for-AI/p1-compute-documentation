@@ -8,9 +8,6 @@
 
   let { children } = $props();
 
-  // Null on /gallery/ itself, which is the overview page rather than an
-  // example. It renders its own <article> and passes through the {:else}
-  // branch below.
   const example = $derived(getGallery().find((e) => e.href === $page.url.pathname) ?? null);
 </script>
 
@@ -19,10 +16,8 @@
 {/if}
 
 {#if example}
-  <!-- The TOC aside and the two-column shell come from the root layout. -->
   <article class="prose mx-auto w-full max-w-3xl" use:headingAnchors>
     <div class="not-prose">
-      <!-- The sidebar does not list the gallery, so this is the way back. -->
       <a
         href={GALLERY_HREF}
         class="mb-6 inline-flex text-sm font-medium text-slate-500 no-underline hover:text-[var(--color-brand)] dark:text-slate-400"
@@ -57,8 +52,6 @@
     {@render children()}
   </article>
 {:else}
-  <!-- /gallery/ overview: the root layout drops the sidebar shell for it, so
-       the container lives here. It brings its own <svelte:head>. -->
   <div class="mx-auto w-full max-w-7xl px-4 py-10 md:px-6 md:py-16">
     {@render children()}
   </div>

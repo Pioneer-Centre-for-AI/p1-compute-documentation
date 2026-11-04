@@ -110,7 +110,7 @@ aicentre is refused, with a pointer to the Nix configuration.
 `package.json`, runs the typecheck, tests and shellcheck, then builds each
 platform on its own runner. Darwin builds are not cross-compiled: bun's ad-hoc
 signing of darwin binaries has been unreliable, and macOS kills an unsigned
-arm64 binary on start. The macOS builds are signed with `codesign --sign -`.
+arm64 binary on start. The macOS builds are signed with `codesign --sign -`. The workflow grants no permissions by default. Only the job that publishes the release can write to the repository.
 Each build is smoke-tested: `--version` must match, and `check --json` in an
 empty home must exit 0 or 1. The release carries
 `aicentre-<os>-<arch>.tar.gz` (the binary and `pi/`), `VERSION` and

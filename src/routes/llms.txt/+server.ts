@@ -1,14 +1,3 @@
-// llms.txt — an index of the site for language models, per llmstxt.org.
-//
-// The convention is an H1 name, a blockquote summary, then sections of links.
-// Every link here points at the `.md` twin rather than the HTML page, so a
-// model that follows one gets clean markdown instead of a Svelte-rendered DOM.
-//
-// Sections mirror src/lib/nav.ts, so a page added to the nav is indexed here
-// without a second edit. The gallery is the one section kept out of the nav:
-// the header and the landing page link to it instead, so it is added here by
-// hand. Other pages kept out of the nav (Terms, Privacy) land in `## Optional`,
-// which the spec defines as safe to skip.
 import { GALLERY_HREF, getGallery } from '$lib/gallery';
 import { getNav, isGroup } from '$lib/nav';
 import { twinMeta, twinPaths } from '$lib/markdown/twins';
@@ -48,8 +37,6 @@ export const GET: RequestHandler = () => {
   gallery.forEach((path) => indexed.add(path));
   sections.push(`## Gallery\n\n${gallery.map(link).join('\n')}`);
 
-  // The landing page is a +page.svelte, so it has no twin and no nav entry.
-  // Link the HTML rather than leave the site's front door out of the index.
   sections.unshift(`## Start here\n\n- [${SITE_NAME}](${SITE_URL}/): ${LANDING_DESCRIPTION}`);
 
   const rest = twinPaths.filter((path) => !indexed.has(path));

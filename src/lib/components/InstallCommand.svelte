@@ -1,6 +1,4 @@
 <script lang="ts">
-  // The one-line install for aicentre, with a copy button, as the landing
-  // page shows it. The script itself is served at /install from pkgs/cli.
   import { SITE_URL } from '$lib/site';
 
   type Props = { class?: string };

@@ -1,23 +1,13 @@
 <script lang="ts">
-  // One place for every per-page head tag, so a new page cannot ship with a
-  // title but no description, or a description that never reaches Open Graph.
-  //
-  // Pages previously wrote <title> and the description by hand and had neither
-  // og: nor twitter: tags at all, which meant a link pasted into Slack (the
-  // channel this site points researchers at) unfurled as a bare URL.
   import { page } from '$app/stores';
   import { SITE_NAME, SITE_URL } from '$lib/site';
 
   type Props = {
     title: string;
     description: string;
-    /** 'article' for a page about one thing, 'website' for an index. */
     type?: 'website' | 'article';
-    /** Absolute or root-relative image for link previews. */
     image?: string;
-    /** Describes the image for people using a screen reader on the unfurled link. */
     imageAlt?: string;
-    /** Set on the landing page, whose title is already the site name. */
     isLanding?: boolean;
   };
   let {
@@ -29,13 +19,9 @@
     isLanding = false
   }: Props = $props();
 
-  // Describes the default card. A page passing its own `image` should pass
-  // `imageAlt` too; falling back to this would then describe the wrong picture.
   const DEFAULT_IMAGE_ALT =
     'Pioneer Centre for AI · Compute. Dedicated HPC partitions at DTU, NGC, and Gefion.';
 
-  // "Privacy · Pioneer Centre for AI · Compute" reads long in a tab, so the
-  // suffix is the short form. The landing page is already the full name.
   const fullTitle = $derived(isLanding ? title : `${title} · P1 Compute`);
   const canonical = $derived(`${SITE_URL}${$page.url.pathname}`);
   const imageUrl = $derived(

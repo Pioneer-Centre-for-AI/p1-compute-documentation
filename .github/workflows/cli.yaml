@@ -1,15 +1,12 @@
 name: CLI
 
-# Typecheck, test and lint pkgs/cli on every change to it, on Linux and macOS.
-# Releases are built by release-cli.yaml.
-
 on:
   push:
     branches: [main]
-    paths: ['pkgs/cli/**', '.github/workflows/cli.yaml']
+    paths: ['pkgs/cli/**', '.github/workflows/cli.yaml', 'flake.nix', 'flake.lock']
   pull_request:
     branches: [main]
-    paths: ['pkgs/cli/**', '.github/workflows/cli.yaml']
+    paths: ['pkgs/cli/**', '.github/workflows/cli.yaml', 'flake.nix', 'flake.lock']
   workflow_dispatch:
 
 permissions:
@@ -49,8 +46,6 @@ jobs:
       - name: Check formatting
         run: bun run lint
 
-      # The end-to-end test compiles two releases and installs them with
-      # install.sh, under dash on Ubuntu and the system sh on macOS.
       - name: Test
         run: bun test
         env:
@@ -59,3 +54,27 @@ jobs:
       - name: Lint shell scripts
         if: runner.os == 'Linux'
         run: bun run lint:sh
+
+  nix:
+    name: Nix package (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, ubuntu-24.04-arm, macos-15]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Install nix
+        uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+
+      - name: Build
+        run: nix build .#aicentre --print-build-logs
+
+      - name: Smoke test
+        run: ./result/bin/aicentre --version

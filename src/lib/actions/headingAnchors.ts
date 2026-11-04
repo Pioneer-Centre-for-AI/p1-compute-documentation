@@ -1,4 +1,3 @@
-/** Svelte action: append a `#` permalink anchor to each h2/h3/h4 that has an id. */
 export function headingAnchors(node: HTMLElement) {
   enhance(node);
 

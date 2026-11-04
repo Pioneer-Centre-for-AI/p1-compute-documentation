@@ -5,9 +5,6 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  /* P1 ink-derived neutral ramp. Deliberately overrides Tailwind's slate scale
-     so every existing slate-* utility picks up the brand tone — do not "fix"
-     these back to stock slate. */
   --color-slate-50: #f7f7fa;
   --color-slate-100: #eef0f4;
   --color-slate-200: #dfe1e9;
@@ -15,14 +12,11 @@
   --color-slate-400: #999eb2;
   --color-slate-500: #6d7288; /* muted text — 4.9:1 on white */
   --color-slate-600: #565a70;
-  --color-slate-700: #4b4f63; /* P1 ink, primary text — 7.5:1 on white */
+  --color-slate-700: #4b4f63;
   --color-slate-800: #2a2e40;
   --color-slate-900: #1d2030; /* dark-mode page background */
   --color-slate-950: #14161f;
 
-  /* P1 accents. Coral is decorative only (shapes, accent bars, pulse) —
-     mirroring aicentre.dk, it never fills buttons or body text. Plum carries
-     interactive color; highlight is the apex site's yellow marker. */
   --color-coral: #fd5061;
   --color-coral-strong: #d22c42;
   --color-plum: #822684;
@@ -38,10 +32,6 @@
   --font-mono: 'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
-/* Semantic accent — flips with theme so prose links and CTA text stay AA.
-   color-scheme rides along so scrollbars and native controls follow the site's
-   own toggle rather than the OS, which is what the `dark` class already does
-   for everything else. */
 :root {
   --color-brand: var(--color-plum);
   color-scheme: light;
@@ -51,17 +41,12 @@ html.dark {
   color-scheme: dark;
 }
 
-/* Tailwind v4's preflight dropped the pointer cursor on buttons. The site
-   styles anchors and buttons identically all over (the header's split button,
-   every modal trigger, the theme toggle), so without this the two halves of
-   one control feel different under the mouse. */
 button:not(:disabled),
 summary,
 [role='button']:not([aria-disabled='true']) {
   cursor: pointer;
 }
 
-/* Yellow marker highlight, as on aicentre.dk headlines. */
 mark {
   background: var(--color-highlight);
   color: inherit;
@@ -74,7 +59,6 @@ html.dark mark {
   color: var(--color-slate-900);
 }
 
-/* Mono uppercase micro-label — the P1 "eyebrow" signature. */
 @utility eyebrow {
   font-family: var(--font-mono);
   font-size: 0.6875rem;
@@ -98,12 +82,6 @@ html.dark {
   color: var(--color-slate-200);
 }
 
-/* shiki dual-theme: flip the token colour variables on .dark.
-   Only `color` is set. Shiki emits --shiki-*-bg on the <pre> alone, so the
-   value inherits down to every token span; painting background-color here as
-   well made each token render as a filled box against the transparent pre,
-   which was invisible on white but obvious in dark mode. The block background
-   belongs to .codeblock instead. */
 .shiki,
 .shiki span {
   color: var(--shiki-light);
@@ -114,9 +92,6 @@ html.dark .shiki span {
   color: var(--shiki-dark);
 }
 
-/* Code block chrome is generated as raw HTML by the mdsvex highlighter, so the
-   pre reset and the block surface must live here rather than in a scoped
-   component style. The surface matches the card components. */
 .codeblock {
   background: var(--color-slate-50);
 }
@@ -131,11 +106,8 @@ html.dark .codeblock {
   background: transparent !important;
 }
 
-/* Copy button, same rationale: emitted as raw HTML by the highlighter.
-   Stays visible on touch devices, where there is no hover. */
 .copy-btn {
   position: absolute;
-  /* Sits inside the 2rem header bar, clear of the code below it. */
   top: 0.125rem;
   right: 0.375rem;
   z-index: 1;
@@ -146,7 +118,6 @@ html.dark .codeblock {
   height: 1.75rem;
   border: 1px solid var(--color-slate-200);
   border-radius: 0.375rem;
-  /* Opaque, and a step off the block surface so it reads as a control. */
   background: white;
   color: var(--color-slate-500);
   cursor: pointer;
@@ -184,7 +155,6 @@ html.dark .copy-btn:hover {
   background: var(--color-slate-700);
 }
 
-/* Icon swap is driven by the data-copied flag the layout listener sets. */
 .copy-btn .copy-icon-done,
 .copy-btn[data-copied] .copy-icon-idle {
   display: none;
@@ -199,16 +169,6 @@ html.dark .copy-btn:hover {
   color: var(--color-brand);
 }
 
-/* Prose styling — only inline prose links get the brand colour.
-   Nav, sidebar, ToC, buttons control their own colour via Tailwind utilities.
-
-   Every rule carries the `:not(.not-prose, .not-prose *)` guard, which is what
-   makes the `not-prose` marker mean anything here. @tailwindcss/typography is
-   not installed, so `not-prose` is otherwise an inert class and these rules
-   reach into the card, table and diagram components that opt out of them.
-   These rules are unlayered, so they also outrank the Tailwind utilities those
-   components set on the same elements — dropping the guard silently overrides
-   component styling rather than merely adding to it. */
 .prose a:not(.heading-anchor):not(.not-prose, .not-prose *) {
   color: var(--color-brand);
   text-decoration: none;
@@ -263,8 +223,6 @@ html.dark .prose th:not(.not-prose, .not-prose *) {
 }
 .prose code:not(pre code):not(.not-prose, .not-prose *) {
   @apply rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[0.85em];
-  /* Inline code that wraps keeps its padding and corners on every line,
-     instead of one box sliced in two at the line break. */
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
 }
@@ -284,7 +242,6 @@ html.dark .prose code:not(pre code):not(.not-prose, .not-prose *) {
   @apply px-4 pb-4 pt-2;
 }
 
-/* Heading anchor links (added at runtime via the headingAnchors action) */
 .prose .heading-anchor {
   @apply ml-2 text-slate-300 dark:text-slate-600 no-underline;
   opacity: 0;

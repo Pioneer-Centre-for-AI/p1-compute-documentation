@@ -69,8 +69,33 @@ tarball. `src/lib/server/tar.ts` is a small ustar writer that gives every
 entry the same owner, mode and time, so the same files always give the same
 bytes, as a reproducible build needs. Entries sit under `<code>/`.
 
+A path of up to 100 bytes goes in the ustar `name` field. A longer one is
+split into `prefix` and `name`. Without aicentre, an example unpacks with
+`curl -fsSL https://hpc.aicentre.dk/gallery/<code>.tar.gz | tar -xz`.
+
 `/gallery/index.json` lists the published examples: code, slug, title,
 summary, providers, page URL, the tarball URL or `null`, and `commands`.
+
+## The gallery page
+
+`GalleryBrowser` holds the search box, the provider and tag filters, and the
+card grid. The prerendered page shows every card, so it works before
+hydration and without JavaScript. The filters only narrow it. The chosen
+provider and tag go in `?provider=` and `?tag=`, so other pages can link to a
+filtered gallery. They are read after mount, because a prerendered page has
+no query string at build time. Every provider shows, in registry order. One
+with no examples is disabled with a count of zero.
+
+A card is a `div`, not one big link, because it holds several links. The
+thumbnail link repeats the title link, so it is kept out of the tab order and
+the accessibility tree. With `onTag` the tags are filter buttons. The landing
+page leaves it out and gets plain labels. `GalleryIllustration` draws in the
+same style as `ClusterIllustration`: strokes in `currentColor`, coral as
+decoration, and `--color-brand` for the accent. INT-GPU's drawing shows the
+three spirals its notebook trains on.
+
+The sidebar does not list the gallery, so the example layout has its own link
+back. The header link to the gallery shows on every screen size.
 
 A gallery card's Source button links to `pkgs/gallery/<code>` on GitHub, and
 is left out when the example has no directory. The card also renders in the

@@ -1,9 +1,7 @@
 { lib
 , stdenvNoCC
 , bun
-, nodeModulesHash ? {
-    aarch64-linux = "sha256-HpMXuDC/vvzC5Yl1LNU9wR1pWHKiXXQIAeIfUh6eesA=";
-  }.${stdenvNoCC.hostPlatform.system} or lib.fakeHash
+, nodeModulesHash ? "sha256-HpMXuDC/vvzC5Yl1LNU9wR1pWHKiXXQIAeIfUh6eesA="
 ,
 }:
 
@@ -87,7 +85,6 @@ stdenvNoCC.mkDerivation {
     platforms = [
       "x86_64-linux"
       "aarch64-linux"
-      "x86_64-darwin"
       "aarch64-darwin"
     ];
   };

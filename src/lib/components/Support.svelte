@@ -109,8 +109,6 @@
         <dd class="text-sm text-slate-600 dark:text-slate-400">
           Onboarding, workload guidance, general questions. Always happy to help
         </dd>
-        <!-- Works on every cluster, unlike the DTU-only DOI: acknowledging the
-             coordinator credits the person rather than the facility. -->
         <dd class="mt-1 text-xs text-slate-500 dark:text-slate-400">
           Helped with your work? Acknowledge
           <a

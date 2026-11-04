@@ -103,6 +103,4 @@
   </div>
 {/if}
 
-<!-- Outside the drawer's own `{#if}`: the button that opens it also closes the
-     drawer, so a dialog nested inside would be destroyed on the same click. -->
 <BookingDialog bind:open={booking} />

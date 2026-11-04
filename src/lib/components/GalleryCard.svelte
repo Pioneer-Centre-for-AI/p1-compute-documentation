@@ -1,8 +1,4 @@
 <script lang="ts">
-  // One example in the gallery grid: thumbnail, title, clusters, summary,
-  // tags and the two ways in. A div rather than one big link, because it
-  // holds several. With `onTag` the tags become filter buttons; the landing
-  // page leaves it out and gets plain labels.
   import Button from './Button.svelte';
   import ClusterDots from './ClusterDots.svelte';
   import GalleryIllustration from './GalleryIllustration.svelte';
@@ -15,8 +11,6 @@
 <div
   class="group flex flex-col rounded-xl border border-slate-200 bg-slate-50/60 p-4 transition-all hover:-translate-y-0.5 hover:shadow-lg dark:border-slate-700 dark:bg-slate-800/40"
 >
-  <!-- Duplicate of the title link, kept out of the tab order and the
-       accessibility tree so the card announces one link, not two. -->
   <a
     href={entry.href}
     tabindex="-1"

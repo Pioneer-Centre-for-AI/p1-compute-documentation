@@ -1,6 +1,3 @@
-// External URLs used across the site. The values live in ./urls.js, which is
-// plain JS so svelte.config.js can import it for the `p1:` markdown scheme.
-// These named re-exports are what Svelte components import.
 import { URLS } from './urls.js';
 
 export const SURVEY_URL = URLS.survey;
@@ -28,14 +25,6 @@ export type FormInfo = {
   url: string;
 };
 
-// Every form, survey and booking referenced on the site, in the order a new
-// researcher typically meets them. Rendered as a table on /forms/.
-//
-// The booking page is not a form, which is why the page is called Forms &
-// Bookings rather than Forms & Surveys: that page is where a researcher looks
-// for "what do I have to fill in", and leaving the consultation out of it hid
-// the entry point that needs the least filling in of all. Renaming the label
-// was the cheaper fix than keeping the table honest by omission.
 export const FORMS: FormInfo[] = [
   {
     title: 'Book a consultation',

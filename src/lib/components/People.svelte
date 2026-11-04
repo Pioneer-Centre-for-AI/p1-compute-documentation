@@ -22,8 +22,6 @@
   class="not-prose my-6 divide-y divide-slate-200 overflow-hidden rounded-xl border border-slate-200 bg-slate-50 dark:divide-slate-700 dark:border-slate-700 dark:bg-slate-800/40"
 >
   {#each people as person}
-    <!-- Wraps below sm: the email is long enough in mono that keeping it on the
-         same row squeezes the name down to a few characters on a phone. -->
     <li class="flex flex-wrap items-center gap-x-4 gap-y-1 px-4 py-3">
       <span
         class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-slate-200 font-mono text-xs font-semibold text-slate-700 select-none dark:bg-slate-700 dark:text-slate-200"

@@ -16,14 +16,8 @@
 </script>
 
 <header class={shell}>
-  <!-- Sits inside the header shell on every page, so it stays put with the
-       sticky bar on content pages and rides the transparent overlay on the
-       landing hero. It adds roughly 28px, which the `top-24` sidebar offsets
-       and the `scroll-mt-24` heading margins in app.css are sized against. -->
   <EventNotice />
   <div class="flex items-center justify-between px-4 py-3 md:px-6">
-    <!-- Wider gap only matters below md, where the menu button is the sibling
-         the brand would otherwise crowd against. -->
     <div class="flex min-w-0 items-center gap-3 sm:gap-4">
       <button
         aria-label="Open navigation"
@@ -39,8 +33,6 @@
       <a href="/" class="flex min-w-0 items-center gap-3 no-underline">
         <img src="/assets/logos/PCAI_Solo_RGB.svg" alt="" class="block h-8 w-8 shrink-0 dark:hidden" />
         <img src="/assets/logos/PCAI_Solo_White.svg" alt="" class="hidden h-8 w-8 shrink-0 dark:block" />
-        <!-- Never wraps: the bar is a fixed-height row, so a second line breaks
-             its alignment. The suffix drops on phones instead. -->
         <span
           class="truncate text-sm font-semibold whitespace-nowrap text-slate-900 sm:text-base dark:text-slate-100"
         >
@@ -50,8 +42,6 @@
       </a>
     </div>
     <div class="flex shrink-0 items-center gap-2">
-      <!-- Always visible, unlike Update Profile: the gallery is the shortest
-           path from an account to a GPU doing something, on every screen size. -->
       <a
         href={GALLERY_HREF}
         class="inline-flex h-9 items-center rounded-full border border-slate-400 px-4 text-sm font-medium whitespace-nowrap text-slate-700 no-underline transition-colors hover:bg-slate-100 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-800"

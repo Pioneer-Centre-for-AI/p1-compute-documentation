@@ -10,9 +10,6 @@
 
   let { children } = $props();
 
-  // Null on /providers/ itself, which is the overview page rather than a cluster.
-  // It renders its own <article> and passes through the {:else} branch below;
-  // only the detail pages get the header, illustration, and hardware table.
   const cluster = $derived(getClusters().find((c) => c.href === $page.url.pathname) ?? null);
 </script>
 
@@ -21,7 +18,6 @@
 {/if}
 
 {#if cluster}
-  <!-- The TOC aside and the two-column shell come from the root layout. -->
   <article class="prose mx-auto w-full max-w-3xl" use:headingAnchors>
     <div class="not-prose flex items-end justify-between gap-6">
       <div>
@@ -41,6 +37,5 @@
     <HardwareSpec items={cluster.meta.hardware} />
   </article>
 {:else}
-  <!-- /providers/ overview: brings its own <article> and <svelte:head>. -->
   {@render children()}
 {/if}

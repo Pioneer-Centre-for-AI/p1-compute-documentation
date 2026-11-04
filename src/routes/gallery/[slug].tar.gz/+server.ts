@@ -1,6 +1,3 @@
-// /gallery/<code>.tar.gz: an example's files, for
-//   aicentre gallery get <code>
-// or, without aicentre, curl -fsSL https://hpc.aicentre.dk/gallery/<code>.tar.gz | tar -xz
 import { error } from '@sveltejs/kit';
 import { getGallery } from '$lib/gallery';
 import { exampleFiles, hasFiles } from '$lib/server/gallery-files';

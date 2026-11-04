@@ -7,12 +7,8 @@
 
   let { children } = $props();
 
-  // Null on /events/ itself, which is the overview page rather than an event.
-  // It renders its own <article> and passes through the {:else} branch below.
   const event = $derived(getEvents().find((e) => e.href === $page.url.pathname) ?? null);
 
-  // schema.org Event, so calendars and search surfaces can read the session.
-  // Location is the venue when the page names one, else the conference.
   const jsonLd = $derived(
     event
       ? JSON.stringify({
@@ -44,14 +40,11 @@
 
 <svelte:head>
   {#if event}
-    <!-- Built in markup, not in the script block above: a literal closing
-         script tag inside <script> would terminate it. -->
     {@html `<script type="application/ld+json">${jsonLd}<\/script>`}
   {/if}
 </svelte:head>
 
 {#if event}
-  <!-- The TOC aside and the two-column shell come from the root layout. -->
   <article class="prose mx-auto w-full max-w-3xl" use:headingAnchors>
     <div class="not-prose">
       <div class="mb-4 flex items-center gap-3">
@@ -67,6 +60,5 @@
     {@render children()}
   </article>
 {:else}
-  <!-- /events/ overview: brings its own <article> and <svelte:head>. -->
   {@render children()}
 {/if}

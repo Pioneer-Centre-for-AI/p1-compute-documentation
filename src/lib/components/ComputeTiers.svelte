@@ -2,11 +2,6 @@
   import { computeTiers } from '$lib/content';
 </script>
 
-<!-- Cards below sm, table above it. As a plain markdown table the description
-     column collapsed to roughly a dozen characters wide on a phone. The
-     descriptions carry authored inline HTML for the example-facility links; see
-     the note on ComputeTier in $lib/content. -->
-
 <div class="not-prose my-6 flex flex-col gap-3 sm:hidden">
   {#each computeTiers as t}
     <div

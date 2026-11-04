@@ -1,22 +1,14 @@
 <script lang="ts">
-  // An iframe whose content has a fixed width wider than the prose column,
-  // like an Airtable kanban (fixed-width columns, no fit-to-width option).
-  // It renders at its natural size and is scaled down to the container, so
-  // every column shows at once. Below minScale the text gets too small to
-  // read, so on a phone it falls back to its natural size and scrolls.
   type Props = {
     src: string;
     title: string;
-    /** Width the content needs to show without scrolling, in CSS pixels. */
     width: number;
-    /** Height to render at before scaling, in CSS pixels. */
     height: number;
     minScale?: number;
   };
   let { src, title, width, height, minScale = 0.55 }: Props = $props();
 
   let containerWidth = $state(0);
-  // 0 until hydration measures the container: render unscaled until then.
   const fits = $derived(containerWidth > 0 && containerWidth / width >= minScale);
   const scale = $derived(fits ? Math.min(1, containerWidth / width) : 1);
 </script>

@@ -5,14 +5,12 @@
   type TocChild = { id: string; label: string };
   type TocEntry = { id: string; label: string; children?: TocChild[] };
 
-  /** Link to this page's raw markdown twin, when it has one. */
   let { mdHref = null }: { mdHref?: string | null } = $props();
 
   let entries = $state<TocEntry[]>([]);
   let activeId = $state<string | null>(null);
   let observer: IntersectionObserver | null = null;
 
-  // Heading text without the '#' permalink appended by the headingAnchors action.
   function labelOf(h: HTMLElement): string {
     return Array.from(h.childNodes)
       .filter((n) => !(n instanceof Element && n.classList.contains('heading-anchor')))

@@ -1,7 +1,4 @@
 <script lang="ts">
-  // The clusters an example runs on, each with its brand-colour dot. Resolved
-  // while rendering rather than at import, for the cycle noted in $lib/nav.
-  // With `href`, each cluster links somewhere, such as the gallery filtered to it.
   import { getCluster } from '$lib/content';
 
   type Props = { slugs: string[]; href?: (slug: string) => string; class?: string };

@@ -21,16 +21,22 @@ binary in the Nix store, because Nix owns it. The output is
 `libexec/aicentre/` (the binary and `pi/`) with a link in `bin/`.
 
 The dependencies are a fixed-output derivation, the only step with network
-access: `bun install --frozen-lockfile --production`. Its hash is recorded
-per system in `nodeModulesHash`, because bun resolves platform-specific
-packages. After a change to `bun.lock`, or on a system without a hash, the
-build fails with the right one to paste in. The derivation has
+access: `bun install --frozen-lockfile --production`. aicentre's production
+dependencies have no platform-specific packages, so one `nodeModulesHash`
+covers every system. After a change to `bun.lock` the build fails with the
+new hash to paste in. The derivation has
 `dontFixup = true`. Patching shebangs would make a fixed output refer to the
 store, which Nix rejects.
 
 The final derivation sets `dontStrip`, `dontPatchELF` and `dontFixup`. The
 program is appended to the bun runtime inside the executable, and strip or
 patchelf would cut it off.
+
+The package builds on x86_64-linux, aarch64-linux and aarch64-darwin.
+nixpkgs-unstable no longer supports x86_64-darwin, so Intel Macs use the
+release binary. The `nix` job in `.github/workflows/cli.yaml` builds the
+package on all three systems whenever `pkgs/cli`, `flake.nix` or
+`flake.lock` changes, so a stale hash fails there first.
 
 Nix sees only files git knows about, so `git add` (or `git add -N`) new files
 first.
