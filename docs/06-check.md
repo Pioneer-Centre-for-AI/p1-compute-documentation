@@ -7,8 +7,10 @@ The rest show as not set up, which is not a failure: most people use one or
 two. `-p` checks only the providers named, and missing setup there is a
 failure. `--all` checks every provider and cannot be combined with `-p`.
 The network path is part of every check: a TCP connect with no login, so it
-cannot prompt. When it fails it is a warning, because being away from the DTU
-network is not a setup error, and the hint names the DTU VPN. `--connect`
+cannot prompt. When it fails it is a warning, because the setup can be right
+on a network that blocks the way. login9 takes SSH from the internet, so the
+hint for DTU is the machine's connection or a network that blocks port 22, and
+the DTU VPN as a way around one. `--connect`
 adds the login steps, and then a failed network path is a failure. `--json` is
 for scripts.
 
@@ -68,13 +70,13 @@ classifier serves `check`, [login](03-providers-and-login.md#connecting) and
 | --- | --- |
 | `teleport` | Teleport refused: expired, not logged in, tsh missing. Only counts when the Host goes through tsh. |
 | `dns` | The host name does not resolve |
-| `timeout` | No answer. The hint is the DTU VPN, or for Gefion that Teleport answered but the login node did not |
+| `timeout` | No answer. For DTU the hint is the machine's connection or a network that blocks port 22, or for Gefion that Teleport answered but the login node did not |
 | `refused`, `reset` | Refused, or closed before login |
 | `host-key-changed` | Remove the old key only if the provider announced a new one |
 | `host-key-unknown` | A warning: connect once by hand and answer yes |
 | `unprotected-key` | ssh ignored a key others can read |
 | `too-many-keys` | Add `IdentitiesOnly yes` |
-| `password` | The key was accepted and the login node also wants a password, a second factor BatchMode cannot give. Any interactive command logs in once. |
+| `password` | The key was accepted and the login node also wants a password, a second factor BatchMode cannot give. DTU asks for it off its own network. Any interactive command logs in once. |
 | `key-refused` | Copy the key with `ssh-copy-id`, or fix Teleport |
 
 Anything else reports ssh's last line and suggests `ssh -v`.

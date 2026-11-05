@@ -84,7 +84,8 @@ workload, so we can point you to the right resource.
 
 ## Connecting
 
-The login node is `login9.hpc.dtu.dk`. Off DTU's network, connect to the DTU VPN first;
+The login node is `login9.hpc.dtu.dk`, and you can reach it from anywhere. Off DTU's network it
+asks for your DTU password after your key. On DTU's network or the DTU VPN, the key is enough;
 [DTU IT's VPN guide](https://www.hpc.dtu.dk/?page_id=2501) covers setup and MFA.
 
 ```bash

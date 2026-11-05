@@ -1,7 +1,7 @@
 import { run } from '../../exec';
 import type { Env } from '../../context';
 import { atLeast, type SshVersion } from './ssh';
-import { DTU, DTU_VPN_HINT, GEFION, tshLogin } from '../clusters';
+import { DTU, DTU_NO_ANSWER_HINT, GEFION, tshLogin } from '../clusters';
 
 export function probeArgs(
   alias: string,
@@ -48,7 +48,7 @@ export function providerContext(
       ? [
           'Teleport answered, but the login node did not. Try again in a minute, or ask DCAI support (support@dcai.dk).'
         ]
-      : [DTU_VPN_HINT],
+      : [DTU_NO_ANSWER_HINT],
     teleportHint: gefion ? [tshLogin(opts.user || undefined)] : []
   };
 }
@@ -126,6 +126,7 @@ const RULES: Rule[] = [
     test: /Permission denied \((?![^)]*publickey)[^)]*(password|keyboard-interactive)[^)]*\)/i,
     message: 'your key was accepted, and the login node also asks for your password',
     hint: () => [
+      "Off DTU's network, login9 wants your DTU password after the key. On DTU's network or the DTU VPN, the key is enough.",
       'In a terminal, aicentre asks for it once and keeps the login open for 30 min.',
       'aicentre list jobs, or any session or batch command, does that.'
     ]

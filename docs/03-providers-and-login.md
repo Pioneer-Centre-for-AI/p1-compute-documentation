@@ -7,7 +7,7 @@ Change the three together.
 
 | Id | Login | How |
 | --- | --- | --- |
-| `dtu` | `login9.hpc.dtu.dk`, port 22 | Plain OpenSSH with a key the user copied there. DTU asks for the password after the key. Outside DTU's network it needs the DTU VPN. The project directory is `/dtu/p1/<user>`. |
+| `dtu` | `login9.hpc.dtu.dk`, port 22 | Plain OpenSSH with a key the user copied there. login9 takes SSH from the internet. Outside DTU's network it asks for the DTU password after the key; on DTU's network or the DTU VPN the key is enough. The project directory is `/dtu/p1/<user>`. |
 | `gefion` | `slurm-login-01.hpc.ite.dcai.dk`, port 3022 | ssh through Teleport: `tsh login` writes a short-lived certificate under `~/.tsh` (or `$TELEPORT_HOME`), and the Host block has a `tsh proxy ssh` ProxyCommand. The proxy is `secureremote.dcai.dk:443`. |
 | `ngc` | none | Air-gapped. People work on it through its remote desktop, so nothing on a laptop can reach it. Commands that need a login node refuse it. |
 

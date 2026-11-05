@@ -40,7 +40,7 @@ test('a ready DTU setup passes', async () => {
   expect(result('dtu.key').detail).toBe('~/.ssh/id_ed25519');
 });
 
-test('off the DTU network, a plain check warns with the VPN hint but still passes', async () => {
+test('when login9 does not answer, a plain check warns but still passes', async () => {
   sb.answer(
     'ssh-G-dtu',
     sshG({
@@ -58,7 +58,7 @@ test('off the DTU network, a plain check warns with the VPN hint but still passe
   const { code, result } = await check();
   expect(code).toBe(0);
   expect(result('dtu.reach').status).toBe('warn');
-  expect(result('dtu.reach').hint?.[0]).toContain('DTU VPN');
+  expect(result('dtu.reach').hint?.[0]).toContain('port 22');
 });
 
 test('a provider named without a Host block fails, with the block to add', async () => {

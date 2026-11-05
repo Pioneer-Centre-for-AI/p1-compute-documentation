@@ -5,7 +5,7 @@ import type { Group } from './types';
 import { blockHint, cliThere, expander, type CheckEnv } from './env';
 import { VERSION_PROBE } from '../session/sync';
 import { isOpen, sharedSocket } from '../remote/master';
-import { DTU, DTU_VPN_HINT, hostBlock } from './clusters';
+import { DTU, DTU_NO_ANSWER_HINT, hostBlock } from './clusters';
 import { privateKeyProblem, statOrNull } from './probes/files';
 import { knownHost } from './probes/knownhosts';
 import { reachTimeout } from './probes/net';
@@ -123,7 +123,7 @@ export async function checkDtu(g: Group, c: CheckEnv): Promise<void> {
       const r = await c.ctx.tcp(hostname, port, { timeoutMs: reachTimeout(c.connect) });
       return r.ok
         ? { status: 'ok', detail: `port ${port} answers` }
-        : { status: c.connect ? 'fail' : 'warn', detail: r.message, hint: [DTU_VPN_HINT] };
+        : { status: c.connect ? 'fail' : 'warn', detail: r.message, hint: [DTU_NO_ANSWER_HINT] };
     });
     if (reach.status !== 'ok') {
       if (c.connect) await g.skip('login', 'Login', 'needs the network path');

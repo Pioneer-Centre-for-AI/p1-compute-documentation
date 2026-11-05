@@ -45,7 +45,7 @@ export function teleportCert(tsh: string, user: string): string {
   return `${tsh}/keys/${GEFION.proxy}/${user}-ssh/${GEFION.proxy}-cert.pub`;
 }
 
-export const DTU_VPN_HINT = `From outside DTU's network, connect to the DTU VPN (${DTU.vpn}) first.`;
+export const DTU_NO_ANSWER_HINT = `${DTU.login} takes SSH from the internet. Check that this machine is online and that this network lets SSH (port 22) out; the DTU VPN (${DTU.vpn}) gets around a network that does not.`;
 
 export function tshLogin(user?: string): string {
   return `tsh login --proxy ${GEFION.proxy}${user ? ` --user ${user}` : ''}`;
