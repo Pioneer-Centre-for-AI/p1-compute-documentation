@@ -1,6 +1,6 @@
 {
   "name": "aicentre",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Command line tool for the P1 HPC clusters",
   "private": true,
   "type": "module",

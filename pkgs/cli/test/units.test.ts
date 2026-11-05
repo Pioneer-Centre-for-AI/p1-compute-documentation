@@ -12,6 +12,7 @@ import { ConfigError, parseConfig } from '../src/config';
 import type { Ctx, Env } from '../src/context';
 import { parseBjobs } from '../src/jobs/lsf';
 import { parseSqueue } from '../src/jobs/slurm';
+import { pathLine, sessionLine } from '../src/install/self-install';
 import { resolvePaths } from '../src/paths';
 import { decide } from '../src/session/sync';
 import { rsyncFlags } from '../src/transfer/transfer';
@@ -286,4 +287,11 @@ test('aicentre is installed on a cluster when missing or older, never downgraded
   expect(decide(ctx('0.0.0-dev'), {}, 'dtu', '')).toBe('off');
   expect(decide(ctx('0.2.0'), { dtu: { sync: false } }, 'dtu', '')).toBe('off');
   expect(decide(ctx('0.2.0', { AICENTRE_SYNC: '0' }), {}, 'gefion', '')).toBe('off');
+});
+
+test('the PATH hint has a line for the rc file and one for the current shell', () => {
+  expect(pathLine('bash')).toBe(`echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc`);
+  expect(sessionLine('bash')).toBe('export PATH="$HOME/.local/bin:$PATH"');
+  expect(sessionLine('tcsh')).toBe('set path = ($HOME/.local/bin $path)');
+  expect(sessionLine('fish')).toBeNull();
 });

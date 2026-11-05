@@ -54,7 +54,10 @@ by one piece of code for a first install, a reinstall or an upgrade. Running
 it again reinstalls. It never edits shell startup files. `self-install`
 prints the line that puts `~/.local/bin` on PATH for the user's shell (bash,
 zsh, fish, tcsh/csh, or `~/.profile`) when it is missing. tcsh reads
-`~/.cshrc` when there is no `~/.tcshrc`.
+`~/.cshrc` when there is no `~/.tcshrc`. It also prints the command that
+adds it to the current shell, because `curl | sh` runs in a child process and
+cannot change the caller's PATH. fish gets no second line: `fish_add_path`
+applies at once.
 
 - `AICENTRE_VERSION` installs that version instead of the latest.
 - `AICENTRE_DOWNLOAD_BASE` fetches from another URL or a local directory laid

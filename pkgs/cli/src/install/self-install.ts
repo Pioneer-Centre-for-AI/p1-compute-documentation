@@ -24,13 +24,14 @@ export function commit(ctx: Ctx, version: string, created: string[] = []): LinkR
   return link.result;
 }
 
-export function pathHint(ctx: Ctx): string | null {
+export type PathHint = { add: string; now: string | null };
+
+export function pathHint(ctx: Ctx): PathHint | null {
   const dirs = (ctx.env.PATH ?? '').split(':');
   if (dirs.includes(ctx.paths.binDir)) return null;
-  return pathLine(
-    basename(ctx.env.SHELL ?? ''),
-    tilde(ctx.paths.binDir, ctx.paths.home).replace(/^~/, '$HOME')
-  );
+  const shell = basename(ctx.env.SHELL ?? '');
+  const dir = tilde(ctx.paths.binDir, ctx.paths.home).replace(/^~/, '$HOME');
+  return { add: pathLine(shell, dir), now: sessionLine(shell, dir) };
 }
 
 export function pathLine(shell: string, dir = '$HOME/.local/bin'): string {
@@ -38,6 +39,12 @@ export function pathLine(shell: string, dir = '$HOME/.local/bin'): string {
   if (shell === 'tcsh' || shell === 'csh') return `echo 'set path = (${dir} $path)' >> ~/.cshrc`;
   const rc = shell === 'zsh' ? '~/.zshrc' : shell === 'bash' ? '~/.bashrc' : '~/.profile';
   return `echo 'export PATH="${dir}:$PATH"' >> ${rc}`;
+}
+
+export function sessionLine(shell: string, dir = '$HOME/.local/bin'): string | null {
+  if (shell === 'fish') return null;
+  if (shell === 'tcsh' || shell === 'csh') return `set path = (${dir} $path)`;
+  return `export PATH="${dir}:$PATH"`;
 }
 
 export async function selfInstall(ctx: Ctx): Promise<number> {
@@ -70,10 +77,12 @@ export async function selfInstall(ctx: Ctx): Promise<number> {
     ctx.out.write(`  The command is ${tilde(ctx.paths.binLink, home)}.\n`);
     const hint = pathHint(ctx);
     if (hint) {
+      const where = hint.now ? ' for new terminals' : '';
       ctx.out.write(
-        `${s.symbol('warn')} ${tilde(ctx.paths.binDir, home)} is not on your PATH. Add it, then open a new terminal:\n`
+        `${s.symbol('warn')} ${tilde(ctx.paths.binDir, home)} is not on your PATH. Add it${where}:\n`
       );
-      ctx.out.write(`    ${s.cyan(hint)}\n`);
+      ctx.out.write(`    ${s.cyan(hint.add)}\n`);
+      if (hint.now) ctx.out.write(`  and for this one:\n    ${s.cyan(hint.now)}\n`);
     }
   }
   ctx.out.write(
