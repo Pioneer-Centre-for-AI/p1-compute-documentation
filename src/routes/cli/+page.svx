@@ -67,14 +67,14 @@ It checks OpenSSH, `~/.ssh` and `~/.ssh/config`, then each provider:
 
 | Provider | What it checks |
 | --- | --- |
-| [P1 DTU HPC](/providers/dtu/) | A `Host dtu` block for `login9.hpc.dtu.dk`, your username, an SSH key ssh will use, the host key |
-| [P1 Gefion HPC](/providers/gefion/) | A Host block for the login node, and whether your DCAI sign-in login is still valid |
+| [P1 DTU HPC](/providers/dtu/) | A `Host dtu` block for `login9.hpc.dtu.dk`, your username, an SSH key ssh will use, the host key, and whether the login node answers from where you are |
+| [P1 Gefion HPC](/providers/gefion/) | A Host block for the login node, whether your DCAI sign-in login is still valid, and whether the sign-in service answers |
 | [P1 NGC HPC](/providers/ngc/) | Nothing to set up here: you work on it through its remote desktop |
 
 A provider is set up when `~/.ssh/config` has its Host block, or for Gefion when you have logged
 in to DCAI. `--all` also checks the rest and prints any missing Host block to paste in.
 
-`--connect` tests the VPN, your key and your sign-in. It never prompts, so a login that would ask
+If the login node does not answer, the check warns and names what to connect first, such as the DTU VPN. `--connect` also logs in, which tests your key and your sign-in. It never prompts, so a login that would ask
 fails with a reason. The exit code is 0 when nothing failed and 1 otherwise, and `--json` prints
 results for scripts.
 

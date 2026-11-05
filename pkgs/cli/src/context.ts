@@ -1,3 +1,4 @@
+import { tcpProbe, type TcpProbe } from './check/probes/net';
 import { resolvePaths, type Paths } from './paths';
 import { currentPlatform, type Platform } from './platform';
 import { VERSION } from './version';
@@ -22,6 +23,7 @@ export type Ctx = {
   compiled: boolean;
   version: string;
   platform: Platform;
+  tcp: TcpProbe;
 };
 
 export function processCtx(): Ctx {
@@ -38,7 +40,8 @@ export function processCtx(): Ctx {
     execPath: process.execPath,
     compiled: isCompiled(),
     version: VERSION,
-    platform: currentPlatform()
+    platform: currentPlatform(),
+    tcp: tcpProbe
   };
 }
 

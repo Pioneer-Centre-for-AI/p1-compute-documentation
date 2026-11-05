@@ -6,7 +6,7 @@ import { blockHint, cliThere, expander, type CheckEnv } from './env';
 import { VERSION_PROBE } from '../session/sync';
 import { isOpen, sharedSocket } from '../remote/master';
 import { GEFION, hostBlock, teleportCert, teleportKey, tshLogin } from './clusters';
-import { tcpProbe } from './probes/net';
+import { reachTimeout } from './probes/net';
 import { providerContext, sshProbe } from './probes/connect';
 import { all, get, isConfigured, words, type SshConfig } from './probes/ssh';
 import { certValidity, duration, profileUsers, tshHome, tshVersion } from './probes/tsh';
@@ -115,21 +115,24 @@ export async function checkGefion(g: Group, c: CheckEnv): Promise<void> {
     return { status: 'ok', detail: left === Infinity ? 'valid' : `valid for ${duration(left)}` };
   });
 
-  if (!c.connect) return;
-
-  let there: string | null | undefined = null;
   const reach = await g.step('reach', `Network path to ${GEFION.proxy}`, async () => {
-    const r = await tcpProbe(GEFION.proxy, GEFION.proxyPort);
+    const r = await c.ctx.tcp(GEFION.proxy, GEFION.proxyPort, {
+      timeoutMs: reachTimeout(c.connect)
+    });
     return r.ok
       ? { status: 'ok', detail: `port ${GEFION.proxyPort} answers` }
       : {
-          status: 'fail',
+          status: c.connect ? 'fail' : 'warn',
           detail: r.message,
           hint: ['Teleport needs outbound HTTPS. Check that this machine is online.']
         };
   });
 
-  if (reach.status === 'fail') await g.skip('ssh', 'Login', 'needs the network path');
+  if (!c.connect) return;
+
+  let there: string | null | undefined = null;
+
+  if (reach.status !== 'ok') await g.skip('ssh', 'Login', 'needs the network path');
   else if (!loggedIn) await g.skip('ssh', 'Login', 'needs a valid Teleport login');
   else {
     await g.step('ssh', 'Login', async () => {

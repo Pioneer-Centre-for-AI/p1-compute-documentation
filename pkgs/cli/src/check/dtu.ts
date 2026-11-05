@@ -8,7 +8,7 @@ import { isOpen, sharedSocket } from '../remote/master';
 import { DTU, DTU_VPN_HINT, hostBlock } from './clusters';
 import { privateKeyProblem, statOrNull } from './probes/files';
 import { knownHost } from './probes/knownhosts';
-import { tcpProbe } from './probes/net';
+import { reachTimeout } from './probes/net';
 import { all, get, isConfigured, words, type SshConfig } from './probes/ssh';
 import { providerContext, sshProbe } from './probes/connect';
 
@@ -117,21 +117,21 @@ export async function checkDtu(g: Group, c: CheckEnv): Promise<void> {
     };
   });
 
-  if (!c.connect) return;
-
   const proxied = Boolean(get(conf, 'proxyjump') ?? get(conf, 'proxycommand'));
   if (!proxied) {
     const reach = await g.step('reach', `Network path to ${hostname}`, async () => {
-      const r = await tcpProbe(hostname, port);
+      const r = await c.ctx.tcp(hostname, port, { timeoutMs: reachTimeout(c.connect) });
       return r.ok
         ? { status: 'ok', detail: `port ${port} answers` }
-        : { status: 'fail', detail: r.message, hint: [DTU_VPN_HINT] };
+        : { status: c.connect ? 'fail' : 'warn', detail: r.message, hint: [DTU_VPN_HINT] };
     });
-    if (reach.status === 'fail') {
-      await g.skip('login', 'Login', 'needs the network path');
+    if (reach.status !== 'ok') {
+      if (c.connect) await g.skip('login', 'Login', 'needs the network path');
       return;
     }
   }
+
+  if (!c.connect) return;
 
   let p1: string | undefined;
   let there: string | undefined;

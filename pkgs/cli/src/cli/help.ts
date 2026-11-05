@@ -214,7 +214,7 @@ const PAGES: Record<string, Page> = {
       {
         title: 'Options',
         rows: [
-          ['--connect', 'Also log in: tests the VPN, your key and your sign-in'],
+          ['--connect', 'Also log in: tests your key and your sign-in'],
           ['--all', 'Include providers not set up here, with what they need'],
           PROVIDER,
           JSON_ROW

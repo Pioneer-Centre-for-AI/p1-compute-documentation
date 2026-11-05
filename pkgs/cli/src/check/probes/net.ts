@@ -9,6 +9,12 @@ export type NetResult =
       message: string;
     };
 
+export type TcpProbe = typeof tcpProbe;
+
+export function reachTimeout(connect: boolean): number {
+  return connect ? 5_000 : 3_000;
+}
+
 export async function tcpProbe(
   host: string,
   port: number,

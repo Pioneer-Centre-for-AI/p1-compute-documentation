@@ -176,6 +176,11 @@ export function sandbox(): Sandbox {
         compiled: true,
         version: '0.1.0',
         platform: { os: 'linux', arch: 'x64' },
+        tcp: async (host, port) => {
+          const answer = join(fake, 'answers', `tcp-${host}-${port}`);
+          if (!existsSync(answer)) return { ok: true };
+          return { ok: false, reason: 'timeout', message: readFileSync(answer, 'utf8').trim() };
+        },
         ...overrides
       };
     },

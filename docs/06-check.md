@@ -6,7 +6,11 @@ checked when it is [in use](03-providers-and-login.md#which-providers-a-machine-
 The rest show as not set up, which is not a failure: most people use one or
 two. `-p` checks only the providers named, and missing setup there is a
 failure. `--all` checks every provider and cannot be combined with `-p`.
-`--connect` adds the network and login steps. `--json` is for scripts.
+The network path is part of every check: a TCP connect with no login, so it
+cannot prompt. When it fails it is a warning, because being away from the DTU
+network is not a setup error, and the hint names the DTU VPN. `--connect`
+adds the login steps, and then a failed network path is a failure. `--json` is
+for scripts.
 
 Each group is a list of steps with a stable id (`ssh-config`, `dtu.key`, ...)
 for `--json`. A step reports `ok`, `warn`, `fail`, `skip` or `info`, a
@@ -34,8 +38,10 @@ The checks ask the tools rather than parse files by hand
 - `knownhosts.ts`: `ssh-keygen -F`, which understands hashed entries. It exits
   0 on a match, 1 without one, and 255 for a missing file. A host on a port
   other than 22 is stored as `[host]:port`.
-- `net.ts`: a name lookup, then a TCP connect, with a 5 second limit. It runs
-  before ssh, so a VPN or firewall problem is not mistaken for a key problem.
+- `net.ts`: a name lookup, then a TCP connect, with a 3 second limit (5 with
+  `--connect`). It runs before ssh, so a VPN or firewall problem is not
+  mistaken for a key problem. Checks call it as `ctx.tcp`, which the test
+  sandbox replaces, so tests never touch the network.
 - `tsh.ts`: Teleport, read from files only. `tsh version` and `tsh status`
   contact the proxy unless given `--client`, which tsh before 18.7 lacks. So
   the profile is `~/.tsh/<proxy>.yaml`, the users are the
@@ -82,17 +88,18 @@ every line on the way and syntax errors surface.
 
 DTU (`dtu.ts`): the Host block points at `login9.hpc.dtu.dk`; the User is not
 a `<placeholder>` and agrees with `config.toml`; a usable key on disk or in
-the agent; the host key is known. With `--connect`: the network path, unless
-a ProxyJump or ProxyCommand means the login node is not reached directly; the
-login; `/dtu/p1/<user>`; the aicentre version there.
+the agent; the host key is known; the network path, unless a ProxyJump or
+ProxyCommand means the login node is not reached directly. With `--connect`:
+the login; `/dtu/p1/<user>`; the aicentre version there.
 
 Gefion (`gefion.ts`): tsh installed; the Host block has HostName, port 3022
 and a `tsh proxy ssh` ProxyCommand; CertificateFile, IdentityFile and
 UserKnownHostsFile point at the files `tsh login` writes
 (`~/.tsh/keys/<proxy>/<user>-ssh/<proxy>-cert.pub`,
 `~/.tsh/keys/<proxy>/<user>` and `~/.tsh/known_hosts`); the certificate is
-valid, with a warning under an hour left. A login lasts about 12 hours. With
-`--connect`: port 443 on the proxy, the login, and the aicentre version there.
+valid, with a warning under an hour left. A login lasts about 12 hours; port
+443 on the proxy answers. With `--connect`: the login and the aicentre version
+there.
 
 NGC (`ngc.ts`) is air-gapped. People work on it through its remote desktop,
 so there is nothing on a laptop to check.
