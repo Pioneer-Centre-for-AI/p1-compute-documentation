@@ -122,3 +122,29 @@ jobs:
             --title "aicentre $v" \
             --notes "Install or reinstall: \`curl -fsSL https://hpc.aicentre.dk/install | sh\`. Upgrade: \`aicentre upgrade\`." \
             aicentre-*.tar.gz VERSION SHA256SUMS
+
+  install-check:
+    name: Install check ${{ matrix.os }}-${{ matrix.arch }}
+    needs: release
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { runner: ubuntu-24.04, os: linux, arch: x64 }
+          - { runner: ubuntu-24.04-arm, os: linux, arch: arm64 }
+          - { runner: macos-15, os: darwin, arch: arm64 }
+          - { runner: macos-15-intel, os: darwin, arch: x64 }
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install, upgrade and uninstall
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          old="$(gh release list --repo "$GITHUB_REPOSITORY" --exclude-pre-releases --exclude-drafts \
+            --limit 20 --json tagName -q '.[].tagName' | grep -vx "$GITHUB_REF_NAME" | head -n 1 || true)"
+          pkgs/cli/scripts/install-check.sh "${GITHUB_REF_NAME#cli-v}" "${old#cli-v}"

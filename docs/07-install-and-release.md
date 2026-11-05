@@ -121,6 +121,33 @@ empty home must exit 0 or 1. The release carries
 pre-release. `install.sh` and `upgrade` ignore pre-releases unless asked for
 that version.
 
+After publishing, the `install-check` job runs `scripts/install-check.sh` on
+the same four runners against the real release. It installs the previous
+stable release with the tag's `install.sh`, upgrades to the new version,
+upgrades again (which must report it as installed), and runs
+`uninstall --purge`. Then it installs the new version fresh, runs `check`, and
+uninstalls without `--purge`, which must keep `config.toml`. After each
+uninstall, aicentre's binary link and data, state and cache directories must
+be gone. The script runs as any user without aicentre:
+
+```sh
+pkgs/cli/scripts/install-check.sh 0.2.0 0.1.1
+```
+
+### Release candidates
+
+Test a release on real downloads before users get it:
+
+1. Set `version` to `0.2.0-rc.1`, commit, and push `cli-v0.2.0-rc.1`. The
+   pre-release does not become `releases/latest`, so `install.sh` and
+   `upgrade` do not offer it.
+2. If `install-check` fails, fix it and release `rc.2`.
+3. When it passes on all four runners, set `version` to `0.2.0` and push
+   `cli-v0.2.0`. `install-check` runs again on the real latest release.
+
+The tag must equal `package.json`, so the binary's `--version`, the release's
+`VERSION` file and the tag agree.
+
 The asset names are a contract with `install.sh` and the workflow
 (`src/platform.ts`): os `linux` or `darwin`, arch `x64` or `arm64`.
 `install.sh` fetches from `releases/latest`, so this repository's releases

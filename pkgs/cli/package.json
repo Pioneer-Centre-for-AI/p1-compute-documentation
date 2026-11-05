@@ -1,6 +1,6 @@
 {
   "name": "aicentre",
-  "version": "0.1.1",
+  "version": "0.1.1-rc.1",
   "description": "Command line tool for the P1 HPC clusters",
   "private": true,
   "type": "module",
@@ -9,7 +9,7 @@
     "build": "bun run scripts/build.ts",
     "test": "bun test",
     "typecheck": "tsc --noEmit",
-    "lint:sh": "shellcheck -s sh install.sh && shellcheck -s bash src/session/launcher.sh",
+    "lint:sh": "shellcheck -s sh install.sh && shellcheck -s bash src/session/launcher.sh scripts/install-check.sh",
     "format": "prettier --write src test scripts",
     "lint": "prettier --check src test scripts"
   },

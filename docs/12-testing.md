@@ -55,4 +55,6 @@ fake ssh round trips, and under the parallel compile of the end-to-end run 5
 seconds is too tight.
 
 `.github/workflows/cli.yaml` runs the typecheck, prettier, the tests and
-shellcheck on Linux and macOS for every change under `pkgs/cli`.
+shellcheck on Linux and macOS for every change under `pkgs/cli`. Every release also runs
+`scripts/install-check.sh` against its real downloads
+([07](07-install-and-release.md#release)).
