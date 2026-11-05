@@ -1,6 +1,6 @@
-import * as links from '$lib/links';
-import { QUOTA_GROUPS, type ClusterQuotaMeta } from '$lib/content';
-import { URLS } from '$lib/urls';
+import * as links from '#lib/links.ts';
+import { QUOTA_GROUPS, type ClusterQuotaMeta } from '#lib/content.ts';
+import { URLS } from '#lib/urls.js';
 
 type Meta = {
   title?: string;

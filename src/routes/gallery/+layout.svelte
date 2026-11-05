@@ -1,14 +1,14 @@
 <script lang="ts">
-  import { page } from '$app/stores';
-  import BrandAccent from '$lib/components/BrandAccent.svelte';
-  import ClusterDots from '$lib/components/ClusterDots.svelte';
-  import Meta from '$lib/components/Meta.svelte';
-  import { headingAnchors } from '$lib/actions/headingAnchors';
-  import { GALLERY_HREF, getGallery } from '$lib/gallery';
+  import { page } from '$app/state';
+  import BrandAccent from '#lib/components/BrandAccent.svelte';
+  import ClusterDots from '#lib/components/ClusterDots.svelte';
+  import Meta from '#lib/components/Meta.svelte';
+  import { headingAnchors } from '#lib/actions/headingAnchors.ts';
+  import { GALLERY_HREF, getGallery } from '#lib/gallery.ts';
 
   let { children } = $props();
 
-  const example = $derived(getGallery().find((e) => e.href === $page.url.pathname) ?? null);
+  const example = $derived(getGallery().find((e) => e.href === page.url.pathname) ?? null);
 </script>
 
 {#if example}

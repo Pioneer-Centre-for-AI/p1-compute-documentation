@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { sessionTypes, sessionTypeColor, type ProgrammeRow } from '$lib/events';
+  import { sessionTypes, sessionTypeColor, type ProgrammeRow } from '#lib/events.ts';
 
   type Props = { rows: ProgrammeRow[] };
   let { rows }: Props = $props();

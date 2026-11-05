@@ -1,6 +1,6 @@
-import { getGallery } from '$lib/gallery';
-import { hasFiles } from '$lib/server/gallery-files';
-import { SITE_URL } from '$lib/site';
+import { getGallery } from '#lib/gallery.ts';
+import { hasFiles } from '#lib/server/gallery-files.ts';
+import { SITE_URL } from '#lib/site.ts';
 import type { RequestHandler } from './$types';
 
 export const prerender = true;

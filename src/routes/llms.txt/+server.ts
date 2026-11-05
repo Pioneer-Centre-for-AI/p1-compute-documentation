@@ -1,7 +1,7 @@
-import { GALLERY_HREF, getGallery } from '$lib/gallery';
-import { getNav, isGroup } from '$lib/nav';
-import { twinMeta, twinPaths } from '$lib/markdown/twins';
-import { LANDING_DESCRIPTION, SITE_NAME, SITE_SUMMARY, SITE_URL } from '$lib/site';
+import { GALLERY_HREF, getGallery } from '#lib/gallery.ts';
+import { getNav, isGroup } from '#lib/nav.ts';
+import { twinMeta, twinPaths } from '#lib/markdown/twins.ts';
+import { LANDING_DESCRIPTION, SITE_NAME, SITE_SUMMARY, SITE_URL } from '#lib/site.ts';
 import type { RequestHandler } from './$types';
 
 export const prerender = true;

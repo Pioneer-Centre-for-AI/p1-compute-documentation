@@ -2,7 +2,7 @@
   import { afterNavigate } from '$app/navigation';
   import NavList from './NavList.svelte';
   import BookingDialog from './BookingDialog.svelte';
-  import { SURVEY_PAGE, PROFILE_URL } from '$lib/links';
+  import { SURVEY_PAGE, PROFILE_URL } from '#lib/links.ts';
 
   let { open = $bindable(false) }: { open?: boolean } = $props();
   let panel = $state<HTMLElement | null>(null);

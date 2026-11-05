@@ -1,5 +1,5 @@
-import { getClusters, getClusterDecisionEntries, computeTiers } from '$lib/content';
-import { GALLERY_INTRO, GALLERY_SOURCE, getGallery } from '$lib/gallery';
+import { getClusters, getClusterDecisionEntries, computeTiers } from '#lib/content.ts';
+import { GALLERY_INTRO, GALLERY_SOURCE, getGallery } from '#lib/gallery.ts';
 import {
   getEvents,
   superAgentAtAGlance,
@@ -7,10 +7,10 @@ import {
   superAgentImpactBoard,
   superAgentOrganizers,
   superAgentProgramme
-} from '$lib/events';
-import { FORMS } from '$lib/links';
-import { MARKDOWN_PAGES } from '$lib/markdownPages';
-import { URLS } from '$lib/urls';
+} from '#lib/events.ts';
+import { FORMS } from '#lib/links.ts';
+import { MARKDOWN_PAGES } from '#lib/markdownPages.ts';
+import { URLS } from '#lib/urls.js';
 import { markdownTable, svxToMarkdown } from './toMarkdown';
 
 const sources = import.meta.glob(['/src/routes/**/+page.svx', '!/src/routes/gallery/[(]drafts[)]/**'], {

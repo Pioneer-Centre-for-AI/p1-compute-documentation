@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { SITE_URL } from '$lib/site';
+  import { SITE_URL } from '#lib/site.ts';
 
   type Props = { class?: string };
   let { class: className = '' }: Props = $props();

@@ -13,9 +13,9 @@
         pkgs = import nixpkgs { inherit system; };
 
         nodeModulesHash = {
-          aarch64-linux = "sha256-oqf0jdh8IyJLau9Yeb2oWXceA1OQEW+/8spkTvDrWgw=";
-          aarch64-darwin = "sha256-KiT44+6HdBayLOezW+lLseXC78rW3ljdyunvqeO8nTs=";
-          x86_64-linux = "sha256-VIiTBdSi7nXPskoJtlOF5xd8MUVt2NLwrF2UeDFayyg=";
+          aarch64-linux = "sha256-D6qiX9h+s45aHQEw3SEFKIVPflhknwAl54F4eoDqTz8=";
+          aarch64-darwin = "sha256-sQZi8cujOoeNM9bZBR+n2cl1aNHTWEo6UxdciJFzn4w=";
+          x86_64-linux = "sha256-gJL+Gpsn4py9rxemFhESTElCtR+p5HFGbVr00T3rUbw=";
         }.${system} or (throw
           "No node_modules hash recorded for ${system}. Run `nix build .#website`, then paste the printed `got:` hash into nodeModulesHash in flake.nix.");
 
@@ -63,7 +63,6 @@
             fileset = pkgs.lib.fileset.unions [
               ./package.json
               ./bun.lock
-              ./svelte.config.js
               ./vite.config.ts
               ./tsconfig.json
               ./src

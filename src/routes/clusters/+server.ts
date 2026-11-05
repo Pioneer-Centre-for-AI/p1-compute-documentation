@@ -1,4 +1,4 @@
-import { movedPage } from '$lib/server/moved';
+import { movedPage } from '#lib/server/moved.ts';
 import type { RequestHandler } from './$types';
 
 export const prerender = true;

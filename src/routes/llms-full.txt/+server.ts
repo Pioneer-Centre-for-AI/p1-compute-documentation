@@ -1,5 +1,5 @@
-import { renderTwin, twinPaths } from '$lib/markdown/twins';
-import { SITE_NAME, SITE_SUMMARY, SITE_URL } from '$lib/site';
+import { renderTwin, twinPaths } from '#lib/markdown/twins.ts';
+import { SITE_NAME, SITE_SUMMARY, SITE_URL } from '#lib/site.ts';
 import type { RequestHandler } from './$types';
 
 export const prerender = true;

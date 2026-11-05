@@ -1,5 +1,5 @@
-import { getClusters } from '$lib/content';
-import { getEvents } from '$lib/events';
+import { getClusters } from '#lib/content.ts';
+import { getEvents } from '#lib/events.ts';
 
 export type NavBadgeVariant = 'caution' | 'note';
 

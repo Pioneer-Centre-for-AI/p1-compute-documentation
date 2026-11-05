@@ -1,6 +1,6 @@
 <script lang="ts">
   import BookingDialog from './BookingDialog.svelte';
-  import { BOOKING_URL } from '$lib/links';
+  import { BOOKING_URL } from '#lib/links.ts';
 
   type Props = {
     title?: string;

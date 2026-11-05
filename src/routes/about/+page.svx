@@ -1,10 +1,10 @@
 <script>
-  import Meta from '$lib/components/Meta.svelte';
-  import People from '$lib/components/People.svelte';
-  import NeedsCallout from '$lib/components/NeedsCallout.svelte';
-  import ComputeBudget from '$lib/components/ComputeBudget.svelte';
-  import ComputeTiers from '$lib/components/ComputeTiers.svelte';
-  import { headingAnchors } from '$lib/actions/headingAnchors';
+  import Meta from '#lib/components/Meta.svelte';
+  import People from '#lib/components/People.svelte';
+  import NeedsCallout from '#lib/components/NeedsCallout.svelte';
+  import ComputeBudget from '#lib/components/ComputeBudget.svelte';
+  import ComputeTiers from '#lib/components/ComputeTiers.svelte';
+  import { headingAnchors } from '#lib/actions/headingAnchors.ts';
 
   const board = [
     {

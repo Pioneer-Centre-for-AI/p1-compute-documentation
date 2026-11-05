@@ -1,19 +1,19 @@
 <script lang="ts">
   import '../app.css';
   import { onMount } from 'svelte';
-  import { page } from '$app/stores';
-  import Header from '$lib/components/Header.svelte';
-  import NavList from '$lib/components/NavList.svelte';
-  import NavDrawer from '$lib/components/NavDrawer.svelte';
-  import PageToc from '$lib/components/PageToc.svelte';
-  import Footer from '$lib/components/Footer.svelte';
-  import { markdownHref } from '$lib/markdownPages';
-  import { GALLERY_HREF } from '$lib/gallery';
+  import { page } from '$app/state';
+  import Header from '#lib/components/Header.svelte';
+  import NavList from '#lib/components/NavList.svelte';
+  import NavDrawer from '#lib/components/NavDrawer.svelte';
+  import PageToc from '#lib/components/PageToc.svelte';
+  import Footer from '#lib/components/Footer.svelte';
+  import { markdownHref } from '#lib/markdownPages.ts';
+  import { GALLERY_HREF } from '#lib/gallery.ts';
 
   let { children } = $props();
-  let isLanding = $derived($page.url.pathname === '/');
-  let isWide = $derived(isLanding || $page.url.pathname === GALLERY_HREF);
-  let mdHref = $derived(markdownHref($page.url.pathname));
+  let isLanding = $derived(page.url.pathname === '/');
+  let isWide = $derived(isLanding || page.url.pathname === GALLERY_HREF);
+  let mdHref = $derived(markdownHref(page.url.pathname));
   let mobileNavOpen = $state(false);
 
   onMount(() => {

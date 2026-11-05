@@ -1,7 +1,7 @@
 import { error } from '@sveltejs/kit';
-import { getGallery } from '$lib/gallery';
-import { exampleFiles, hasFiles } from '$lib/server/gallery-files';
-import { tarGz } from '$lib/server/tar';
+import { getGallery } from '#lib/gallery.ts';
+import { exampleFiles, hasFiles } from '#lib/server/gallery-files.ts';
+import { tarGz } from '#lib/server/tar.ts';
 import type { EntryGenerator, RequestHandler } from './$types';
 
 export const prerender = true;

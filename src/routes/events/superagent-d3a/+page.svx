@@ -13,16 +13,16 @@ address: Østerøvej 2, 5800 Nyborg, Denmark
 ---
 
 <script>
-  import People from '$lib/components/People.svelte';
-  import Programme from '$lib/components/Programme.svelte';
-  import ScaledEmbed from '$lib/components/ScaledEmbed.svelte';
+  import People from '#lib/components/People.svelte';
+  import Programme from '#lib/components/Programme.svelte';
+  import ScaledEmbed from '#lib/components/ScaledEmbed.svelte';
   import {
     superAgentAtAGlance,
     superAgentProgramme,
     superAgentOrganizers,
     superAgentCollaborations,
     superAgentImpactBoard
-  } from '$lib/events';
+  } from '#lib/events.ts';
 </script>
 
 **Thursday 8 October 2026, 11:00–12:30** · Salon 26+27, Hotel Nyborg Strand · D3A 4.0 2026

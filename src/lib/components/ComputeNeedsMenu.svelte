@@ -2,7 +2,7 @@
   import { afterNavigate } from '$app/navigation';
   import { fly } from 'svelte/transition';
   import BookingDialog from './BookingDialog.svelte';
-  import { SURVEY_PAGE, BOOKING_URL } from '$lib/links';
+  import { SURVEY_PAGE, BOOKING_URL } from '#lib/links.ts';
 
   let open = $state(false);
   let booking = $state(false);

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { getNav, isGroup, type NavItem } from '$lib/nav';
+  import { getNav, isGroup, type NavItem } from '#lib/nav.ts';
   import {
     SURVEY_PAGE,
     BOOKING_URL,
@@ -7,7 +7,7 @@
     GITHUB_URL,
     COORDINATOR_EMAIL,
     GOVERNANCE_EMAIL
-  } from '$lib/links';
+  } from '#lib/links.ts';
   import DigitalObjectIdentifier from './DigitalObjectIdentifier.svelte';
 
   type FooterLink = {

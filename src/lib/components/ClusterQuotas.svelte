@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { getCluster, QUOTA_GROUPS } from '$lib/content';
+  import { getCluster, QUOTA_GROUPS } from '#lib/content.ts';
 
   let { slug }: { slug: string } = $props();
 

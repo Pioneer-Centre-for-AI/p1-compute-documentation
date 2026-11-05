@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { page } from '$app/stores';
-  import { SITE_NAME, SITE_URL } from '$lib/site';
+  import { page } from '$app/state';
+  import { SITE_NAME, SITE_URL } from '#lib/site.ts';
 
   type Props = {
     title: string;
@@ -23,7 +23,7 @@
     'Pioneer Centre for AI · Compute. Dedicated HPC partitions at DTU, NGC, and Gefion.';
 
   const fullTitle = $derived(isLanding ? title : `${title} · P1 Compute`);
-  const canonical = $derived(`${SITE_URL}${$page.url.pathname}`);
+  const canonical = $derived(`${SITE_URL}${page.url.pathname}`);
   const imageUrl = $derived(
     image ? (image.startsWith('http') ? image : `${SITE_URL}${image}`) : `${SITE_URL}/assets/og.png`
   );

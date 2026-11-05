@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { page } from '$app/stores';
-  import { upcomingEvent } from '$lib/events';
+  import { page } from '$app/state';
+  import { upcomingEvent } from '#lib/events.ts';
 
   const event = upcomingEvent();
   const wideLabel = event
@@ -14,7 +14,7 @@
   });
 </script>
 
-{#if event && !stale && $page.url.pathname !== event.href}
+{#if event && !stale && page.url.pathname !== event.href}
   <a
     href={event.href}
     class="group flex items-center justify-center gap-x-2 gap-y-0.5 border-b border-slate-200 bg-slate-100 px-4 py-1.5 text-center text-xs no-underline dark:border-slate-700 dark:bg-slate-800"

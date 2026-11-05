@@ -1,13 +1,13 @@
 <script lang="ts">
-  import { page } from '$app/stores';
-  import BrandAccent from '$lib/components/BrandAccent.svelte';
-  import Meta from '$lib/components/Meta.svelte';
-  import { headingAnchors } from '$lib/actions/headingAnchors';
-  import { getEvents } from '$lib/events';
+  import { page } from '$app/state';
+  import BrandAccent from '#lib/components/BrandAccent.svelte';
+  import Meta from '#lib/components/Meta.svelte';
+  import { headingAnchors } from '#lib/actions/headingAnchors.ts';
+  import { getEvents } from '#lib/events.ts';
 
   let { children } = $props();
 
-  const event = $derived(getEvents().find((e) => e.href === $page.url.pathname) ?? null);
+  const event = $derived(getEvents().find((e) => e.href === page.url.pathname) ?? null);
 
   const jsonLd = $derived(
     event

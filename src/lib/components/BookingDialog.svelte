@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { BOOKING_URL } from '$lib/links';
+  import { BOOKING_URL } from '#lib/links.ts';
 
   let { open = $bindable(false), title = 'Book a consultation' }: { open?: boolean; title?: string } =
     $props();

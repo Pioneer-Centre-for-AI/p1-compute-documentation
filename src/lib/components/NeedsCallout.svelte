@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { SURVEY_PAGE } from '$lib/links';
+  import { SURVEY_PAGE } from '#lib/links.ts';
 </script>
 
 <aside

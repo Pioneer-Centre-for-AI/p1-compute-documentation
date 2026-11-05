@@ -2,8 +2,8 @@
   import EventNotice from './EventNotice.svelte';
   import ThemeToggle from './ThemeToggle.svelte';
   import ComputeNeedsMenu from './ComputeNeedsMenu.svelte';
-  import { PROFILE_URL, GITHUB_URL } from '$lib/links';
-  import { GALLERY_HREF } from '$lib/gallery';
+  import { PROFILE_URL, GITHUB_URL } from '#lib/links.ts';
+  import { GALLERY_HREF } from '#lib/gallery.ts';
 
   type Props = { variant?: 'solid' | 'landing'; onMenuClick: () => void };
   let { variant = 'solid', onMenuClick }: Props = $props();

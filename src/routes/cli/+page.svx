@@ -1,7 +1,7 @@
 <script>
-  import Meta from '$lib/components/Meta.svelte';
-  import Aside from '$lib/components/Aside.svelte';
-  import { headingAnchors } from '$lib/actions/headingAnchors';
+  import Meta from '#lib/components/Meta.svelte';
+  import Aside from '#lib/components/Aside.svelte';
+  import { headingAnchors } from '#lib/actions/headingAnchors.ts';
 </script>
 
 <Meta

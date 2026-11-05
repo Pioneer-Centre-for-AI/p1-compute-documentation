@@ -1,8 +1,8 @@
 <script>
-  import Meta from '$lib/components/Meta.svelte';
-  import GalleryBrowser from '$lib/components/GalleryBrowser.svelte';
-  import { GALLERY_INTRO, GALLERY_SOURCE, getGallery } from '$lib/gallery';
-  import { URLS } from '$lib/urls';
+  import Meta from '#lib/components/Meta.svelte';
+  import GalleryBrowser from '#lib/components/GalleryBrowser.svelte';
+  import { GALLERY_INTRO, GALLERY_SOURCE, getGallery } from '#lib/gallery.ts';
+  import { URLS } from '#lib/urls.js';
 </script>
 
 <Meta

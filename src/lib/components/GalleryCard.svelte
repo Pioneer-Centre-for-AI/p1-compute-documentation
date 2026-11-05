@@ -2,7 +2,7 @@
   import Button from './Button.svelte';
   import ClusterDots from './ClusterDots.svelte';
   import GalleryIllustration from './GalleryIllustration.svelte';
-  import type { GalleryEntry } from '$lib/gallery';
+  import type { GalleryEntry } from '#lib/gallery.ts';
 
   type Props = { entry: GalleryEntry; onTag?: (tag: string) => void };
   let { entry, onTag }: Props = $props();

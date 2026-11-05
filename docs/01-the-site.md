@@ -1,8 +1,16 @@
 # The site
 
-The site at <https://hpc.aicentre.dk> is SvelteKit with `adapter-static`,
+The site at <https://hpc.aicentre.dk> is SvelteKit 3 with `adapter-static`,
 built to `build/` and served by GitHub Pages. Pages are mdsvex `.svx` files
 under `src/routes/`. bun is the package manager.
+
+SvelteKit 3 has no `svelte.config.js`. The site config (adapter, mdsvex,
+extensions) is passed to the `sveltekit()` plugin in `vite.config.ts`.
+`version.pollInterval` is 0, because a static site has no new version to
+poll for between deploys. Code in `src/` imports `src/lib` through the
+`#lib/*` subpath import in `package.json`, with the file extension:
+`#lib/links.ts`, `#lib/components/Meta.svelte`. Param matchers live in
+`src/params.ts`.
 
 ## Develop
 
@@ -140,14 +148,14 @@ markdown as the new ones.
 - `/clusters/` sets `trailingSlash: 'always'`, because the old URL ended in a
   slash and endpoints default to `'never'`.
 - `/clusters/[slug=segment]/` makes one page per provider, so a provider added
-  later gets an old-style URL too. The `segment` matcher in `src/params/`
+  later gets an old-style URL too. The `segment` matcher in `src/params.ts`
   takes one path segment with no dot, which leaves `/clusters/dtu.md` to the
   markdown route.
 
 ## Links
 
-Every external URL is in `src/lib/urls.js`. It is plain JS because Node loads
-`svelte.config.js`, which imports it. `src/lib/links.ts` re-exports the URLs
+Every external URL is in `src/lib/urls.js`. It is plain JS because Vite loads
+`vite.config.ts`, which imports it through the mdsvex plugins. `src/lib/links.ts` re-exports the URLs
 as named constants for components.
 
 In a `.svx` page, write `[workload survey](p1:survey)`. A raw
@@ -169,7 +177,7 @@ so bookmarks and the sitemap keep working.
 ## Code blocks
 
 `src/lib/markdown/highlight.js` renders fenced blocks with shiki at build
-time, through the mdsvex highlighter in `svelte.config.js`. A metastring adds
+time, through the mdsvex highlighter in `vite.config.ts`. A metastring adds
 a file name to the header: ` ```bash file=train.sh `. The header bar is always
 drawn, so the copy button has its own row and does not cover the first line
 on a phone.

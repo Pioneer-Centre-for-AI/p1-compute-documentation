@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { ProviderDocsMeta } from '$lib/content';
+  import type { ProviderDocsMeta } from '#lib/content.ts';
 
   let { provider, url, note }: ProviderDocsMeta = $props();
 </script>

@@ -38,14 +38,14 @@ hardware:
 ---
 
 <script>
-  import Aside from '$lib/components/Aside.svelte';
-  import AccessException from '$lib/components/AccessException.svelte';
-  import ClusterQuotas from '$lib/components/ClusterQuotas.svelte';
-  import Citation from '$lib/components/Citation.svelte';
-  import EmbedForm from '$lib/components/EmbedForm.svelte';
-  import GpuAllowance from '$lib/components/GpuAllowance.svelte';
-  import Support from '$lib/components/Support.svelte';
-  import { DTU_SIGNUP_FORM_URL } from '$lib/links';
+  import Aside from '#lib/components/Aside.svelte';
+  import AccessException from '#lib/components/AccessException.svelte';
+  import ClusterQuotas from '#lib/components/ClusterQuotas.svelte';
+  import Citation from '#lib/components/Citation.svelte';
+  import EmbedForm from '#lib/components/EmbedForm.svelte';
+  import GpuAllowance from '#lib/components/GpuAllowance.svelte';
+  import Support from '#lib/components/Support.svelte';
+  import { DTU_SIGNUP_FORM_URL } from '#lib/links.ts';
 </script>
 
 The P1 DTU HPC is P1's partition at DTU. It suits medium to large-scale machine learning research

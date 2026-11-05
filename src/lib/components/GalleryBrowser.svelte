@@ -1,9 +1,9 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { replaceState } from '$app/navigation';
+  import { goto } from '$app/navigation';
   import GalleryCard from './GalleryCard.svelte';
-  import { getClusters } from '$lib/content';
-  import type { GalleryEntry } from '$lib/gallery';
+  import { getClusters } from '#lib/content.ts';
+  import type { GalleryEntry } from '#lib/gallery.ts';
 
   type Props = { entries: GalleryEntry[] };
   let { entries }: Props = $props();
@@ -61,7 +61,7 @@
       if (value) url.searchParams.set(key, value);
       else url.searchParams.delete(key);
     }
-    replaceState(url, {});
+    goto(url, { state: {}, shallow: true, replace: true });
   }
 
   function chooseCluster(next: string | null) {

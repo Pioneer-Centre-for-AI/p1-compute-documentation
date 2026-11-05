@@ -1,9 +1,9 @@
 <script>
-  import Meta from '$lib/components/Meta.svelte';
-  import ClusterIllustration from '$lib/components/ClusterIllustration.svelte';
-  import { getClusters, getClusterDecisionEntries } from '$lib/content';
-  import { headingAnchors } from '$lib/actions/headingAnchors';
-  import { SURVEY_PAGE } from '$lib/links';
+  import Meta from '#lib/components/Meta.svelte';
+  import ClusterIllustration from '#lib/components/ClusterIllustration.svelte';
+  import { getClusters, getClusterDecisionEntries } from '#lib/content.ts';
+  import { headingAnchors } from '#lib/actions/headingAnchors.ts';
+  import { SURVEY_PAGE } from '#lib/links.ts';
 </script>
 
 <Meta

@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { page } from '$app/stores';
-  import { getNav, isGroup, type NavItem } from '$lib/nav';
+  import { page } from '$app/state';
+  import { getNav, isGroup, type NavItem } from '#lib/nav.ts';
 
   function isActive(href: string, current: string): boolean {
     if (href.startsWith('http')) return false;
@@ -10,7 +10,7 @@
 </script>
 
 {#snippet navLink(item: NavItem)}
-  {@const active = isActive(item.href, $page.url.pathname)}
+  {@const active = isActive(item.href, page.url.pathname)}
   <a
     href={item.href}
     target={item.newTab ? '_blank' : undefined}

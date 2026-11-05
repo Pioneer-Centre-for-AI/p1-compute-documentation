@@ -1,8 +1,8 @@
 <script>
-  import Meta from '$lib/components/Meta.svelte';
-  import BookConsultation from '$lib/components/BookConsultation.svelte';
-  import { headingAnchors } from '$lib/actions/headingAnchors';
-  import { SURVEY_URL } from '$lib/links';
+  import Meta from '#lib/components/Meta.svelte';
+  import BookConsultation from '#lib/components/BookConsultation.svelte';
+  import { headingAnchors } from '#lib/actions/headingAnchors.ts';
+  import { SURVEY_URL } from '#lib/links.ts';
 </script>
 
 <Meta

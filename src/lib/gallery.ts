@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { dev } from '$app/environment';
-import { URLS } from '$lib/urls';
+import { dev } from '$app/env';
+import { URLS } from '#lib/urls.js';
 
 export const SESSION_TYPES = {
   int: 'Interactive',

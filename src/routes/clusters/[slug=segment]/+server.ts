@@ -1,6 +1,6 @@
 import { error } from '@sveltejs/kit';
-import { getClusters } from '$lib/content';
-import { movedPage } from '$lib/server/moved';
+import { getClusters } from '#lib/content.ts';
+import { movedPage } from '#lib/server/moved.ts';
 import type { EntryGenerator, RequestHandler } from './$types';
 
 export const prerender = true;

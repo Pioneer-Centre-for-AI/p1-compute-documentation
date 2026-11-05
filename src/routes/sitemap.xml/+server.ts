@@ -1,5 +1,5 @@
-import { MARKDOWN_PAGES } from '$lib/markdownPages';
-import { SITE_URL } from '$lib/site';
+import { MARKDOWN_PAGES } from '#lib/markdownPages.ts';
+import { SITE_URL } from '#lib/site.ts';
 import type { RequestHandler } from './$types';
 
 export const prerender = true;

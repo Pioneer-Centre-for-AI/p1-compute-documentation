@@ -1,6 +1,6 @@
 import { error } from '@sveltejs/kit';
-import { renderTwin, twinPaths } from '$lib/markdown/twins';
-import { currentPath, oldPaths } from '$lib/server/moved';
+import { renderTwin, twinPaths } from '#lib/markdown/twins.ts';
+import { currentPath, oldPaths } from '#lib/server/moved.ts';
 import type { EntryGenerator, RequestHandler } from './$types';
 
 export const prerender = true;

@@ -1,6 +1,6 @@
 <script lang="ts">
   import EmbedForm from './EmbedForm.svelte';
-  import { COMPUTE_BUDGET_URL } from '$lib/links';
+  import { COMPUTE_BUDGET_URL } from '#lib/links.ts';
 </script>
 
 <p>

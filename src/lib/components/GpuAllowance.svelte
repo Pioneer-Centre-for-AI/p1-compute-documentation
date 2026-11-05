@@ -1,6 +1,6 @@
 <script lang="ts">
   import EmbedForm from './EmbedForm.svelte';
-  import { GPU_ALLOWANCE_URL } from '$lib/links';
+  import { GPU_ALLOWANCE_URL } from '#lib/links.ts';
 
   let { selfServeDocumented = false }: { selfServeDocumented?: boolean } = $props();
 </script>

@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { page } from '$app/stores';
-  import Button from '$lib/components/Button.svelte';
+  import { page } from '$app/state';
+  import Button from '#lib/components/Button.svelte';
 
-  const isMissing = $derived($page.status === 404);
+  const isMissing = $derived(page.status === 404);
 </script>
 
 <svelte:head>
@@ -11,7 +11,7 @@
 </svelte:head>
 
 <article class="prose mx-auto w-full max-w-3xl py-12">
-  <p class="eyebrow not-prose mb-4">Error {$page.status}</p>
+  <p class="eyebrow not-prose mb-4">Error {page.status}</p>
 
   <h1>{isMissing ? 'Page not found' : 'Something went wrong'}</h1>
 
@@ -21,7 +21,7 @@
       bookmark is the likely cause.
     </p>
   {:else}
-    <p>{$page.error?.message ?? 'An unexpected error occurred.'}</p>
+    <p>{page.error?.message ?? 'An unexpected error occurred.'}</p>
   {/if}
 
   <div class="not-prose mt-8 flex flex-wrap gap-3">

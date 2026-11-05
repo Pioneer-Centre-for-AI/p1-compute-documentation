@@ -1,6 +1,6 @@
 <script lang="ts">
   import EmbedForm from './EmbedForm.svelte';
-  import { ACCESS_EXCEPTION_EMBED_URL, ACCESS_EXCEPTION_FORM_URL } from '$lib/links';
+  import { ACCESS_EXCEPTION_EMBED_URL, ACCESS_EXCEPTION_FORM_URL } from '#lib/links.ts';
 </script>
 
 <p>

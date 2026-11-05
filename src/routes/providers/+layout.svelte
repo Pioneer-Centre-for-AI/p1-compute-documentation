@@ -1,16 +1,16 @@
 <script lang="ts">
-  import { page } from '$app/stores';
-  import BrandAccent from '$lib/components/BrandAccent.svelte';
-  import ClusterIllustration from '$lib/components/ClusterIllustration.svelte';
-  import Meta from '$lib/components/Meta.svelte';
-  import HardwareSpec from '$lib/components/HardwareSpec.svelte';
-  import ProviderDocs from '$lib/components/ProviderDocs.svelte';
-  import { headingAnchors } from '$lib/actions/headingAnchors';
-  import { getClusters } from '$lib/content';
+  import { page } from '$app/state';
+  import BrandAccent from '#lib/components/BrandAccent.svelte';
+  import ClusterIllustration from '#lib/components/ClusterIllustration.svelte';
+  import Meta from '#lib/components/Meta.svelte';
+  import HardwareSpec from '#lib/components/HardwareSpec.svelte';
+  import ProviderDocs from '#lib/components/ProviderDocs.svelte';
+  import { headingAnchors } from '#lib/actions/headingAnchors.ts';
+  import { getClusters } from '#lib/content.ts';
 
   let { children } = $props();
 
-  const cluster = $derived(getClusters().find((c) => c.href === $page.url.pathname) ?? null);
+  const cluster = $derived(getClusters().find((c) => c.href === page.url.pathname) ?? null);
 </script>
 
 {#if cluster}

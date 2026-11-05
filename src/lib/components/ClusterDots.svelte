@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { getCluster } from '$lib/content';
+  import { getCluster } from '#lib/content.ts';
 
   type Props = { slugs: string[]; href?: (slug: string) => string; class?: string };
   let { slugs, href, class: className = '' }: Props = $props();

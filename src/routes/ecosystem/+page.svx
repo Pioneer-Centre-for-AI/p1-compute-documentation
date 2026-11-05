@@ -1,8 +1,8 @@
 <script>
-  import Meta from '$lib/components/Meta.svelte';
-  import LandscapeDiagram from '$lib/components/LandscapeDiagram.svelte';
-  import ResearchNetworkDiagram from '$lib/components/ResearchNetworkDiagram.svelte';
-  import { headingAnchors } from '$lib/actions/headingAnchors';
+  import Meta from '#lib/components/Meta.svelte';
+  import LandscapeDiagram from '#lib/components/LandscapeDiagram.svelte';
+  import ResearchNetworkDiagram from '#lib/components/ResearchNetworkDiagram.svelte';
+  import { headingAnchors } from '#lib/actions/headingAnchors.ts';
 </script>
 
 <Meta

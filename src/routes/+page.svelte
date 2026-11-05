@@ -1,15 +1,15 @@
 <script lang="ts">
-  import Button from '$lib/components/Button.svelte';
-  import BookingDialog from '$lib/components/BookingDialog.svelte';
-  import Meta from '$lib/components/Meta.svelte';
-  import { LANDING_DESCRIPTION, SITE_NAME } from '$lib/site';
-  import DigitalObjectIdentifier from '$lib/components/DigitalObjectIdentifier.svelte';
-  import LandscapeDiagram from '$lib/components/LandscapeDiagram.svelte';
-  import { getClusters } from '$lib/content';
-  import GalleryCard from '$lib/components/GalleryCard.svelte';
-  import InstallCommand from '$lib/components/InstallCommand.svelte';
-  import { GALLERY_HREF, getGallery } from '$lib/gallery';
-  import { SURVEY_PAGE } from '$lib/links';
+  import Button from '#lib/components/Button.svelte';
+  import BookingDialog from '#lib/components/BookingDialog.svelte';
+  import Meta from '#lib/components/Meta.svelte';
+  import { LANDING_DESCRIPTION, SITE_NAME } from '#lib/site.ts';
+  import DigitalObjectIdentifier from '#lib/components/DigitalObjectIdentifier.svelte';
+  import LandscapeDiagram from '#lib/components/LandscapeDiagram.svelte';
+  import { getClusters } from '#lib/content.ts';
+  import GalleryCard from '#lib/components/GalleryCard.svelte';
+  import InstallCommand from '#lib/components/InstallCommand.svelte';
+  import { GALLERY_HREF, getGallery } from '#lib/gallery.ts';
+  import { SURVEY_PAGE } from '#lib/links.ts';
 
   let booking = $state(false);
 

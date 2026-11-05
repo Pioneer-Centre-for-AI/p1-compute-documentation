@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { computeTiers } from '$lib/content';
+  import { computeTiers } from '#lib/content.ts';
 </script>
 
 <div class="not-prose my-6 flex flex-col gap-3 sm:hidden">

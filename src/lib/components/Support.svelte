@@ -1,6 +1,6 @@
 <script lang="ts">
   import BookingDialog from './BookingDialog.svelte';
-  import { SURVEY_PAGE, COORDINATOR_ORCID } from '$lib/links';
+  import { SURVEY_PAGE, COORDINATOR_ORCID } from '#lib/links.ts';
 
   let booking = $state(false);
 

@@ -39,13 +39,13 @@ hardware:
 ---
 
 <script>
-  import Aside from '$lib/components/Aside.svelte';
-  import AccessException from '$lib/components/AccessException.svelte';
-  import ClusterQuotas from '$lib/components/ClusterQuotas.svelte';
-  import EmbedForm from '$lib/components/EmbedForm.svelte';
-  import GpuAllowance from '$lib/components/GpuAllowance.svelte';
-  import Support from '$lib/components/Support.svelte';
-  import { GEFION_SIGNUP_FORM_URL } from '$lib/links';
+  import Aside from '#lib/components/Aside.svelte';
+  import AccessException from '#lib/components/AccessException.svelte';
+  import ClusterQuotas from '#lib/components/ClusterQuotas.svelte';
+  import EmbedForm from '#lib/components/EmbedForm.svelte';
+  import GpuAllowance from '#lib/components/GpuAllowance.svelte';
+  import Support from '#lib/components/Support.svelte';
+  import { GEFION_SIGNUP_FORM_URL } from '#lib/links.ts';
 </script>
 
 The P1 Gefion HPC is a sandbox with on-demand H100 GPUs on [Gefion](https://dcai.dk/gefion). Use

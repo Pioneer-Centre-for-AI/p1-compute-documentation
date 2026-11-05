@@ -1,4 +1,4 @@
-import { SITE_URL } from '$lib/site';
+import { SITE_URL } from '#lib/site.ts';
 
 export const MOVED: Record<string, string> = {
   clusters: 'providers'
