@@ -29,7 +29,7 @@
       <span class="hidden sm:inline">{wideLabel}</span>
     </span>
     <span
-      class="shrink-0 font-semibold text-[var(--color-brand)] transition-transform group-hover:translate-x-0.5"
+      class="shrink-0 font-semibold text-[var(--color-brand)] motion-safe:transition-transform motion-safe:group-hover:translate-x-0.5"
       aria-hidden="true">&rarr;</span
     >
   </a>

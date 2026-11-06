@@ -13,21 +13,18 @@
 
   let booking = $state(false);
 
-  const profiles: Record<string, { profile: string; image: string; imageAlt: string }> = {
+  const profiles: Record<string, { profile: string; image: string }> = {
     dtu: {
       profile: 'General Purpose',
-      image: '/assets/landing/DTU_324.avif',
-      imageAlt: 'DTU Compute, Building 324, 2800 Kongens Lyngby, Denmark'
+      image: '/assets/landing/DTU_324.avif'
     },
     ngc: {
       profile: 'Sensitive Data',
-      image: '/assets/landing/NGC.avif',
-      imageAlt: 'Danish National Genome Center (NGC)'
+      image: '/assets/landing/NGC.avif'
     },
     gefion: {
       profile: 'Path to Scale',
-      image: '/assets/landing/DCAI_Gefion.avif',
-      imageAlt: 'AI supercomputer, Gefion'
+      image: '/assets/landing/DCAI_Gefion.avif'
     }
   };
 
@@ -36,9 +33,9 @@
 
 <Meta title={SITE_NAME} description={LANDING_DESCRIPTION} isLanding />
 
-<main class="mx-auto w-full max-w-6xl px-4 md:px-6">
+<div class="mx-auto w-full max-w-6xl px-4 md:px-6">
   <!-- Hero -->
-  <section class="grid items-center gap-12 pb-14 pt-28 md:pt-36 lg:grid-cols-[1.05fr_1fr] lg:gap-10">
+  <section class="grid grid-cols-1 items-center gap-12 pb-14 pt-28 md:pt-36 lg:grid-cols-[1.05fr_1fr] lg:gap-10">
     <div class="flex flex-col items-start gap-6">
       <h1 class="text-balance text-5xl font-extrabold leading-[1.05] tracking-tight text-slate-900 md:text-6xl dark:text-slate-50">
         Your <mark>entry point</mark> to research compute.
@@ -72,7 +69,7 @@
     <div class="mx-auto w-full max-w-md lg:max-w-none">
       <LandscapeDiagram variant="stacked" />
       <p class="mt-3 text-center text-sm text-slate-500 dark:text-slate-400">
-        We consult and guide; We don't broker access unless its our own resources.
+        We consult and guide, and broker access only to our own resources.
       </p>
     </div>
   </section>
@@ -88,12 +85,12 @@
         {@const p = profiles[cluster.slug]}
         <a
           href={cluster.href}
-          class="group flex flex-col overflow-hidden rounded-xl border border-slate-200 no-underline transition-all hover:-translate-y-0.5 hover:shadow-lg dark:border-slate-700"
+          class="group flex flex-col overflow-hidden rounded-xl border border-slate-200 no-underline transition-[translate,box-shadow] hover:shadow-lg motion-safe:hover:-translate-y-0.5 dark:border-slate-700"
         >
           {#if p}
             <img
               src={p.image}
-              alt={p.imageAlt}
+              alt=""
               loading="lazy"
               class="aspect-video w-full object-cover"
             />
@@ -103,14 +100,14 @@
             {#if p}
               <span class="eyebrow">{p.profile}</span>
             {/if}
-            <span class="flex items-center gap-2 text-lg font-semibold text-slate-900 dark:text-slate-100">
+            <h3 class="flex items-center gap-2 text-lg font-semibold text-slate-900 dark:text-slate-100">
               {cluster.meta.title}
               {#if cluster.meta.badge}
                 <span class="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[10px] font-medium uppercase tracking-wide text-slate-600 dark:bg-slate-800 dark:text-slate-300">
                   {cluster.meta.badge.text}
                 </span>
               {/if}
-            </span>
+            </h3>
             <p class="flex-1 text-sm leading-relaxed text-slate-500 dark:text-slate-400">
               {cluster.meta.description}
             </p>
@@ -199,6 +196,6 @@
       </ul>
     </div>
   </section>
-</main>
+</div>
 
 <BookingDialog bind:open={booking} />

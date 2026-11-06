@@ -18,14 +18,14 @@
 
 <div class="flex w-full max-w-xl flex-col gap-2 {className}">
   <div
-    class="flex items-center gap-3 rounded-lg border border-slate-200 bg-slate-50 py-1.5 pl-4 pr-1.5 font-mono text-sm dark:border-slate-700 dark:bg-slate-900"
+    class="flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 py-1.5 pl-4 pr-1.5 font-mono text-sm dark:border-slate-700 dark:bg-slate-900"
   >
     <span class="select-none text-slate-400 dark:text-slate-500" aria-hidden="true">$</span>
     <code class="min-w-0 flex-1 overflow-x-auto whitespace-nowrap text-slate-800 dark:text-slate-100">{command}</code>
     <button
       type="button"
       onclick={copy}
-      aria-label="Copy the install command"
+      aria-label={copied ? 'Copied' : 'Copy the install command'}
       class="inline-flex shrink-0 items-center gap-1.5 rounded-md px-2.5 py-1.5 font-sans text-xs font-semibold text-slate-600 transition-colors hover:bg-slate-200 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-white"
     >
       {#if copied}

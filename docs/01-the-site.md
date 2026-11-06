@@ -210,6 +210,12 @@ around every token.
   utilities, so a rule without the guard overrides component styles.
 - The diagrams lift `slate-500` text in dark mode. It is about 3.4:1 on
   `slate-900`, too low for 10 to 12 px text.
+- Movement runs only for people who have not asked for less motion: hover
+  lifts and nudges use `motion-safe:`, and the compute-needs menu slides by
+  `prefersReducedMotion` from `svelte/motion`. Colour and shadow changes stay.
+- The layout renders the one `<main id="main">` for every page, and a "Skip to
+  content" link before the header targets it. Pages do not add their own
+  `<main>`.
 - The event notice bar adds about 28 px to the header. The sidebar's
   `top-24` and the headings' `scroll-mt-24` are sized for it.
 

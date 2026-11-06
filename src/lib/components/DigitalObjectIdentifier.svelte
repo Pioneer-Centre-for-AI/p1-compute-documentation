@@ -16,7 +16,7 @@
 <button
   type="button"
   onclick={copy}
-  aria-label="Copy DOI to clipboard"
+  aria-label={copied ? 'Copied' : `Copy DOI ${displayDoi}`}
   class="inline-flex items-center justify-center gap-2 rounded-md bg-slate-800 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-slate-700 dark:bg-slate-700 dark:hover:bg-slate-600"
 >
   {#if copied}

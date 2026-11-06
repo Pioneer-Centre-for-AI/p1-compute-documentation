@@ -34,7 +34,7 @@
         <img src="/assets/logos/PCAI_Solo_RGB.svg" alt="" class="block h-8 w-8 shrink-0 dark:hidden" />
         <img src="/assets/logos/PCAI_Solo_White.svg" alt="" class="hidden h-8 w-8 shrink-0 dark:block" />
         <span
-          class="truncate text-sm font-semibold whitespace-nowrap text-slate-900 sm:text-base dark:text-slate-100"
+          class="truncate text-sm font-semibold whitespace-nowrap text-slate-900 max-[359px]:sr-only sm:text-base dark:text-slate-100"
         >
           Pioneer Centre for AI
           <span class="hidden font-normal text-slate-500 sm:inline dark:text-slate-400">· Compute</span>

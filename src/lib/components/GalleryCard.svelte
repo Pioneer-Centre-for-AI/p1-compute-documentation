@@ -9,7 +9,7 @@
 </script>
 
 <div
-  class="group flex flex-col rounded-xl border border-slate-200 bg-slate-50/60 p-4 transition-all hover:-translate-y-0.5 hover:shadow-lg dark:border-slate-700 dark:bg-slate-800/40"
+  class="group flex flex-col rounded-xl border border-slate-200 bg-slate-50/60 p-4 transition-[translate,box-shadow] hover:shadow-lg motion-safe:hover:-translate-y-0.5 dark:border-slate-700 dark:bg-slate-800/40"
 >
   <a
     href={entry.href}

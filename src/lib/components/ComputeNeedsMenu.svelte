@@ -1,6 +1,7 @@
 <script lang="ts">
   import { afterNavigate } from '$app/navigation';
   import { fly } from 'svelte/transition';
+  import { prefersReducedMotion } from 'svelte/motion';
   import BookingDialog from './BookingDialog.svelte';
   import { SURVEY_PAGE, BOOKING_URL } from '#lib/links.ts';
 
@@ -49,12 +50,18 @@
     'relative cursor-pointer transition-colors before:absolute before:inset-0 before:bg-white/0 before:transition-colors hover:before:bg-white/12 dark:before:bg-slate-900/0 dark:hover:before:bg-slate-900/10 focus-visible:outline-none focus-visible:before:bg-white/12 dark:focus-visible:before:bg-slate-900/10';
 
   const item =
-    'group flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left no-underline transition-colors hover:bg-slate-100 focus-visible:bg-slate-100 focus-visible:outline-none dark:hover:bg-slate-800 dark:focus-visible:bg-slate-800';
+    'group flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left no-underline transition-colors hover:bg-slate-100 focus-visible:bg-slate-100 dark:hover:bg-slate-800 dark:focus-visible:bg-slate-800';
   const itemIcon =
     'mt-px flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-500 transition-colors group-hover:bg-white group-hover:text-slate-900 dark:bg-slate-800 dark:text-slate-400 dark:group-hover:bg-slate-700 dark:group-hover:text-slate-100';
 </script>
 
-<div bind:this={wrapper} class="relative hidden md:block">
+<div
+  bind:this={wrapper}
+  class="relative hidden md:block"
+  onfocusout={(e) => {
+    if (!wrapper?.contains(e.relatedTarget as Node)) open = false;
+  }}
+>
   <div
     class="flex h-9 items-stretch overflow-hidden rounded-full bg-slate-800 text-white ring-1 ring-slate-900/5 ring-inset transition-shadow has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-slate-500 has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-white dark:bg-slate-200 dark:text-slate-900 dark:ring-white/10 dark:has-[:focus-visible]:ring-offset-slate-900"
   >
@@ -87,7 +94,7 @@
         stroke-linecap="round"
         stroke-linejoin="round"
         aria-hidden="true"
-        class="relative transition-transform duration-200"
+        class="relative motion-safe:transition-transform motion-safe:duration-200"
         class:rotate-180={open}
       >
         <polyline points="6 9 12 15 18 9" />
@@ -102,7 +109,7 @@
       role="menu"
       tabindex="-1"
       onkeydown={onKeydown}
-      transition:fly={{ y: -4, duration: 120 }}
+      transition:fly={{ y: prefersReducedMotion.current ? 0 : -4, duration: 120 }}
       class="absolute right-0 z-40 mt-2 w-80 origin-top-right rounded-2xl border border-slate-200 bg-white p-2 shadow-xl ring-1 ring-slate-900/5 dark:border-slate-700 dark:bg-slate-900 dark:ring-black/40"
     >
       <a href={SURVEY_PAGE} role="menuitem" class={item}>
@@ -155,7 +162,7 @@
         target="_blank"
         rel="noopener noreferrer"
         role="menuitem"
-        class="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs text-slate-500 no-underline transition-colors hover:bg-slate-100 hover:text-slate-900 focus-visible:bg-slate-100 focus-visible:outline-none dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-100"
+        class="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs text-slate-500 no-underline transition-colors hover:bg-slate-100 hover:text-slate-900 focus-visible:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-100"
       >
         Open the calendar in a new tab
         <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">

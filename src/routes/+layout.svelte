@@ -67,13 +67,19 @@
 </svelte:head>
 
 <div class="flex min-h-screen flex-col bg-white text-slate-700 dark:bg-slate-900 dark:text-slate-200">
+  <a
+    href="#main"
+    class="sr-only rounded-md bg-white px-3 py-2 text-sm font-medium text-slate-900 shadow-lg focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 dark:bg-slate-800 dark:text-slate-100"
+  >
+    Skip to content
+  </a>
   <Header variant={isLanding ? 'landing' : 'solid'} onMenuClick={() => (mobileNavOpen = true)} />
   <NavDrawer bind:open={mobileNavOpen} />
 
   {#if isWide}
-    <div class="flex-1">
+    <main id="main" class="flex-1">
       {@render children()}
-    </div>
+    </main>
   {:else}
     <div class="mx-auto flex w-full max-w-7xl flex-1 gap-8 px-4 py-8 md:px-6">
       <aside class="hidden w-60 shrink-0 md:block">
@@ -81,9 +87,9 @@
           <NavList />
         </div>
       </aside>
-      <div class="min-w-0 flex-1">
+      <main id="main" class="min-w-0 flex-1">
         {@render children()}
-      </div>
+      </main>
       <aside class="hidden w-48 shrink-0 lg:block">
         <div class="sticky top-24">
           <PageToc {mdHref} />
