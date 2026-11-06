@@ -29,7 +29,7 @@
         <span class="eyebrow">{example.code} · {example.typeLabel}</span>
       </div>
       <h1
-        class="mb-0 mt-0 text-4xl font-extrabold tracking-tight text-slate-900 dark:text-slate-50"
+        class="mb-0 mt-0 text-4xl font-extrabold tracking-tight hyphens-auto text-slate-900 [overflow-wrap:break-word] dark:text-slate-50"
       >
         {example.meta.title}
       </h1>

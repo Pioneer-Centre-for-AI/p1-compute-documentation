@@ -208,8 +208,13 @@ around every token.
   `@tailwindcss/typography` is not installed, so `not-prose` means only what
   these guards make it mean. The rules are unlayered and beat Tailwind
   utilities, so a rule without the guard overrides component styles.
-- The diagrams lift `slate-500` text in dark mode. It is about 3.4:1 on
-  `slate-900`, too low for 10 to 12 px text.
+- The diagrams lift `slate-500` text in dark mode. It is about 3:1 on
+  `slate-900`, too low for 10 to 12 px text. In light mode `slate-500` is
+  the muted text colour, at 4.6:1 or more on white, `slate-50` and
+  `slate-100`.
+- `src/lib/markdown/tableScroll.js` wraps each prose table in a
+  `.table-scroll` div, so a wide table scrolls inside the column instead of
+  widening the page on a phone.
 - Movement runs only for people who have not asked for less motion: hover
   lifts and nudges use `motion-safe:`, and the compute-needs menu slides by
   `prefersReducedMotion` from `svelte/motion`. Colour and shadow changes stay.

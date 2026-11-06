@@ -115,7 +115,7 @@
       type="search"
       bind:value={query}
       placeholder="Search examples…"
-      class="h-11 w-full rounded-lg border border-slate-300 bg-white pr-4 pl-10 text-sm text-slate-900 placeholder:text-slate-400 focus:border-[var(--color-brand)] focus:ring-2 focus:ring-[var(--color-brand)]/20 focus:outline-none dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
+      class="h-11 w-full rounded-lg border border-slate-300 bg-white pr-4 pl-10 text-base text-slate-900 placeholder:text-slate-500 sm:text-sm focus:border-[var(--color-brand)] focus:ring-2 focus:ring-[var(--color-brand)]/20 focus:outline-none dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
     />
   </label>
   <p class="shrink-0 text-sm text-slate-500 dark:text-slate-400" aria-live="polite">

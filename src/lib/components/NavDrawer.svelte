@@ -11,10 +11,12 @@
   $effect(() => {
     if (!open) return;
     const prev = document.body.style.overflow;
+    const opener = document.activeElement as HTMLElement | null;
     document.body.style.overflow = 'hidden';
     panel?.querySelector<HTMLElement>('a, button')?.focus();
     return () => {
       document.body.style.overflow = prev;
+      if (opener?.isConnected) opener.focus();
     };
   });
 

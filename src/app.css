@@ -10,7 +10,7 @@
   --color-slate-200: oklch(0.911 0.011 274.9);
   --color-slate-300: oklch(0.834 0.018 275.6);
   --color-slate-400: oklch(0.702 0.03 274.5);
-  --color-slate-500: oklch(0.556 0.035 275.1); /* muted text */
+  --color-slate-500: oklch(0.53 0.035 275.1); /* muted text */
   --color-slate-600: oklch(0.49 0.036 276.9);
   --color-slate-700: oklch(0.432 0.033 276.1);
   --color-slate-800: oklch(0.305 0.033 274.6);
@@ -142,9 +142,11 @@ html.dark .codeblock {
   }
 }
 
-.copy-btn:hover {
-  color: var(--color-slate-900);
-  background: var(--color-slate-100);
+@media (hover: hover) {
+  .copy-btn:hover {
+    color: var(--color-slate-900);
+    background: var(--color-slate-100);
+  }
 }
 
 html.dark .copy-btn {
@@ -153,9 +155,11 @@ html.dark .copy-btn {
   color: var(--color-slate-400);
 }
 
-html.dark .copy-btn:hover {
-  color: var(--color-slate-100);
-  background: var(--color-slate-700);
+@media (hover: hover) {
+  html.dark .copy-btn:hover {
+    color: var(--color-slate-100);
+    background: var(--color-slate-700);
+  }
 }
 
 .copy-btn .copy-icon-done,
@@ -176,12 +180,15 @@ html.dark .copy-btn:hover {
   color: var(--color-brand);
   text-decoration: none;
 }
-.prose a:not(.heading-anchor):not(.not-prose, .not-prose *):hover {
-  text-decoration: underline;
+@media (hover: hover) {
+  .prose a:not(.heading-anchor):not(.not-prose, .not-prose *):hover {
+    text-decoration: underline;
+  }
 }
 
 .prose h1:not(.not-prose, .not-prose *) {
-  @apply text-4xl font-bold tracking-tight mb-6 mt-2;
+  @apply text-4xl font-bold tracking-tight mb-6 mt-2 hyphens-auto;
+  overflow-wrap: break-word;
 }
 .prose h2:not(.not-prose, .not-prose *) {
   @apply text-2xl font-semibold mt-12 mb-4 scroll-mt-24;
@@ -207,8 +214,11 @@ html.dark .copy-btn:hover {
 html.dark .prose blockquote:not(.not-prose, .not-prose *) {
   @apply border-slate-600 text-slate-300;
 }
+.prose .table-scroll:not(.not-prose, .not-prose *) {
+  @apply my-6 max-w-full overflow-x-auto;
+}
 .prose table:not(.not-prose, .not-prose *) {
-  @apply w-full text-sm my-6 border-collapse;
+  @apply w-full text-sm border-collapse;
 }
 .prose th:not(.not-prose, .not-prose *),
 .prose td:not(.not-prose, .not-prose *) {
@@ -226,6 +236,7 @@ html.dark .prose th:not(.not-prose, .not-prose *) {
 }
 .prose code:not(pre code):not(.not-prose, .not-prose *) {
   @apply rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[0.85em];
+  overflow-wrap: anywhere;
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
 }
@@ -238,8 +249,10 @@ html.dark .prose code:not(pre code):not(.not-prose, .not-prose *) {
 .prose details:not(.not-prose, .not-prose *) > summary {
   @apply cursor-pointer rounded-lg bg-slate-50 dark:bg-slate-800/50 px-4 py-3 font-medium;
 }
-.prose details:not(.not-prose, .not-prose *) > summary:hover {
-  @apply bg-slate-100 dark:bg-slate-800;
+@media (hover: hover) {
+  .prose details:not(.not-prose, .not-prose *) > summary:hover {
+    @apply bg-slate-100 dark:bg-slate-800;
+  }
 }
 .prose details:not(.not-prose, .not-prose *) > *:not(summary) {
   @apply px-4 pb-4 pt-2;
@@ -256,6 +269,8 @@ html.dark .prose code:not(pre code):not(.not-prose, .not-prose *) {
 .prose .heading-anchor:focus {
   opacity: 1;
 }
-.prose .heading-anchor:hover {
-  @apply text-slate-500 dark:text-slate-400 underline;
+@media (hover: hover) {
+  .prose .heading-anchor:hover {
+    @apply text-slate-500 dark:text-slate-400 underline;
+  }
 }

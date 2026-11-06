@@ -8,6 +8,7 @@ import rehypeExternalLinks from 'rehype-external-links';
 import rehypeSlug from 'rehype-slug';
 import { defineConfig } from 'vite';
 import { renderCodeBlock } from './src/lib/markdown/highlight.js';
+import { tableScroll } from './src/lib/markdown/tableScroll.js';
 import { urlScheme } from './src/lib/markdown/urlScheme.js';
 
 const galleryDirs = readdirSync(new URL('./pkgs/gallery', import.meta.url), { withFileTypes: true })
@@ -31,6 +32,7 @@ export default defineConfig({
           remarkPlugins: [urlScheme],
           rehypePlugins: [
             rehypeSlug,
+            tableScroll,
             [rehypeExternalLinks, { target: '_blank', rel: ['noopener', 'noreferrer'] }]
           ],
           highlight: { highlighter },

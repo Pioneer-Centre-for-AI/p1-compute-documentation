@@ -30,7 +30,7 @@
 
   <ol class="relative">
     {#each rows as row, i}
-      <li class="grid grid-cols-[3.5rem_1.25rem_1fr] gap-x-3 sm:grid-cols-[5rem_1.5rem_1fr] sm:gap-x-4">
+      <li class="grid grid-cols-[3.5rem_1.25rem_minmax(0,1fr)] gap-x-3 sm:grid-cols-[5rem_1.5rem_minmax(0,1fr)] sm:gap-x-4">
         <div class="pt-3.5 text-end">
           <span
             class="block font-mono text-sm font-medium tabular-nums text-slate-900 dark:text-slate-100"
@@ -84,7 +84,7 @@
       </li>
     {/each}
 
-    <li class="grid grid-cols-[3.5rem_1.25rem_1fr] gap-x-3 sm:grid-cols-[5rem_1.5rem_1fr] sm:gap-x-4">
+    <li class="grid grid-cols-[3.5rem_1.25rem_minmax(0,1fr)] gap-x-3 sm:grid-cols-[5rem_1.5rem_minmax(0,1fr)] sm:gap-x-4">
       <div class="text-end">
         <span class="block font-mono text-sm tabular-nums text-slate-500 dark:text-slate-400"
           >{until(rows[rows.length - 1].time)}</span

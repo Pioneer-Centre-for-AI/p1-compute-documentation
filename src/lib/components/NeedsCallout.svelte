@@ -19,9 +19,9 @@
     <div class="flex flex-col gap-2.5">
       <div>
         <p class="eyebrow">Help shape P1 compute</p>
-        <h3 class="mt-1 text-lg font-semibold text-slate-900 dark:text-slate-100">
+        <h2 class="mt-1 text-lg font-semibold text-slate-900 dark:text-slate-100">
           What do you need: hardware or software?
-        </h3>
+        </h2>
       </div>
       <p class="text-sm leading-relaxed text-slate-600 dark:text-slate-400">
         We want to hear what researchers actually need from HPC, whether that is hardware (GPUs,
