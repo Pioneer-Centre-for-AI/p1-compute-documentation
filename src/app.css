@@ -5,28 +5,28 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --color-slate-50: #f7f7fa;
-  --color-slate-100: #eef0f4;
-  --color-slate-200: #dfe1e9;
-  --color-slate-300: #c5c8d5;
-  --color-slate-400: #999eb2;
-  --color-slate-500: #6d7288; /* muted text — 4.9:1 on white */
-  --color-slate-600: #565a70;
-  --color-slate-700: #4b4f63;
-  --color-slate-800: #2a2e40;
-  --color-slate-900: #1d2030; /* dark-mode page background */
-  --color-slate-950: #14161f;
+  --color-slate-50: oklch(0.977 0.004 286.3);
+  --color-slate-100: oklch(0.955 0.006 264.5);
+  --color-slate-200: oklch(0.911 0.011 274.9);
+  --color-slate-300: oklch(0.834 0.018 275.6);
+  --color-slate-400: oklch(0.702 0.03 274.5);
+  --color-slate-500: oklch(0.556 0.035 275.1); /* muted text */
+  --color-slate-600: oklch(0.49 0.036 276.9);
+  --color-slate-700: oklch(0.432 0.033 276.1);
+  --color-slate-800: oklch(0.305 0.033 274.6);
+  --color-slate-900: oklch(0.248 0.031 275.7); /* dark page background */
+  --color-slate-950: oklch(0.202 0.018 274.9);
 
-  --color-coral: #fd5061;
-  --color-coral-strong: #d22c42;
-  --color-plum: #822684;
-  --color-plum-bright: #c98fd6;
-  --color-highlight: #f5e642;
+  --color-coral: oklch(0.676 0.208 19.3);
+  --color-coral-strong: oklch(0.567 0.2 20);
+  --color-plum: oklch(0.449 0.168 327);
+  --color-plum-bright: oklch(0.8 0.118 320.1);
+  --color-highlight: oklch(0.91 0.173 104);
 
-  /* Per-cluster accents */
-  --color-brand-dtu: #990000;
-  --color-brand-ngc: #2f5891;
-  --color-brand-gefion: #e9b83f;
+  /* Provider accents */
+  --color-brand-dtu: oklch(0.429 0.176 29.2);
+  --color-brand-ngc: oklch(0.46 0.104 257);
+  --color-brand-gefion: oklch(0.64 0.131 85.8);
 
   --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
@@ -38,6 +38,9 @@
 }
 html.dark {
   --color-brand: var(--color-plum-bright);
+  --color-brand-dtu: oklch(0.66 0.176 29.2);
+  --color-brand-ngc: oklch(0.66 0.104 257);
+  --color-brand-gefion: oklch(0.806 0.144 85.8);
   color-scheme: dark;
 }
 
@@ -55,7 +58,7 @@ mark {
   -webkit-box-decoration-break: clone;
 }
 html.dark mark {
-  background: color-mix(in srgb, var(--color-highlight) 85%, transparent);
+  background: color-mix(in oklch, var(--color-highlight) 85%, transparent);
   color: var(--color-slate-900);
 }
 
@@ -97,7 +100,7 @@ html.dark .shiki span {
 }
 
 html.dark .codeblock {
-  background: color-mix(in srgb, var(--color-slate-800) 40%, transparent);
+  background: color-mix(in oklch, var(--color-slate-800) 40%, transparent);
 }
 
 .codeblock pre.shiki {

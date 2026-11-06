@@ -140,7 +140,7 @@
     >
       <span class="inline-block h-2 w-2 shrink-0 rounded-full" style:background-color={c.color} aria-hidden="true"></span>
       {c.label}
-      <span class="text-xs text-slate-400 dark:text-slate-500">{c.count}</span>
+      <span class="text-xs text-slate-500 dark:text-slate-400">{c.count}</span>
     </button>
   {/each}
 </div>

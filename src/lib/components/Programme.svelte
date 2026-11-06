@@ -36,7 +36,7 @@
             class="block font-mono text-sm font-medium tabular-nums text-slate-900 dark:text-slate-100"
             >{at(row.time)}</span
           >
-          <span class="block font-mono text-[11px] tabular-nums text-slate-400 dark:text-slate-500"
+          <span class="block font-mono text-[11px] tabular-nums text-slate-500 dark:text-slate-400"
             >{lengthOf(row.time)} min</span
           >
         </div>
@@ -70,7 +70,7 @@
               >
             {:else}
               <span class="font-medium text-slate-700 dark:text-slate-300">{row.speaker}</span>
-            {/if}{#if row.affiliation}<span class="text-slate-400 dark:text-slate-500"
+            {/if}{#if row.affiliation}<span class="text-slate-500 dark:text-slate-400"
                 >{" · " + row.affiliation}</span
               >{/if}{#if row.link}<span class="text-slate-400 dark:text-slate-500">{" · "}</span><a
                 href={row.link.href}
@@ -86,7 +86,7 @@
 
     <li class="grid grid-cols-[3.5rem_1.25rem_1fr] gap-x-3 sm:grid-cols-[5rem_1.5rem_1fr] sm:gap-x-4">
       <div class="text-end">
-        <span class="block font-mono text-sm tabular-nums text-slate-400 dark:text-slate-500"
+        <span class="block font-mono text-sm tabular-nums text-slate-500 dark:text-slate-400"
           >{until(rows[rows.length - 1].time)}</span
         >
       </div>

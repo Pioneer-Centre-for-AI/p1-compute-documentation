@@ -8,7 +8,7 @@
       class="rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-800/40"
     >
       <div class="mb-2 flex items-baseline gap-2">
-        <span class="font-mono text-2xl font-semibold text-slate-400 tabular-nums dark:text-slate-500"
+        <span class="font-mono text-2xl font-semibold text-slate-500 tabular-nums dark:text-slate-400"
           >{t.tier}</span
         >
         <span class="font-semibold text-slate-900 dark:text-slate-100">{t.level}</span>
