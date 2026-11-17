@@ -1,13 +1,12 @@
 <script>
   import Meta from '#lib/components/Meta.svelte';
-  import LandscapeDiagram from '#lib/components/LandscapeDiagram.svelte';
   import ResearchNetworkDiagram from '#lib/components/ResearchNetworkDiagram.svelte';
   import { headingAnchors } from '#lib/actions/headingAnchors.ts';
 </script>
 
 <Meta
   title="Compute Ecosystem"
-  description="The Danish and international HPC landscape beyond P1: university, national, and EU compute resources."
+  description="Compute for research in Denmark and the EU beyond the P1-funded partitions: university, national and international resources."
   type="website"
 />
 
@@ -17,16 +16,10 @@
 
 # Compute Ecosystem
 
-P1 funds and helps run partitions at partner facilities, and we point the way to the rest. The Danish compute
-landscape is bigger than P1. As a consortium we know it well: we understand the challenges of
-getting compute for research, we have experience across the systems below, and when your needs fit
-better elsewhere we point you in the right direction.
-
-**We consult and guide. We don't broker access unless its our own resources.** Getting onto the systems below goes through
-their own institutions and application processes, but if you are unsure where your project
-belongs, [talk to us](/about/) first.
-
-<LandscapeDiagram class="not-prose my-8" />
+Research compute in Denmark is much more than the P1-funded partitions, and researchers get the
+most from it when the systems work together. Each system below has its own institution and its own application process.
+If you are unsure where your project belongs, [describe your workload](/survey/) and we help you
+choose.
 
 ## University HPCs
 
@@ -41,10 +34,9 @@ researchers and collaborators:
 ## The Danish Research Network
 
 Danish universities and national facilities share a dedicated high-bandwidth network,
-forskningsnettet, operated by [DeiC](p1:researchNetwork). It is why
-moving a dataset between two Danish facilities is usually faster than pulling it down to your own
-machine and pushing it back up, and why a cluster-to-cluster hop is worth preferring when you have
-the choice.
+forskningsnettet, operated by [DeiC](p1:researchNetwork). So moving a dataset between two Danish
+facilities is usually faster than pulling it down to your own machine and pushing it back up. When
+you have the choice, prefer a cluster-to-cluster hop.
 
 <ResearchNetworkDiagram class="not-prose my-8" />
 
@@ -65,9 +57,11 @@ further, covering the other Danish universities and research institutions.
 
 ## Where P1 fits
 
-The P1 partitions are the entry point for P1-affiliated researchers: start on the
-[DTU HPC](/providers/dtu/) for general work, the [NGC HPC](/providers/ngc/) for sensitive data, and
-the [Gefion sandbox](/providers/gefion/) to get a workload ready for large-scale runs. When your
-needs outgrow them, the systems above are the next step, and we are happy to help you choose.
+P1 funds partitions for P1-affiliated researchers: the [DTU HPC](/providers/dtu/) for general work,
+the [NGC HPC](/providers/ngc/) for sensitive data, and the [Gefion sandbox](/providers/gefion/) to
+get a workload ready for large-scale runs. They are one starting point. When your needs outgrow
+them, the systems above are the next step.
+
+Providers that want to take part can meet the [standards](/rfc/) the research community sets.
 
 </article>

@@ -4,7 +4,7 @@
   import Meta from '#lib/components/Meta.svelte';
   import { LANDING_DESCRIPTION, SITE_NAME } from '#lib/site.ts';
   import DigitalObjectIdentifier from '#lib/components/DigitalObjectIdentifier.svelte';
-  import LandscapeDiagram from '#lib/components/LandscapeDiagram.svelte';
+  import CommunityDiagram from '#lib/components/CommunityDiagram.svelte';
   import { getClusters } from '#lib/content.ts';
   import GalleryCard from '#lib/components/GalleryCard.svelte';
   import InstallCommand from '#lib/components/InstallCommand.svelte';
@@ -37,23 +37,24 @@
   <!-- Hero -->
   <section class="grid grid-cols-1 items-center gap-12 pb-14 pt-28 md:pt-36 lg:grid-cols-[1.05fr_1fr] lg:gap-10">
     <div class="flex flex-col items-start gap-6">
-      <h1 class="text-balance text-5xl font-extrabold leading-[1.05] tracking-tight text-slate-900 md:text-6xl dark:text-slate-50">
-        Your <mark>entry point</mark> to research compute.
+      <h1 class="text-4xl font-extrabold leading-[1.08] tracking-tight text-slate-900 sm:text-5xl lg:text-[3.25rem] dark:text-slate-50">
+        Research compute,<br />
+        <span class="text-slate-500 dark:text-slate-400">built together.</span>
       </h1>
       <p class="max-w-xl text-lg leading-relaxed text-slate-500 dark:text-slate-400">
-        P1 funds and helps run partitions at three Danish HPC providers, free for P1-affiliated
-        researchers. When your work fits better elsewhere, we point you there.
+        A community effort to help researchers find, reach and use the right compute. P1 funding backs partitions at three
+        Danish providers, free for P1-affiliated researchers. Other providers are welcome to join.
       </p>
       <div class="flex flex-wrap items-center gap-3">
         <Button href="/providers/" variant="primary">
           {#snippet children()}
-            Find your cluster
+            Find compute
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12,5 19,12 12,19"/></svg>
           {/snippet}
         </Button>
-        <Button href="/about/" variant="ghost">
+        <Button href="/rfc/" variant="ghost">
           {#snippet children()}
-            About P1 compute
+            How it works
           {/snippet}
         </Button>
       </div>
@@ -66,19 +67,21 @@
       </div>
     </div>
 
-    <div class="mx-auto w-full max-w-md lg:max-w-none">
-      <LandscapeDiagram variant="stacked" />
-      <p class="mt-3 text-center text-sm text-slate-500 dark:text-slate-400">
-        We consult and guide, and broker access only to our own resources.
-      </p>
+    <div class="mx-auto hidden w-full max-w-md sm:block lg:max-w-none">
+      <CommunityDiagram />
     </div>
   </section>
 
   <!-- Three clusters, three profiles -->
   <section class="border-t border-slate-200 py-14 dark:border-slate-800">
-    <h2 class="mb-8 text-2xl font-semibold text-slate-900 md:text-3xl dark:text-slate-50">
-      Three partitions, three research profiles.
-    </h2>
+    <div class="mb-8 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
+      <h2 class="text-2xl font-semibold text-slate-900 md:text-3xl dark:text-slate-50">
+        Three P1-funded partitions, three research profiles.
+      </h2>
+      <a href="/providers/" class="text-sm font-semibold text-[var(--color-brand)] no-underline hover:underline">
+        Compare the providers →
+      </a>
+    </div>
 
     <div class="grid gap-8 md:grid-cols-3">
       {#each getClusters() as cluster}
@@ -119,12 +122,15 @@
       {/each}
     </div>
 
-    <p class="mt-8 text-sm text-slate-500 dark:text-slate-400">
-      Not sure which one fits your project?
-      <a href="/providers/" class="font-semibold text-[var(--color-brand)] no-underline hover:underline">
-        Compare the providers →
-      </a>
-    </p>
+    <a
+      href="/rfc/"
+      class="group mt-8 flex flex-wrap items-center justify-between gap-x-6 gap-y-1 rounded-xl border border-dashed border-slate-300 px-5 py-4 text-sm no-underline transition-colors hover:border-slate-400 hover:bg-slate-50 dark:border-slate-600 dark:hover:border-slate-500 dark:hover:bg-slate-800/50"
+    >
+      <span class="text-slate-500 dark:text-slate-400">Do you offer compute for research?</span>
+      <span class="font-semibold text-[var(--color-brand)] group-hover:underline">
+        Help shape a sustainable compute ecosystem →
+      </span>
+    </a>
   </section>
 
   <section class="border-t border-slate-200 py-14 dark:border-slate-800">

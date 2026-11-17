@@ -1,0 +1,69 @@
+---
+title: Service levels
+description: Requirements for the service information that a provider publishes, so that researchers can compare the service with its targets.
+authors: [Benjamin Starostka Jakobsen]
+created: 2026-11-06
+updated: 2026-11-06
+status: open
+version: '0.1'
+changes:
+  - version: '0.1'
+    date: 2026-11-06
+    note: First draft.
+---
+
+## 1. Scope
+
+Requirements for the service information that a provider publishes. This RFC sets no target
+values. Providers propose them in the [provider review](/rfc/conventions/#6-provider-review).
+
+## 2. Terms
+
+| Term | Meaning |
+| --- | --- |
+| Target | A value that a provider sets for a service measure, such as two working days. |
+| Figure | A measured value for a service measure over a period. |
+| First response | The first reply from a person to a support request. |
+| Availability | The part of the time that a resource accepts jobs, outside announced maintenance. |
+| Queue wait | The time from the submission of a job to its start. |
+
+## 3. Requirements
+
+| ID | Requirement |
+| --- | --- |
+| SL1 | The provider MUST publish a support channel and a target for first response. |
+| SL2 | The provider MUST publish a target for the time from an approved request to a working account. |
+| SL3 | The provider MUST announce planned maintenance, with a stated notice period. |
+| SL4 | The provider MUST report each unplanned outage, with its cause and its duration. |
+| SL5 | The provider MUST state the quota, the backups and the retention for each storage area. |
+| SL6 | The provider MUST keep public documentation in English for access, the scheduler, storage and software requests. |
+| SL7 | The provider MUST let a researcher move their data off the resource before a project ends. |
+| SL8 | The provider SHOULD publish monthly figures for availability and queue wait. |
+| SL9 | The provider MUST publish its figures against its targets once each year. |
+
+## 4. Conformance
+
+These steps add to the [conformance steps](/rfc/conventions/#7-conformance):
+
+1. The provider publishes its targets and figures, and its page on this site links to them.
+2. The compute needs survey asks researchers to compare the service with the figures.
+3. If the survey shows a gap, P1 asks the provider for a new confirmation.
+
+## 5. Example implementations (informative)
+
+| ID | Example |
+| --- | --- |
+| SL1 | A ticket system or a mailbox |
+| SL3, SL4 | A status page or a mailing list |
+| SL8 | Scheduler statistics |
+
+## 6. Rationale (informative)
+
+A confirmation states what a provider offers, and figures show if the service holds. The providers
+know their costs, so they propose the targets.
+
+## 7. Open questions
+
+1. Should SL1 and SL2 set minimums, such as two and five working days?
+2. Should SL3 set a minimum notice, such as one week?
+3. Should SL8 set a minimum availability?

@@ -10,7 +10,7 @@ The site at [hpc.aicentre.dk](https://hpc.aicentre.dk) for P1 compute, and what 
 ## Develop
 
 ```sh
-nix develop    # bun, node and shellcheck; or `direnv allow` once
+nix develop    # bun and node for the site, cargo for the CLI, and shellcheck
 bun install
 bun run dev    # http://localhost:5173/
 bun run check

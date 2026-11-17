@@ -1,0 +1,103 @@
+---
+title: Restricted-access data
+description: Requirements for a provider and its researchers before a resource holds data that only named, approved people may access.
+authors: [Benjamin Starostka Jakobsen]
+created: 2026-11-06
+updated: 2026-11-06
+status: open
+version: '0.1'
+changes:
+  - version: '0.1'
+    date: 2026-11-06
+    note: First draft.
+---
+
+## 1. Scope
+
+Requirements for a resource that holds restricted data, for the provider and for its researchers.
+Personal data is out of scope, and it needs a resource approved for personal data. Keywords and
+conformance steps are in the [RFC conventions](/rfc/conventions/).
+
+## 2. Terms
+
+| Term | Meaning |
+| --- | --- |
+| Restricted data | Data that a licence or a data use agreement limits to named, approved people. It is not personal data. |
+| Personal data | Data that can identify a person, directly or by linking. Pseudonymised data is personal data. |
+| Approval | The permission from a data owner for one person to use one dataset. |
+| Shared copy | One read-only copy of a dataset for a group of approved people. |
+
+## 3. Before you bring data
+
+1. If the data can identify a person, use a resource approved for personal data. If you are not
+   sure, ask your data protection officer.
+2. If the contract asks for more than section 7 covers, ask the provider to agree terms with the
+   data owner.
+3. Send your answers to the provider with your access request.
+
+## 4. Requirements, level 1: private copies
+
+| ID | Requirement |
+| --- | --- |
+| RD1 | The provider MUST give each person a personal account linked to an institutional identity, and MUST NOT permit shared logins. |
+| RD2 | The provider MUST let a researcher keep a directory that no other user can read or list, with no default ACLs. |
+| RD3 | The provider MUST let a researcher encrypt data at rest with a key that the researcher holds. |
+| RD4 | The provider MUST give each job temporary storage that no other job can read, and wipe it when the job ends. |
+| RD5 | The provider MUST delete restricted data when a project ends or an account expires, and MUST NOT give it to another user. |
+| RD6 | The provider MUST state how long it keeps logs, backups and snapshots. |
+| RD7 | The provider MUST bind its administrators to confidentiality. |
+| RD8 | The provider MUST tell the affected researchers about an exposure within 72 hours. |
+| RD9 | The provider SHOULD offer exclusive nodes, allow outbound internet only through an allowlist, and log privileged administrator actions. |
+| RD10 | The provider MUST put RD11 to RD16 in its terms of service. |
+| RD11 | The researcher MUST hold their own approval for each dataset, and register the dataset, purpose, path and end date with the provider. |
+| RD12 | The researcher MUST keep restricted data encrypted in their private directory, and decrypt it only inside a job (RD2 to RD4). |
+| RD13 | The researcher MUST NOT try to identify anyone in the data, and MUST publish only aggregate results. |
+| RD14 | The researcher MUST NOT send the data, or extracts from it, to a hosted AI service. A model on the resource is permitted. |
+| RD15 | The researcher MUST treat model weights trained on the data as restricted, unless the data owner states otherwise. |
+| RD16 | The researcher MUST delete their copy when the project ends or the approval stops. |
+
+## 5. Requirements, level 2: shared copies
+
+Level 2 includes level 1.
+
+| ID | Requirement |
+| --- | --- |
+| RD17 | The provider MUST NOT make a shared copy before the data owner confirms in writing that it fits the agreement. |
+| RD18 | The provider MUST make the shared copy read-only, and readable only by the approved people for that dataset. |
+| RD19 | The provider MUST check each approval before it adds a person, and remove the person when the approval stops. |
+| RD20 | The provider MUST record each change to the group of approved people. |
+
+## 6. Example implementations (informative)
+
+| ID | Example |
+| --- | --- |
+| RD1 | WAYF, eduGAIN, LDAP |
+| RD2 | POSIX modes, a `getfacl` check |
+| RD3 | gocryptfs, age |
+| RD4 | Slurm tmpfs job container |
+| RD9 | A scheduler flag, a proxy, auditd |
+| RD18 to RD20 | FreeIPA, Keycloak |
+
+## 7. Clause map (informative)
+
+| Clause in a data use agreement | Requirements |
+| --- | --- |
+| Do not share access | RD1, RD2, RD5, RD18 |
+| Keep the data secure | RD2 to RD9, RD12 |
+| Do not give the data to third parties or online services | RD9, RD14 |
+| Do not try to identify anyone | RD13 |
+| Report incidents | RD8 |
+| Delete the data at the end | RD5, RD16 |
+
+## 8. Rationale (informative)
+
+A data use agreement binds each approved person, not a team. File permissions do not keep out
+administrators, backups or other jobs on a node. The requirements therefore also protect the
+data, the jobs and the results, after the Five Safes framework of the UK Office for National
+Statistics.
+
+## 9. Open questions
+
+1. Does root access by an administrator count as sharing access?
+2. Can every provider supply decryption inside a job?
+3. Is 72 hours the correct limit for RD8?

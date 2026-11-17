@@ -6,6 +6,9 @@ set -eu
 REPO="https://github.com/Pioneer-Centre-for-AI/p1-compute-documentation"
 REPO_FLAKE="github:Pioneer-Centre-for-AI/p1-compute-documentation"
 
+SIGNER="release@hpc.aicentre.dk"
+SIGNERS='release@hpc.aicentre.dk namespaces="aicentre-release" ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK+uPLLcLaHWeOrDw9e03Y4LAPJmRKMkLxPb/6rB++mh'
+
 err() {
 	printf 'aicentre install: %s\n' "$1" >&2
 	exit 1
@@ -58,7 +61,11 @@ platform() {
 		arch=arm64
 	fi
 
-	if [ "$os" = linux ]; then
+	case ${AICENTRE_VERSION:-} in
+	0.1.*) needs_glibc=1 ;;
+	*) needs_glibc=0 ;;
+	esac
+	if [ "$os" = linux ] && [ "$needs_glibc" -eq 1 ]; then
 		for loader in /lib/ld-musl-*; do
 			if [ -e "$loader" ]; then
 				err "needs a glibc Linux; this one uses musl (Alpine?)"
@@ -101,6 +108,16 @@ main() {
 	printf 'Downloading %s...\n' "$asset"
 	fetch "$base/$asset" "$tmp/$asset" || err "cannot download $base/$asset"
 	fetch "$base/SHA256SUMS" "$tmp/SHA256SUMS" || err "cannot download $base/SHA256SUMS"
+
+	fetch "$base/SHA256SUMS.sig" "$tmp/SHA256SUMS.sig" || err "this release has no signature ($base/SHA256SUMS.sig), so it was not installed"
+	has ssh-keygen || err "needs ssh-keygen to check the release signature"
+	signers=$SIGNERS
+	if [ -n "${AICENTRE_DOWNLOAD_BASE:-}" ] && [ -n "${AICENTRE_RELEASE_SIGNERS:-}" ]; then
+		signers=$AICENTRE_RELEASE_SIGNERS
+	fi
+	printf '%s\n' "$signers" >"$tmp/signers"
+	ssh-keygen -Y verify -f "$tmp/signers" -I "$SIGNER" -n aicentre-release -s "$tmp/SHA256SUMS.sig" <"$tmp/SHA256SUMS" >/dev/null 2>&1 ||
+		err "SHA256SUMS is not signed with aicentre's release key, so nothing was installed"
 
 	expected=$(awk -v f="$asset" '$2 == f || $2 == "*" f { print $1 }' "$tmp/SHA256SUMS")
 	[ -n "$expected" ] || err "SHA256SUMS has no line for $asset"

@@ -19,22 +19,23 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - name: Tag matches package.json
+      - name: Tag matches Cargo.toml
         run: |
           v="${GITHUB_REF_NAME#cli-v}"
-          p="$(jq -r .version package.json)"
+          p="$(grep -m 1 '^version = ' Cargo.toml | cut -d '"' -f 2)"
           if [ "$v" != "$p" ]; then
-            echo "::error::tag $GITHUB_REF_NAME does not match pkgs/cli/package.json version $p"
+            echo "::error::tag $GITHUB_REF_NAME does not match pkgs/cli/Cargo.toml version $p"
             exit 1
           fi
 
-      - uses: oven-sh/setup-bun@v2
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
         with:
-          bun-version-file: pkgs/cli/.bun-version
-      - run: bun install --frozen-lockfile
-      - run: bun run typecheck
-      - run: bun test
-      - run: bun run lint:sh
+          workspaces: pkgs/cli
+      - run: cargo test --locked
+      - run: |
+          shellcheck -s sh install.sh
+          shellcheck -s bash src/session/launcher.sh scripts/install-check.sh scripts/sign-release.sh
 
   build:
     name: Build ${{ matrix.os }}-${{ matrix.arch }}
@@ -43,12 +44,12 @@ jobs:
       fail-fast: true
       matrix:
         include:
-          - { runner: ubuntu-24.04, os: linux, arch: x64 }
-          - { runner: ubuntu-24.04-arm, os: linux, arch: arm64 }
-          - { runner: macos-15, os: darwin, arch: arm64 }
-          - { runner: macos-15-intel, os: darwin, arch: x64 }
+          - { runner: ubuntu-24.04, os: linux, arch: x64, target: x86_64-unknown-linux-musl }
+          - { runner: ubuntu-24.04-arm, os: linux, arch: arm64, target: aarch64-unknown-linux-musl }
+          - { runner: macos-15, os: darwin, arch: arm64, target: aarch64-apple-darwin }
+          - { runner: macos-15-intel, os: darwin, arch: x64, target: x86_64-apple-darwin }
     runs-on: ${{ matrix.runner }}
-    timeout-minutes: 20
+    timeout-minutes: 30
     permissions:
       contents: read
     defaults:
@@ -56,13 +57,26 @@ jobs:
         working-directory: pkgs/cli
     steps:
       - uses: actions/checkout@v7
-      - uses: oven-sh/setup-bun@v2
+      - uses: dtolnay/rust-toolchain@stable
         with:
-          bun-version-file: pkgs/cli/.bun-version
-      - run: bun install --frozen-lockfile
+          targets: ${{ matrix.target }}
+
+      - name: Install musl (Linux)
+        if: matrix.os == 'linux'
+        run: sudo apt-get update && sudo apt-get install -y musl-tools
 
       - name: Build
-        run: bun run build --target "bun-${{ matrix.os }}-${{ matrix.arch }}" --outfile dist/aicentre
+        env:
+          CC_x86_64_unknown_linux_musl: musl-gcc
+          CC_aarch64_unknown_linux_musl: musl-gcc
+        run: |
+          cargo build --release --locked --target ${{ matrix.target }}
+          mkdir -p dist
+          cp "target/${{ matrix.target }}/release/aicentre" dist/aicentre
+
+      - name: Check it is static (Linux)
+        if: matrix.os == 'linux'
+        run: file dist/aicentre | grep -Eq 'statically linked|static-pie linked'
 
       - name: Sign (macOS)
         if: matrix.os == 'darwin'
@@ -81,7 +95,7 @@ jobs:
           [ "$code" -eq 0 ] || [ "$code" -eq 1 ]
 
       - name: Package
-        run: tar -C dist -czf "aicentre-${{ matrix.os }}-${{ matrix.arch }}.tar.gz" aicentre pi
+        run: tar -C dist -czf "aicentre-${{ matrix.os }}-${{ matrix.arch }}.tar.gz" aicentre
 
       - uses: actions/upload-artifact@v4
         with:
@@ -96,7 +110,14 @@ jobs:
     timeout-minutes: 10
     permissions:
       contents: write
+      id-token: write
+      attestations: write
     steps:
+      - uses: actions/checkout@v7
+        with:
+          sparse-checkout: pkgs/cli/release.pub
+          sparse-checkout-cone-mode: false
+
       - uses: actions/download-artifact@v4
         with:
           path: dist
@@ -108,6 +129,27 @@ jobs:
           printf '%s\n' "${GITHUB_REF_NAME#cli-v}" > VERSION
           sha256sum aicentre-*.tar.gz VERSION > SHA256SUMS
           cat SHA256SUMS
+
+      - name: Sign the checksums
+        working-directory: dist
+        env:
+          RELEASE_KEY: ${{ secrets.AICENTRE_RELEASE_KEY }}
+        run: |
+          if [ -z "$RELEASE_KEY" ]; then
+            echo "::error::the secret AICENTRE_RELEASE_KEY is not set, so the release cannot be signed"
+            exit 1
+          fi
+          key="$RUNNER_TEMP/release-key"
+          (umask 077 && printf '%s\n' "$RELEASE_KEY" > "$key")
+          ssh-keygen -Y sign -f "$key" -n aicentre-release SHA256SUMS
+          rm -f "$key"
+          ssh-keygen -Y verify -f ../pkgs/cli/release.pub -I release@hpc.aicentre.dk \
+            -n aicentre-release -s SHA256SUMS.sig < SHA256SUMS
+
+      - name: Attest where the archives were built
+        uses: actions/attest-build-provenance@v4
+        with:
+          subject-path: dist/aicentre-*.tar.gz
 
       - name: Create release
         working-directory: dist
@@ -121,7 +163,7 @@ jobs:
           gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --verify-tag $flags \
             --title "aicentre $v" \
             --notes "Install or reinstall: \`curl -fsSL https://hpc.aicentre.dk/install | sh\`. Upgrade: \`aicentre upgrade\`." \
-            aicentre-*.tar.gz VERSION SHA256SUMS
+            aicentre-*.tar.gz VERSION SHA256SUMS SHA256SUMS.sig
 
   install-check:
     name: Install check ${{ matrix.os }}-${{ matrix.arch }}

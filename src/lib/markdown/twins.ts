@@ -10,6 +10,16 @@ import {
 } from '#lib/events.ts';
 import { FORMS } from '#lib/links.ts';
 import { MARKDOWN_PAGES } from '#lib/markdownPages.ts';
+import {
+  STATUS_LABELS,
+  formatDay,
+  getConventions,
+  getRfcs,
+  openRfcs,
+  rfcTitle,
+  rfcsNewestFirst,
+  type RfcEntry
+} from '#lib/rfcs.ts';
 import { URLS } from '#lib/urls.js';
 import { markdownTable, svxToMarkdown } from './toMarkdown';
 
@@ -84,6 +94,8 @@ const BLOCKS: Record<string, () => Record<string, string>> = {
       FORMS.map((f) => [`[${f.title}](${f.url})`, f.purpose, f.provider])
     )
   }),
+  rfc: () => ({ 'rfc-list': rfcLines(openRfcs(3)) || 'No RFC is open.' }),
+  'rfc/all': () => ({ 'rfc-all': rfcLines(rfcsNewestFirst()) }),
   events: () => ({
     'event-cards': getEvents()
       .map((e) => `- [${e.meta.title}](${e.href}) (${e.meta.dateLabel}): ${e.meta.description}`)
@@ -91,7 +103,7 @@ const BLOCKS: Record<string, () => Record<string, string>> = {
   }),
   'events/superagent-d3a': () => ({
     'about-cards': superAgentAtAGlance
-      .map((p) => `### ${p.label}\n\n${p.items.map((i) => `- ${i}`).join('\n')}`)
+      .map((p) => `**${p.label}**\n\n${p.items.map((i) => `- ${i}`).join('\n')}`)
       .join('\n\n'),
     programme: markdownTable(
       ['Time', 'Session', 'Speaker'],
@@ -111,6 +123,39 @@ const BLOCKS: Record<string, () => Record<string, string>> = {
   })
 };
 
+function rfcLines(rfcs: RfcEntry[]): string {
+  return rfcs
+    .map((r) => `- [${rfcTitle(r)}](${r.href}) (${STATUS_LABELS[r.meta.status]}): ${r.meta.description}`)
+    .join('\n');
+}
+
+function changesTable(changes: RfcEntry['meta']['changes']): string {
+  const rows = changes.map((c) => [c.version, formatDay(c.date), c.note]);
+  return `## Changes\n\n${markdownTable(['Version', 'Date', 'Change'], rows)}`;
+}
+
+function conventionsPreamble(): string {
+  const meta = getConventions();
+  return (
+    `**${meta.authors.length > 1 ? 'Authors' : 'Author'}:** ${meta.authors.join(', ')}. ` +
+    `**Updated:** ${formatDay(meta.updated)}. **Version:** ${meta.version}.`
+  );
+}
+
+function rfcPreamble(rfc: RfcEntry): string {
+  const { meta } = rfc;
+  const head =
+    `**Status:** ${STATUS_LABELS[meta.status]}${meta.decided ? `, ${formatDay(meta.decided)}` : ''}. ` +
+    `**${meta.authors.length > 1 ? 'Authors' : 'Author'}:** ${meta.authors.join(', ')}. ` +
+    `**Updated:** ${formatDay(meta.updated)}. **Version:** ${meta.version}.`;
+  const comments =
+    meta.status === 'open'
+      ? `\n\n**Comments:** any channel, such as the [compute needs survey](/survey/).`
+      : '';
+  const decision = meta.summary ? `\n\n**Decision:** ${meta.summary}` : '';
+  return `${head}${comments}${decision}`;
+}
+
 export function renderTwin(path: string): string | null {
   const source = pages.get(path);
   if (!source) return null;
@@ -118,9 +163,18 @@ export function renderTwin(path: string): string | null {
   const cluster = getClusters().find((c) => c.href === `/${path}/`);
   const event = getEvents().find((e) => e.href === `/${path}/`);
   const example = getGallery().find((e) => e.href === `/${path}/`);
+  const rfc = getRfcs().find((r) => r.href === `/${path}/`);
+  const conventions = path === 'rfc/conventions' ? getConventions() : null;
 
   return svxToMarkdown(source, {
-    title: cluster?.meta.title ?? event?.meta.title ?? example?.meta.title,
+    title:
+      cluster?.meta.title ??
+      event?.meta.title ??
+      example?.meta.title ??
+      (rfc && rfcTitle(rfc)) ??
+      conventions?.title,
+    preamble: (rfc && rfcPreamble(rfc)) || (conventions ? conventionsPreamble() : undefined),
+    postscript: (rfc && changesTable(rfc.meta.changes)) || (conventions ? changesTable(conventions.changes) : undefined),
     providerDocs: cluster?.meta.providerDocs,
     quotas: cluster?.meta.quotas,
     hardware: cluster?.meta.hardware,
@@ -132,6 +186,14 @@ export function twinMeta(path: string): { title: string; description: string } {
   const cluster = getClusters().find((c) => c.href === `/${path}/`);
   const event = getEvents().find((e) => e.href === `/${path}/`);
   const example = getGallery().find((e) => e.href === `/${path}/`);
+  const rfc = getRfcs().find((r) => r.href === `/${path}/`);
+  if (rfc) {
+    return { title: rfcTitle(rfc), description: rfc.meta.description };
+  }
+  if (path === 'rfc/conventions') {
+    const meta = getConventions();
+    return { title: meta.title, description: meta.description };
+  }
   const fromRegistry = cluster?.meta ?? event?.meta ?? example?.meta;
   if (fromRegistry) {
     return { title: fromRegistry.title, description: fromRegistry.description };

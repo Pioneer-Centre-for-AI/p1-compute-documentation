@@ -31,6 +31,10 @@ export const GET: RequestHandler = () => {
     sections.push(`## ${entry.label}\n\n${paths.map(link).join('\n')}`);
   }
 
+  const rfcs = twinPaths.filter((path) => path.startsWith('rfc/') && !indexed.has(path)).sort();
+  rfcs.forEach((path) => indexed.add(path));
+  if (rfcs.length) sections.push(`## RFCs\n\n${rfcs.map(link).join('\n')}`);
+
   const gallery = [GALLERY_HREF, ...getGallery().map((e) => e.href)]
     .map(toPath)
     .filter((path) => twinPaths.includes(path) && !indexed.has(path));

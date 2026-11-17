@@ -54,7 +54,7 @@
 
 <Meta
   title="About P1 Compute Resources"
-  description="What P1 is, the tiers of compute it funds and helps run, who sits on the HPC governance board, and how to spend a compute budget."
+  description="What P1 is, the compute tiers it funds, the HPC governance board, and how to spend a compute budget."
   type="article"
 />
 
@@ -66,7 +66,8 @@
 
 The Pioneer Centre for Artificial Intelligence (P1) is a Danish cross-university AI research
 centre and consortium. This site shows P1 affiliates how to access and use the high-performance
-computing (HPC) facilities open to them.
+computing (HPC) facilities open to them. It is also where the research community sets
+[standards](/rfc/) for the providers it works with.
 
 <NeedsCallout />
 
@@ -83,8 +84,8 @@ More at the [P1 homepage](https://www.aicentre.dk/) and
 
 P1 prioritizes smaller projects, which make up most research needs. Larger projects can move up
 the [tiered compute resources](#hierarchy-of-compute-resources) to Tier 2 and Tier 1 facilities.
-Training a large language or vision model from scratch may not fit our Tier 3 facilities, but it
-can fit Gefion, a Tier 2 national facility built for large-scale model training. Very large
+Training a large language or vision model from scratch may not fit our Tier 3 facilities. It can
+fit Gefion, a Tier 2 national facility built for large-scale model training. Very large
 projects may be better served by their own funding.
 
 ## Support
@@ -128,8 +129,8 @@ Each tier suits a different scale of work.
 <ComputeTiers />
 <!-- md:end -->
 
-The P1 DTU and NGC HPCs are Tier 3. Gefion is Tier 2 and can support some Tier 1 workloads, but
-the P1 sandbox on it is Tier 3 capacity, for maturing a workload on the hardware it will later run
+The P1 DTU and NGC HPCs are Tier 3. Gefion is Tier 2 and can support some Tier 1 workloads. The
+P1 sandbox on it is Tier 3 capacity, for maturing a workload on the hardware it will later run
 on. Tier 2 scale on Gefion needs its own funding.
 
 ## Reading these docs with an AI agent

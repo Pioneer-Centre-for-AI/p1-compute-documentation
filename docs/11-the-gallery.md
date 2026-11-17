@@ -106,10 +106,15 @@ A new directory shows up in `bun run dev` after a restart.
 ## aicentre gallery
 
 `aicentre gallery` lists the index. `aicentre gallery get <code> [dir]` puts an
-example on a cluster (`src/gallery/gallery.ts`). The login node downloads the
+example on a cluster (`src/gallery/gallery.rs`). The login node downloads the
 tarball from the site itself, with curl or with wget where there is no curl.
 Nothing passes through the laptop, and nobody has to clone the repository. It
 unpacks into `examples/<code>` in the project directory, or under `dir`, and
 prints the example's `commands`. An example without files prints its
-commands only. `AICENTRE_SITE` points the command at another site, including
-a `file://` directory, which the tests use.
+commands only. The index is data from the web, so `get` fetches only
+`<site>/gallery/<slug>.tar.gz`, for a slug of lowercase letters, digits and
+hyphens, and curl runs with `--proto =https,file`. It refuses any other
+`files` value, and prints titles and commands without control characters.
+`AICENTRE_SITE` points the command at another site, including
+a `file://` directory, which the tests use. An index answered with a status
+other than 2xx is an error that names the status.

@@ -7,6 +7,8 @@ type Meta = {
   hardware?: { label: string; value: string }[];
   providerDocs?: { provider: string; url?: string; note?: string };
   quotas?: ClusterQuotaMeta;
+  preamble?: string;
+  postscript?: string;
   blocks?: Record<string, string>;
 };
 
@@ -83,8 +85,12 @@ const WRAPPERS: Record<string, () => string> = {
     'Computing Center resources DOI, [10.48714/DTU.HPC.0001](https://doi.org/10.48714/DTU.HPC.0001). ' +
     'That covers help from the DTU DCC team or the P1 compute coordinator just as much as time ' +
     'spent running jobs.',
-  LandscapeDiagram: () =>
-    '_(Diagram: a researcher enters through P1, which consults and guides, and points on to university, national, and international HPCs.)_',
+  RfcDiagram: () =>
+    '_(Diagram: a loop. The research community voices its needs through events, networks, surveys etc. ' +
+    'Research engineers in an open network, and the HPC governance board, draft and decide RFCs. RFCs set expectations ' +
+    'for providers, and compute budgets follow. Providers deliver compute and support to ' +
+    'researchers, the research community brings providers skilled users, and providers tell the ' +
+    'engineers and board what is feasible.)_',
   ResearchNetworkDiagram: () =>
     '_(Diagram: forskningsnettet drawn as one high-bandwidth link, with the DTU, NGC, and Gefion facilities hosting the P1 partitions above it and the UCPH, SDU, Aarhus, and Computerome facilities below it.)_'
 };
@@ -183,11 +189,13 @@ export function svxToMarkdown(source: string, meta: Meta = {}): string {
       '\n\n'
     : '';
 
-  const head = meta.title ? `# ${meta.title}\n\n${docsBlock}` : docsBlock;
+  const preamble = meta.preamble ? `${meta.preamble}\n\n` : '';
+  const head = `${meta.title ? `# ${meta.title}\n\n` : ''}${preamble}${docsBlock}`;
   const tail = meta.hardware?.length
     ? `\n\n## Hardware Specification\n\n| | |\n| --- | --- |\n` +
       meta.hardware.map((h) => `| ${h.label} | ${h.value} |`).join('\n')
     : '';
 
-  return `${head}${out}${tail}\n`;
+  const postscript = meta.postscript ? `\n\n${meta.postscript}` : '';
+  return `${head}${out}${postscript}${tail}\n`;
 }

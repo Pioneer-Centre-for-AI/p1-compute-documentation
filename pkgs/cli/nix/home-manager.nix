@@ -26,13 +26,23 @@ in
       example = lib.literalExpression ''
         {
           dtu.user = "s123456";
-          gefion.user = "jdoe";  # jobs are charged to P1's iu_0096 unless account says otherwise
+          gefion.user = "jdoe";
           ngc.sync = false;
         }
       '';
       description = ''
         Written to ~/.config/aicentre/config.toml. Tables dtu, gefion and ngc
-        take user, alias, account and sync; see https://hpc.aicentre.dk/cli/.
+        take user, alias and sync; see https://hpc.aicentre.dk/cli/.
+      '';
+    };
+
+    sshInclude = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = ''
+        Add aicentre's own ssh config to programs.ssh.includes, when
+        programs.ssh is enabled. aicentre writes that file, with Host
+        aicentre-gpu for `aicentre code --gpu` in desktop VS Code.
       '';
     };
   };
@@ -42,5 +52,8 @@ in
     xdg.configFile."aicentre/config.toml" = lib.mkIf (cfg.settings != { }) {
       source = toml.generate "aicentre-config.toml" cfg.settings;
     };
+    programs.ssh.includes = lib.mkIf (cfg.sshInclude && config.programs.ssh.enable) [
+      "${config.xdg.stateHome}/aicentre/ssh_config"
+    ];
   };
 }

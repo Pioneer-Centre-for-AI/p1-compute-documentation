@@ -15,7 +15,7 @@ poll for between deploys. Code in `src/` imports `src/lib` through the
 ## Develop
 
 ```sh
-nix develop          # bun, node and shellcheck; or `direnv allow` once
+nix develop          # bun and node; cargo for the CLI; shellcheck
 bun install
 bun run dev          # http://localhost:5173/
 bun run check        # svelte-check
@@ -42,6 +42,8 @@ time. A bad page fails the build.
   [11 · The gallery](11-the-gallery.md).
 - Event pages, `src/routes/events/<slug>/+page.svx`, through
   `src/lib/events.ts`.
+- RFC pages, `src/routes/rfc/<number>/+page.svx`, through `src/lib/rfcs.ts`.
+  See [RFCs](#rfcs).
 
 `ClusterQuotas` takes a slug, not values, so a page cannot state a limit that
 disagrees with its frontmatter. `QUOTA_GROUPS` in `content.ts` holds the order
@@ -55,6 +57,65 @@ assertions, so joins against the provider registry happen in `content.ts`
 too. A compute tier's `description` is inline HTML written in the repository
 and rendered with `{@html}`. Do not feed it anything from outside.
 
+### RFCs
+
+An RFC's folder name is its number, four digits, as in `src/routes/rfc/0001/`.
+`rfcs.ts` throws on any other name. A new RFC takes the next free number. The
+number is the address, so the title can change without breaking a link.
+
+An RFC is a standard the research community sets for HPC providers, and PIs at
+the partner institutions carry its mandate. P1 publishes the standards and
+records which providers meet them. An RFC takes one concern and
+numbers the requirements a provider and its users must meet, so a provider can
+confirm each one. It names no provider or dataset. `/rfc/conventions/` holds
+the keywords (MUST, MUST NOT, SHOULD, MAY), the section structure, the
+responsibilities, the provider review and the conformance steps. It is a plain
+page with no number or status, and the glob in `rfcs.ts` skips it. It has the
+same frontmatter as an RFC without `status`, `decided` and `summary`, and it
+uses the same document layout and Changes table. RFC text keeps to about 80% of
+ASD-STE100: one requirement per row, an actor in each requirement, and the
+terms in a Terms table. The index page says who
+takes part: researchers voice needs through any channel (the survey, events,
+the P1 consortium, networks), research engineers with an open expert network
+draft RFCs from that feedback, and the HPC governance board decides. An RFC page carries the
+requirements, plus a Comments line while it is open.
+
+The frontmatter `status` is `open`, `accepted`, `rejected`, `deferred` or
+`withdrawn`. Any status but `open` needs a `decided` date, and an open RFC
+must not have one, or the build fails. `summary` holds the reasons for the
+decision in a sentence or two.
+
+To record a decision, set `status`, `decided` and `summary`, and move
+`updated`. `/rfc/` shows up to three open RFCs, newest update first, and
+`/rfc/all/` lists every RFC, newest number first. The glob skips the `all`
+folder too.
+
+An RFC page and the conventions page read as standalone documents. The root
+layout gives `/rfc/NNNN/` and `/rfc/conventions/` the full width, as it does for `/` and `/gallery/`, so the site sidebar is
+gone. `src/routes/rfc/+layout.svelte` draws the frame: a back link, the number
+beside the title, a ruled block of metadata with the permanent address, the
+body at reading width, and the page outline. `src/lib/markdown/sectionNumbers.js`
+wraps a leading "1." in an h2 or h3 in `.section-number`, after `rehype-slug`,
+so anchors such as `#1-scope` keep the number. The markdown twin keeps the
+number as text.
+
+Each RFC has a quoted `version` ("0.1") and a `changes` list, newest first.
+The build fails if the first change does not match `version` and `updated`, or
+if an accepted RFC is below 1.0. The layout shows the version in the metadata
+and renders the list as a Changes table at the end of the body. The twin has
+the same table.
+
+`/rfc/feed.xml` is an Atom feed with one entry per RFC, newest update first.
+Every page under `/rfc/` links it in `<head>`. `llms.txt` lists the RFC pages
+under their own heading, since the sidebar holds only the one RFCs link.
+
+An RFC page prints as a document. Elements marked `data-print-hide` (the site
+header and footer, the back link and the outline) are hidden in print, but only
+on a page that contains `data-rfc-document`. Text prints black on white. The nav has one RFCs link, never one per RFC, with an Open badge
+while any RFC is open. The layout in `src/routes/rfc/+layout.svelte` renders
+the header and the decision, and `twins.ts` gives the markdown twin the same
+lines.
+
 ### Import cycles
 
 Each collection globs its pages, and the pages import components that import
@@ -62,8 +123,8 @@ the collection back. Vite's dev SSR runner walks that cycle live, so a page's
 `metadata` export can still be undefined while its module evaluates. The
 rules that keep this working:
 
-- Parse on first call, never at module scope: `getClusters()`, `getEvents()`
-  and `getGallery()`. An eager parse threw a ZodError that took the nav down.
+- Parse on first call, never at module scope: `getClusters()`, `getEvents()`,
+  `getGallery()` and `getRfcs()`. An eager parse threw a ZodError that took the nav down.
 - The cache is a `var`. The dev runner can hand a re-entering module the
   partial namespace, so a caller can reach the getter before the declaration
   has run. A `var` is hoisted as `undefined` and `??=` fills it. A `let`
@@ -133,6 +194,22 @@ All prerendered, so they become files in `build/`.
 | `/gallery/index.json` | `src/routes/gallery/index.json/` | The published examples, for `aicentre gallery`. |
 | `/<path>.md`, `/llms.txt`, `/llms-full.txt` | see above | Markdown for scripts and models. |
 | `/sitemap.xml` | `src/routes/sitemap.xml/` | |
+| `/search.json` | `src/routes/search.json/` | The index for the site search. |
+| `/rfc/feed.xml` | `src/routes/rfc/feed.xml/` | An Atom feed of the RFCs. |
+
+## Search
+
+Ctrl K, Cmd K or `/` opens the launcher in `src/lib/components/SiteSearch.svelte`, and so does
+the search button in the header. `src/lib/search.svelte.ts` holds whether it is open.
+`src/lib/markdown/search.ts` builds `/search.json` from the markdown twins: one entry per page,
+one per h2 or h3 with a short snippet, and one per RFC requirement row (RD, SL) that holds MUST,
+SHOULD or MAY. Section links copy the slugs of `rehype-slug`, so a heading in a twin needs the same
+heading on the page. The launcher fetches the index the first time it opens and ranks results in
+the browser.
+
+`/search.json` is in `prerender.entries` in `vite.config.ts`, since no page links to it. After a
+change to headings, check that every `href` in `build/search.json` resolves to an `id` in the
+built page.
 
 ## Moved pages
 

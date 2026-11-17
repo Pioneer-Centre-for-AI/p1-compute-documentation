@@ -1,82 +1,44 @@
 { lib
-, stdenvNoCC
-, bun
-, nodeModulesHash ? "sha256-HpMXuDC/vvzC5Yl1LNU9wR1pWHKiXXQIAeIfUh6eesA="
+, rustPlatform
+, python3
+, procps
+, openssh
+, iproute2
+, stdenv
 ,
 }:
 
 let
-  pkg = lib.importJSON ../package.json;
+  manifest = (lib.importTOML ../Cargo.toml).package;
+in
+rustPlatform.buildRustPackage {
+  pname = "aicentre";
+  inherit (manifest) version;
 
   src = lib.fileset.toSource {
     root = ./..;
     fileset = lib.fileset.unions [
-      ../package.json
-      ../bun.lock
-      ../tsconfig.json
-      ../scripts
-      ../src
+      ../Cargo.toml
+      ../Cargo.lock
+      (lib.fileset.fileFilter (file: file.hasExt "rs" || file.name == "launcher.sh") ../src)
+      ../tests
+      ../install.sh
+      ../release.pub
     ];
   };
 
-  nodeModules = stdenvNoCC.mkDerivation {
-    pname = "aicentre-node-modules";
-    inherit (pkg) version;
-    src = lib.fileset.toSource {
-      root = ./..;
-      fileset = lib.fileset.unions [
-        ../package.json
-        ../bun.lock
-      ];
-    };
-    nativeBuildInputs = [ bun ];
-    dontConfigure = true;
-    buildPhase = ''
-      runHook preBuild
-      export HOME=$(mktemp -d)
-      bun install --frozen-lockfile --no-progress --production
-      runHook postBuild
-    '';
-    installPhase = ''
-      runHook preInstall
-      mkdir -p $out
-      cp -R node_modules $out/
-      runHook postInstall
-    '';
-    dontFixup = true;
-    outputHashMode = "recursive";
-    outputHashAlgo = "sha256";
-    outputHash = nodeModulesHash;
-  };
-in
-stdenvNoCC.mkDerivation {
-  pname = "aicentre";
-  inherit (pkg) version;
-  inherit src;
+  cargoLock.lockFile = ../Cargo.lock;
 
-  nativeBuildInputs = [ bun ];
-  dontConfigure = true;
+  nativeCheckInputs = [
+    python3
+    procps
+    openssh
+  ] ++ lib.optionals stdenv.hostPlatform.isLinux [ iproute2 ];
 
-  buildPhase = ''
-    runHook preBuild
-    export HOME=$(mktemp -d)
-    cp -R ${nodeModules}/node_modules ./node_modules
-    chmod -R u+w node_modules
-    bun run scripts/build.ts --outfile build/aicentre
-    runHook postBuild
-  '';
-
-  installPhase = ''
-    runHook preInstall
-    mkdir -p $out/libexec/aicentre $out/bin
-    cp -R build/. $out/libexec/aicentre/
-    ln -s $out/libexec/aicentre/aicentre $out/bin/aicentre
-    runHook postInstall
-  '';
-
-  dontStrip = true;
-  dontPatchELF = true;
-  dontFixup = true;
+  checkFlags = [
+    "--skip=in_a_job_a_browser_server_ends_once_no_browser_has_been_connected_for_the_idle_limit"
+    "--skip=sshd_ends_the_job_once_nobody_has_been_connected_for_the_idle_limit"
+  ];
 
   meta = {
     description = "Command line tool for P1 compute: check your setup, run sessions and jobs";

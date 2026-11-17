@@ -1,0 +1,54 @@
+<script>
+  import Meta from '#lib/components/Meta.svelte';
+  import RfcDiagram from '#lib/components/RfcDiagram.svelte';
+  import RfcList from '#lib/components/RfcList.svelte';
+  import { headingAnchors } from '#lib/actions/headingAnchors.ts';
+  import { openRfcs } from '#lib/rfcs.ts';
+</script>
+
+<Meta
+  title="Requests for comments"
+  description="The standards the research community sets for HPC providers, drafted from what researchers need, as numbered requirements providers meet."
+  type="website"
+/>
+
+<article class="prose mx-auto w-full max-w-3xl" use:headingAnchors>
+
+<p class="eyebrow not-prose mb-4">P1 Compute</p>
+
+# Requests for comments
+
+Compute is central to research. RFCs are how the research community and providers agree on what
+researchers need from it.
+
+<RfcDiagram class="not-prose my-8" />
+
+## Open RFCs
+
+<!-- md:replace rfc-list -->
+<RfcList rfcs={openRfcs(3)} />
+<!-- md:end -->
+
+See [all RFCs](/rfc/all/), with their status, or follow changes in the [Atom feed](/rfc/feed.xml).
+
+## How RFCs work
+
+| Who | Does |
+| --- | --- |
+| Researchers | Say what they need: in the [compute needs survey](/survey/), at [events](/events/), in the P1 consortium. Nobody has to write an RFC. |
+| Research engineers | Draft RFCs from that feedback, with an open network of DevOps, MLOps and domain experts. |
+| [HPC governance board](/about/#hpc-governance-board) | Decides each RFC. In the P1 consortium it has one PI per partner institution, and they carry the research community's mandate. |
+| Providers | Review drafts, meet the requirements and confirm it. Compute budgets go to providers that conform. |
+
+Each RFC covers one concern. The [conventions](/rfc/conventions/) give the keywords, the structure
+and the conformance steps.
+
+## Why RFCs
+
+- **Listening:** the needs of researchers set the direction.
+- **Expectations:** providers know what access and service the research community expects.
+- **Open knowledge:** no standard depends on a single consultant or vendor.
+- **Both ways:** the research community trains researchers to use shared compute well through teaching, events and innovation.
+- **Best effort:** nothing here is enforced. It works because everything is public.
+
+</article>

@@ -1,0 +1,26 @@
+<script>
+  import Meta from '#lib/components/Meta.svelte';
+  import RfcList from '#lib/components/RfcList.svelte';
+  import { headingAnchors } from '#lib/actions/headingAnchors.ts';
+  import { rfcsNewestFirst } from '#lib/rfcs.ts';
+</script>
+
+<Meta
+  title="All RFCs"
+  description="Every RFC, newest first, with its status and the date of its last update."
+  type="website"
+/>
+
+<article class="prose mx-auto w-full max-w-3xl" use:headingAnchors>
+
+<p class="eyebrow not-prose mb-4">Requests for comments</p>
+
+# All RFCs
+
+Every RFC, newest first. [Requests for comments](/rfc/) explains how they work.
+
+<!-- md:replace rfc-all -->
+<RfcList rfcs={rfcsNewestFirst()} />
+<!-- md:end -->
+
+</article>

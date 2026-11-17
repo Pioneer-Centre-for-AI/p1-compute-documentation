@@ -134,7 +134,9 @@ storage or your own machine. Before a project ends, ask the compute coordinator 
 
 Only non-GDPR data belongs here, such as public datasets and open benchmarks. Your home directory
 is private, but the cluster is not approved for personal data, whatever you do at file level. If
-your project involves personal data, talk to the compute coordinator before you start.
+your project involves personal data, talk to the compute coordinator before you start. Data under
+a data use agreement that is not personal data is the subject of [RFC 0001](/rfc/0001/), which is
+open for comments.
 
 </Aside>
 

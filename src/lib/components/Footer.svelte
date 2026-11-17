@@ -70,7 +70,7 @@
   </div>
 {/snippet}
 
-<footer class="border-t border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-950">
+<footer data-print-hide class="border-t border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-950">
   <div class="mx-auto grid w-full max-w-7xl gap-10 px-4 py-12 sm:grid-cols-2 md:px-6 lg:grid-cols-3">
     <div class="flex flex-col gap-3 sm:col-span-2 lg:col-span-1">
       <a href="/" class="flex items-center gap-3 no-underline">
@@ -81,8 +81,8 @@
         </span>
       </a>
       <p class="max-w-xs text-sm leading-relaxed text-slate-500 dark:text-slate-400">
-        We fund and help run partitions at partner HPC facilities, train and guide researchers, and
-        point the way across the wider compute landscape.
+        A community effort to help researchers find, reach and use the right compute. P1 funds partitions at three Danish
+        providers, and other providers are welcome to join.
       </p>
       <div class="mt-2">
         <p class="mb-2 text-xs text-slate-500 dark:text-slate-400">

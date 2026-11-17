@@ -61,6 +61,20 @@ jobs:
           fi
           echo "Pages: $(find site -name '*.html' | wc -l), size: $(du -sh site | cut -f1)"
 
+      - name: The install script installs the latest release
+        run: |
+          home="$(mktemp -d)"
+          for try in 1 2 3 4 5 6; do
+            if HOME="$home" sh site/install < /dev/null; then
+              HOME="$home" "$home/.local/bin/aicentre" --version
+              exit 0
+            fi
+            echo "try $try failed; the signing workflow may still be running"
+            sleep 30
+          done
+          echo "::error::site/install cannot install the latest release. If it has no signature, run the workflow 'Sign CLI releases'."
+          exit 1
+
       - name: Configure Pages
         if: github.event_name != 'pull_request'
         uses: actions/configure-pages@v6

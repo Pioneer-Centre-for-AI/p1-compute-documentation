@@ -8,6 +8,7 @@ import rehypeExternalLinks from 'rehype-external-links';
 import rehypeSlug from 'rehype-slug';
 import { defineConfig } from 'vite';
 import { renderCodeBlock } from './src/lib/markdown/highlight.js';
+import { sectionNumbers } from './src/lib/markdown/sectionNumbers.js';
 import { tableScroll } from './src/lib/markdown/tableScroll.js';
 import { urlScheme } from './src/lib/markdown/urlScheme.js';
 
@@ -32,6 +33,7 @@ export default defineConfig({
           remarkPlugins: [urlScheme],
           rehypePlugins: [
             rehypeSlug,
+            sectionNumbers,
             tableScroll,
             [rehypeExternalLinks, { target: '_blank', rel: ['noopener', 'noreferrer'] }]
           ],
@@ -48,6 +50,9 @@ export default defineConfig({
       }),
       paths: {
         base: ''
+      },
+      prerender: {
+        entries: ['*', '/search.json']
       },
       version: {
         pollInterval: 0

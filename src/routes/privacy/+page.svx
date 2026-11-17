@@ -29,25 +29,25 @@ server logs; see
 
 Some pages embed sign-up forms from Microsoft Forms and Google Forms, and event pages may embed a
 read-only Airtable view or link to Airtable forms. Loading those pages fetches content from
-Microsoft, Google or Airtable, and anything you submit through a form is processed by that
-provider under its own privacy policy. We only receive the answers you submit.
+Microsoft, Google or Airtable. That provider processes anything you submit through its form, under
+its own privacy policy. We only receive the answers you submit.
 
 ## Cluster accounts
 
-When you request access to a P1 cluster, we process the information you provide (name, university
-email, affiliation, research description) to create and administer your account, verify
-eligibility, and conduct the periodic user reviews described in the [terms](/terms/). Account
-information is shared with the institution hosting the cluster you request access to (DTU, NGC,
-or DCAI), which operates the system and acts as your point of technical support.
+When you request access to a P1 cluster, we process the information you provide: name, university
+email, affiliation and research description. We use it to create and administer your account,
+verify eligibility, and conduct the periodic user reviews described in the [terms](/terms/). We
+share account information with the institution that hosts the cluster you request (DTU, NGC or
+DCAI). That institution operates the system and is your point of technical support.
 
 ## Research data on the clusters
 
 Data you store or process on the clusters is governed by the hosting institution's policies, not
-by this site. For projects involving personal or sensitive data, use the
-[P1 NGC HPC](/providers/ngc/), and note that each project must carry a signed Data Processing
-Agreement naming NGC as data processor. See the [terms](/terms/) and the per-cluster pages for
+by this site. For projects with personal or sensitive data, use the [P1 NGC HPC](/providers/ngc/).
+Each project there must carry a signed Data Processing Agreement naming NGC as data processor. See the [terms](/terms/) and the per-cluster pages for
 details. Data retention and deletion after account expiry follow the
-[data retention policy](/terms/#data-retention-policy).
+[data retention policy](/terms/#data-retention-policy). For data under a data use agreement that
+is not personal data, see [RFC 0001](/rfc/0001/), which is open for comments.
 
 ## Contact
 

@@ -4,11 +4,13 @@
   // Install VS Code's server on the P1 filesystem on DTU. The default is
   // ~/.vscode-server, and the DTU home directory holds 30 GB.
   "remote.SSH.serverInstallPath": {
-    "dtu": "/dtu/p1/<dtu-username>"
+    "dtu": "/dtu/p1/<dtu-username>",
+    "aicentre-gpu": "/dtu/p1/<dtu-username>"
   },
   "remote.SSH.remotePlatform": {
     "dtu": "linux",
-    "gefion": "linux"
+    "gefion": "linux",
+    "aicentre-gpu": "linux"
   },
   // The VPN and Teleport can make the first connection slow.
   "remote.SSH.connectTimeout": 60,

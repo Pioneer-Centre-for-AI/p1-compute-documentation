@@ -4,6 +4,7 @@
   import ComputeNeedsMenu from './ComputeNeedsMenu.svelte';
   import { PROFILE_URL, GITHUB_URL } from '#lib/links.ts';
   import { GALLERY_HREF } from '#lib/gallery.ts';
+  import { launcher } from '#lib/search.svelte.ts';
 
   type Props = { variant?: 'solid' | 'landing'; onMenuClick: () => void };
   let { variant = 'solid', onMenuClick }: Props = $props();
@@ -15,7 +16,7 @@
   );
 </script>
 
-<header class={shell}>
+<header data-print-hide class={shell}>
   <EventNotice />
   <div class="flex items-center justify-between px-4 py-3 md:px-6">
     <div class="flex min-w-0 items-center gap-3 sm:gap-4">
@@ -49,6 +50,12 @@
         Gallery
       </a>
       <a
+        href="/rfc/"
+        class="hidden h-9 items-center rounded-full border border-slate-400 px-4 text-sm font-medium whitespace-nowrap text-slate-700 no-underline transition-colors hover:bg-slate-100 sm:inline-flex dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-800"
+      >
+        RFCs
+      </a>
+      <a
         href={PROFILE_URL}
         target="_blank"
         rel="noopener noreferrer"
@@ -57,6 +64,18 @@
         Update Profile
       </a>
       <ComputeNeedsMenu />
+      <button
+        type="button"
+        aria-label="Search the site"
+        title="Search (Ctrl K or /)"
+        onclick={() => (launcher.open = true)}
+        class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-slate-200 text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="7" />
+          <line x1="16.5" y1="16.5" x2="21" y2="21" />
+        </svg>
+      </button>
       <a
         href={GITHUB_URL}
         target="_blank"

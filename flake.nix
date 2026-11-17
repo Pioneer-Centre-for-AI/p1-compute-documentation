@@ -4,10 +4,9 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
-    nixpkgs-cli.url = "github:NixOS/nixpkgs/nixos-unstable";
   };
 
-  outputs = { self, nixpkgs, nixpkgs-cli, flake-utils }:
+  outputs = { self, nixpkgs, flake-utils }:
     flake-utils.lib.eachSystem [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" ] (system:
       let
         pkgs = import nixpkgs { inherit system; };
@@ -117,7 +116,7 @@
           '';
         };
 
-        aicentre = nixpkgs-cli.legacyPackages.${system}.callPackage ./pkgs/cli/nix/package.nix { };
+        aicentre = pkgs.callPackage ./pkgs/cli/nix/package.nix { };
 
         serveScript = pkgs.writeShellScript "serve-p1-hpc" ''
           exec ${pkgs.miniserve}/bin/miniserve \
@@ -150,10 +149,15 @@
             bun
             nodejs_22
             shellcheck
+            cargo
+            rustc
+            clippy
+            rustfmt
+            rust-analyzer
           ];
 
           shellHook = ''
-            echo "P1 HPC dev shell — bun $(bun --version), node $(node --version)"
+            echo "P1 HPC dev shell: bun $(bun --version), node $(node --version), $(rustc --version)"
           '';
         };
 
@@ -165,9 +169,7 @@
       nixosModules.default = import ./pkgs/cli/nix/nixos.nix self;
       nixosModules.aicentre = self.nixosModules.default;
       overlays.default = final: _prev: {
-        aicentre = final.callPackage ./pkgs/cli/nix/package.nix {
-          inherit (nixpkgs-cli.legacyPackages.${final.stdenv.hostPlatform.system}) bun;
-        };
+        aicentre = final.callPackage ./pkgs/cli/nix/package.nix { };
       };
     };
 }

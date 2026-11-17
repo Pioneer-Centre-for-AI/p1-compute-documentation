@@ -7,12 +7,14 @@
   import NavDrawer from '#lib/components/NavDrawer.svelte';
   import PageToc from '#lib/components/PageToc.svelte';
   import Footer from '#lib/components/Footer.svelte';
+  import SiteSearch from '#lib/components/SiteSearch.svelte';
   import { markdownHref } from '#lib/markdownPages.ts';
   import { GALLERY_HREF } from '#lib/gallery.ts';
 
   let { children } = $props();
   let isLanding = $derived(page.url.pathname === '/');
-  let isWide = $derived(isLanding || page.url.pathname === GALLERY_HREF);
+  let isRfcDocument = $derived(/^\/rfc\/(\d{4}|conventions)\/$/.test(page.url.pathname));
+  let isWide = $derived(isLanding || isRfcDocument || page.url.pathname === GALLERY_HREF);
   let mdHref = $derived(markdownHref(page.url.pathname));
   let mobileNavOpen = $state(false);
 
@@ -75,6 +77,7 @@
   </a>
   <Header variant={isLanding ? 'landing' : 'solid'} onMenuClick={() => (mobileNavOpen = true)} />
   <NavDrawer bind:open={mobileNavOpen} />
+  <SiteSearch />
 
   {#if isWide}
     <main id="main" class="flex-1">

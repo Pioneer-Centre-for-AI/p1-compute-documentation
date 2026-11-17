@@ -15,6 +15,11 @@ export const MARKDOWN_PAGES = [
   'providers/dtu',
   'providers/gefion',
   'providers/ngc',
+  'rfc',
+  'rfc/0001',
+  'rfc/0002',
+  'rfc/all',
+  'rfc/conventions',
   'survey',
   'terms'
 ];

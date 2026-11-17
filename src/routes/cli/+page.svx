@@ -31,7 +31,8 @@ providers. We can only really wrap stuff (unless maybe one day P1 gets its own c
 | --- | --- | --- |
 | Interactive, CPU | `aicentre shell`, `marimo`, `code` | A login node, at once |
 | Interactive, GPU | the same, with `--gpu` | A GPU node, as an interactive job |
-| Batch | `aicentre submit`, `list jobs`, `logs`, `cancel` | The batch queue, without you |
+| Your jobs | `aicentre list jobs` | Every provider you use, in one table |
+| Free GPUs | `aicentre list gpus` | How busy each GPU and queue is |
 
 `aicentre check` checks your setup. Commands cover every provider you are set up for, and
 `--provider gefion` (or `-p gefion`) picks one.
@@ -78,6 +79,10 @@ It also tries to reach each login node. If one does not answer, the check warns 
 fails with a reason. The exit code is 0 when nothing failed and 1 otherwise, and `--json` prints
 results for scripts.
 
+When any command does something you did not expect, add `--verbose`. It prints every `ssh` and
+`rsync` command aicentre runs, with its exit code and how long it took. Include that output when
+you report a problem.
+
 ### Settings
 
 Settings are optional. Put names that differ from the defaults in
@@ -90,11 +95,12 @@ user = "s123456"
 [gefion]
 user = "jdoe"
 alias = "gefion"       # the Host name in ~/.ssh/config
-# account = "..."      # a project's own Slurm account; P1's iu_0096 is the default
+
+# [desktop]
+# open = "zed ssh://{host}{urlpath}"   # the editor aicentre code opens
 ```
 
-The queues are P1's and need no setting: batch jobs go to `p1` and `--gpu` sessions to `p1i` on
-DTU, and a script's own `#BSUB -q` wins.
+The queue is P1's and needs no setting: `--gpu` sessions go to `p1i` on DTU.
 
 ## Your jobs
 
@@ -113,54 +119,108 @@ Your jobs on P1 compute  3 jobs
   DTU       124    pending  p1     sweep  -          -        -        Not enough GPUs available
 ```
 
+## Free GPUs
+
+```bash
+aicentre list gpus
+```
+
+It shows each GPU on DTU with the memory in use and the number of jobs on it, then one line per
+queue. On `p1i`, the queue for sessions, the GPUs are shared: a new session starts at once and
+shares GPU memory with the others, so look at the memory in use. On `p1`, the batch queue, a GPU
+belongs to one job, and the line says how many are free and how many jobs wait. For Gefion it
+counts idle nodes per partition.
+
+```text
+GPUs on P1 compute  asked DTU
+
+DTU p1i  sessions · 8 running, 0 waiting
+  NODE        GPU  MODEL     MEMORY USED  JOBS
+  n-62-12-83    0  H100PCIe      35.3 GB     8
+  n-62-12-83    1  H100PCIe      48.6 GB     8
+  The GPUs are shared: a new session starts at once and shares their memory.
+
+DTU p1  batch jobs · 0 of 14 GPUs free, 92 running, 36 waiting
+  NODE        GPU  MODEL     MEMORY USED  JOBS
+  n-62-11-44    0  H100PCIe        74 GB     1
+  n-62-11-44    1  H100PCIe       3.7 GB     1
+```
+
 ## Interactive sessions
 
 ```bash
-aicentre shell                           # a shell on the login node
-aicentre marimo project/notebook.py      # marimo in your browser
-aicentre code project                    # VS Code in your browser
-aicentre code project --gpu --time 2h    # the same, on a GPU node
+aicentre shell                            # a shell on the login node
+aicentre marimo project/notebook.py       # marimo in your browser
+aicentre jupyter project/notebook.ipynb   # JupyterLab in your browser
+aicentre code project                     # VS Code on your desktop, or in your browser
+aicentre code project --gpu --time 2h     # the same, on a GPU node
 ```
 
 Without `--gpu`, a session starts at once on your first provider's login node. The login node is
-shared, so keep to editing, installs and light runs.
+shared, so keep to editing, installs and light runs. A session there runs at low priority and
+ends after 12 hours; start it again to go on.
 
 With `--gpu`, it runs as an interactive job with one GPU on `p1i`, P1 DTU HPC's interactive
-queue. `--gpu` is for DTU only, since Gefion runs GPU work as batch jobs and NGC uses its remote
+queue. That queue is one node with two GPUs that everyone's sessions share, so a session takes
+at most 4 CPUs, 225 GB and 4 hours, and a second one from your laptop needs `--another`. `--gpu` is for DTU only, since Gefion runs GPU work as batch jobs and NGC uses its remote
 desktop.
 
-Paths are on the cluster, relative to your project directory (`/dtu/p1/<username>` on DTU, your
-home on Gefion) unless absolute or under `~`. Nothing is copied from your machine.
+With no path, a session opens your home directory on the cluster, and the ready message names
+the folder. Other paths are on the cluster, relative to your project directory
+(`/dtu/p1/<username>` on DTU, your home on Gefion) unless absolute or under `~`. Nothing is copied
+from your machine.
 
 | Option | Default | What |
 | --- | --- | --- |
 | `--gpu` | | Run on a GPU node instead of the login node |
-| `--time 2h` | 1 hour | With `--gpu`: how long the job may run, as `90`, `2h` or `1:30` |
-| `--cpus 4` | 4 | With `--gpu`: CPU cores |
-| `--mem 8GB` | 8GB | With `--gpu`: memory per core |
-| `--server openvscode` | VS Code's own server | For `code`: openvscode-server, the open build, with extensions from Open VSX |
+| `--time 2h` | 1 hour | With `--gpu`: how long the job may run, as `90`, `2h` or `1:30`; at most 4 hours |
+| `--cpus 4` | 4 | With `--gpu`: CPU cores; 4 is the most `p1i` gives |
+| `--mem 8GB` | 8GB | With `--gpu`: memory per core; at most 225 GB in all |
+| `--another` | | With `--gpu`: start although a session of yours already holds a GPU |
+| `--desktop` | | For `code`: the desktop app, or stop if it cannot open |
+| `--browser` | | For `code`: the browser, even when the desktop app is installed |
+| `--server openvscode` | VS Code's own server | For `code` in the browser: openvscode-server, the open build, with extensions from Open VSX |
 | `--no-browser` | | Print the address without opening it |
 
-Ctrl-C ends the session and its job. The first marimo or VS Code session takes a minute to set
-up in `.aicentre` in your project directory.
+Ctrl-C ends the session and its job. With `--gpu`, so do 10 minutes with no browser tab or editor
+connected, so the GPU goes back to others on `p1i`. On a GPU node, the session's server is not
+open to the cluster network. The
+first marimo, JupyterLab or VS Code session takes a minute to set up in `.aicentre` in your
+project directory.
+
+### Your own editor
+
+`aicentre code` opens your desktop editor instead of the browser when it finds one: VS Code,
+VSCodium, Cursor or Windsurf with a Remote-SSH extension, or Zed. With more than one, the one
+named in `$VISUAL` or `$EDITOR` goes first. Any other editor works too:
+name its command in your settings under `[desktop]`, with `{host}` and `{path}` (or `{urlpath}`,
+for a URL) where the host and folder go. Whatever opens, aicentre prints the host and folder, so
+any ssh tool can reach the same place. On the login node, the session lasts until you close the
+editor.
+
+On a GPU node, ask for the desktop app with `aicentre code --gpu --desktop`. Without `--desktop`
+the browser opens. The desktop app there runs an ssh server of your own inside the job, and DTU
+has not yet said that it allows one, so it is your choice to make. It also needs one line at the
+top of `~/.ssh/config`, which `aicentre check` prints:
+
+```text
+Include ~/.local/state/aicentre/ssh_config
+```
+
+aicentre keeps that file up to date and never edits `~/.ssh/config` itself. With the aicentre
+Home Manager module and `programs.ssh` enabled, the line is added for you; otherwise add the path
+to `programs.ssh.includes`. Until the line is there, `aicentre code --gpu --desktop` stops
+and says what is missing. The connection goes through the login node, and it is
+encrypted all the way to the GPU node. Terminals in your editor see the job's GPU. Ctrl-C in the
+terminal where you ran `aicentre code` ends the job. So do 10 minutes with the editor closed, so
+the GPU goes back to others on `p1i`.
 
 ## Batch jobs
 
-```bash
-aicentre submit train.sh
-aicentre logs 4242 -f
-aicentre cancel 4242
-```
-
-`submit` sends a `#BSUB` script to P1 DTU HPC and an `#SBATCH` script to P1 Gefion HPC. A local
-script is copied up first.
-
-What the script leaves out gets P1's default: the `p1` queue on DTU, the Slurm account `iu_0096`
-on Gefion, and output in `.aicentre/logs`. Name another account in the script or in your
-settings.
-
-`logs` and `cancel` need only the job id. `logs -f` follows the output and `--err` shows the
-error file.
+`aicentre` does not submit batch jobs. Open `aicentre shell` and use the scheduler: `bsub`,
+`bjobs` and `bkill` on DTU, `sbatch`, `squeue` and `scancel` on Gefion. Those jobs show in
+`aicentre list jobs` too. Versions before 0.2 had `aicentre submit`, `logs` and `cancel`; they now
+say what to run instead.
 
 ## Moving data
 
@@ -181,17 +241,32 @@ aicentre gallery get int-gpu        # one of them onto the cluster, in examples/
 
 `gallery get` downloads the example on the login node and prints what to run next.
 
-## Chat
+## In your agent tool
+
+`aicentre mcp` gives an agent tool you already use tools that read this site, your setup, your
+jobs and their output. Add it once:
 
 ```bash
-aicentre chat
-aicentre chat --model <provider/id>
-aicentre chat -c                    # pick up the last conversation
+claude mcp add --scope user aicentre -- aicentre mcp     # Claude Code
+codex mcp add aicentre -- aicentre mcp                   # Codex
 ```
 
-`chat` starts an agent with tools that read this site, your setup, your jobs and
-their output. It has no shell, and it submits or cancels a job only after you say yes. Sign in
-with `/login` in the chat, or set a key such as `ANTHROPIC_API_KEY`.
+For opencode, add this to `opencode.json`:
+
+```json
+{
+  "mcp": {
+    "aicentre": { "type": "local", "command": ["aicentre", "mcp"] }
+  }
+}
+```
+
+Other agent tools that take an MCP server on stdio start it the same way: the command
+`aicentre mcp`. Its tools only read: the docs, your jobs and your setup.
+
+Versions before 0.2 had `aicentre chat`, which kept model logins and conversations of its own.
+`aicentre` no longer reads them. Remove them with
+`rm -r ~/.config/aicentre/agent ~/.local/state/aicentre/chat`.
 
 ## On the clusters
 
@@ -200,8 +275,6 @@ with `/login` in the chat, or set a key such as `ANTHROPIC_API_KEY`.
 
 ```bash
 aicentre list jobs
-aicentre submit train.sh
-aicentre logs 4242 -f
 aicentre shell --gpu        # a GPU shell, from the login node
 ```
 
@@ -215,7 +288,8 @@ aicentre upgrade
 aicentre uninstall
 ```
 
-`upgrade` switches to the latest release, and keeps your version if anything fails. `uninstall`
+`upgrade` switches to the latest release, and keeps your version if anything fails. It installs
+only a release signed with aicentre's release key, and so does the install script. `uninstall`
 asks before it removes your settings, and `--purge` skips the question. It ends with the command
 that removes `aicentre` from each cluster.
 
@@ -256,8 +330,8 @@ or `overlays.default` for `pkgs.aicentre`. Nix then handles updates, so `upgrade
 | --- | --- |
 | `~/.local/bin/aicentre` | A link to the program |
 | `~/.local/share/aicentre/` | The program itself |
-| `~/.config/aicentre/` | Your settings, and chat's model logins in `agent/` |
-| `~/.local/state/aicentre/` | State it keeps between runs: job notes and chat conversations |
+| `~/.config/aicentre/` | Your settings |
+| `~/.local/state/aicentre/` | State it keeps between runs, such as job notes |
 | `~/.cache/aicentre/` | Downloads during an upgrade |
 | `$XDG_RUNTIME_DIR/aicentre/` | Open logins to the providers, and other files that only live while it runs |
 

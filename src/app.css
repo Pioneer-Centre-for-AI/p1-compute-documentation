@@ -190,6 +190,15 @@ html.dark .copy-btn {
   @apply text-4xl font-bold tracking-tight mb-6 mt-2 hyphens-auto;
   overflow-wrap: break-word;
 }
+.prose .section-number {
+  color: var(--color-slate-500);
+  font-variant-numeric: tabular-nums;
+  margin-right: 0.15em;
+}
+html.dark .prose .section-number {
+  color: var(--color-slate-400);
+}
+
 .prose h2:not(.not-prose, .not-prose *) {
   @apply text-2xl font-semibold mt-12 mb-4 scroll-mt-24;
 }
@@ -272,5 +281,34 @@ html.dark .prose code:not(pre code):not(.not-prose, .not-prose *) {
 @media (hover: hover) {
   .prose .heading-anchor:hover {
     @apply text-slate-500 dark:text-slate-400 underline;
+  }
+}
+
+@media print {
+  body:has([data-rfc-document]) [data-print-hide] {
+    display: none !important;
+  }
+  body:has([data-rfc-document]),
+  body:has([data-rfc-document]) * {
+    background: transparent !important;
+  }
+  [data-rfc-document],
+  [data-rfc-document] * {
+    color: #000 !important;
+  }
+  [data-rfc-document] {
+    max-width: none;
+    padding: 0;
+  }
+  [data-rfc-document] h2,
+  [data-rfc-document] h3 {
+    break-after: avoid;
+  }
+  [data-rfc-document] tr,
+  [data-rfc-document] li {
+    break-inside: avoid;
+  }
+  [data-rfc-document] .table-scroll {
+    overflow: visible;
   }
 }

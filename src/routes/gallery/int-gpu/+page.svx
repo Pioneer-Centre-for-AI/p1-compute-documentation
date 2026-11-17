@@ -1,14 +1,15 @@
 ---
 title: "Interactive session with a GPU"
-description: "A GPU on DTU's interactive p1i queue with aicentre: a shell, or marimo or VS Code in your browser."
+description: "A GPU on DTU's interactive p1i queue with aicentre: a shell, marimo or JupyterLab in your browser, or VS Code."
 order: 1
 navLabel: "Interactive GPU"
-summary: "One command to a GPU on DTU's interactive queue, as a shell or as marimo or VS Code in your browser. For installing packages, test runs and debugging."
+summary: "One command to a GPU on DTU's interactive queue, as a shell, as marimo or JupyterLab in your browser, or in VS Code. For installing packages, test runs and debugging."
 tags: [interactive, notebook, ide, pytorch]
 clusters: [dtu]
 commands:
   - "aicentre marimo examples/int-gpu/notebook.py --gpu"
   - "aicentre shell examples/int-gpu --gpu"
+  - "aicentre jupyter examples/int-gpu --gpu"
   - "aicentre code examples/int-gpu --gpu"
 ---
 
@@ -25,6 +26,7 @@ runs and debugging on `p1i`, the P1 queue for interactive GPU work.
 aicentre gallery get int-gpu                           # the example, onto the cluster
 aicentre marimo examples/int-gpu/notebook.py --gpu    # the notebook on a GPU, in your browser
 aicentre shell examples/int-gpu --gpu                  # or a shell on the GPU node
+aicentre jupyter examples/int-gpu --gpu                # or JupyterLab, with the same packages
 ```
 
 - `gallery get` has the login node download the example into your project directory, so there

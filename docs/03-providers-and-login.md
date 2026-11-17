@@ -1,6 +1,6 @@
 # Providers and login
 
-P1 compute has three providers. `src/check/clusters.ts` holds what a working
+P1 compute has three providers. `src/check/clusters.rs` holds what a working
 setup looks like for each, taken from the provider pages under
 `src/routes/providers/` and the gallery's `pkgs/gallery/rem-lgn/ssh_config`.
 Change the three together.
@@ -17,7 +17,7 @@ DTU, Gefion and NGC, since "P1 ... HPC" around every row says nothing.
 ## Which providers a machine uses
 
 Commands run without `--provider` work on every provider in use
-(`src/check/select.ts`). A provider is in use when `config.toml` lists it,
+(`src/check/select.rs`). A provider is in use when `config.toml` lists it,
 when aicentre runs on it, when a Host block points at it under any name, or,
 for Gefion, when tsh has a profile here (`~/.tsh/<proxy>.yaml`). Commands that
 work on one provider take the first in use, or the one `-p` names.
@@ -26,7 +26,7 @@ work on one provider take the first in use, or the one `-p` names.
 
 People name their hosts as they like (`Host gbar.p1`, `Host dtu`, `Host p1`).
 aicentre goes by where a block points, its HostName, rather than by its name
-(`src/check/aliases.ts`):
+(`src/check/aliases.rs`):
 
 1. `alias` in `config.toml`, when set.
 2. The default name (`dtu`, `gefion`), when it points at the provider.
@@ -45,7 +45,7 @@ provider.
 
 ## The shared login
 
-`src/remote/master.ts` keeps one ssh login per provider, shared by every
+`src/remote/master.rs` keeps one ssh login per provider, shared by every
 aicentre command. DTU asks for a password after the key. So the first command
 that needs a provider logs in the way ssh always does, on this terminal,
 where the user can type a passphrase or password or trust a host key. ssh then
@@ -63,8 +63,9 @@ without asking again.
 - ssh's messages go to `<socket>.log` with `-E`, not to a pipe. The login
   left running would hold a pipe open, and the reader would never see it
   close.
-- With nobody to type (a script, or chat's tools while Pi owns the terminal),
-  the login uses `BatchMode=yes` and succeeds only when no prompt is needed.
+- With nobody to type (a script, or `aicentre mcp`, whose stdin and stdout
+  carry MCP), the login uses `BatchMode=yes` and succeeds only when no prompt
+  is needed.
 - Commands through the login use `ControlMaster=no` and `-S <socket>`. A
   streamed command with a terminal (`-tt`) is hung up on, and cleans up, when
   the connection goes. Port forwards are added with `-O forward` and taken
@@ -72,7 +73,7 @@ without asking again.
 
 ## Connecting
 
-`src/session/login.ts` is how every session, batch and transfer command
+`src/session/login.rs` is how every session, batch and transfer command
 starts. It picks the provider, finds the Host, opens the shared login (saying
 "Logging in to <alias>" when it is not open yet), and classifies a failure
 with the same classifier as `check` ([06 · Check](06-check.md)). One round
@@ -95,7 +96,7 @@ cannot get in the way of a tag.
 
 ## Running on a cluster
 
-`aicentre` also runs on a login node. `src/session/here.ts` decides whether it
+`aicentre` also runs on a login node. `src/session/here.rs` decides whether it
 is on one, in this order:
 
 1. `AICENTRE_HERE=dtu|gefion|none`.
@@ -104,7 +105,7 @@ is on one, in this order:
 3. The machine itself: `bsub` on PATH and `/dtu/p1` for DTU; `sbatch` on PATH
    and a host name containing `dcai` or starting with `slurm-login` for Gefion.
 
-On the cluster, `LocalShell` (`src/remote/shell.ts`) runs the same commands
+On the cluster, `LocalShell` (`src/remote/shell.rs`) runs the same commands
 directly. Commands arrive wrapped in `bash -lc`, because over ssh only a login
 shell has the scheduler on PATH. Locally aicentre already runs in the user's
 environment, where a login shell adds nothing and can reset PATH, so the

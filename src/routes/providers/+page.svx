@@ -23,6 +23,9 @@ research profile. The P1 compute coordinator holds admin on them alongside each 
 team. Use the table to pick one. Each provider page covers what the partition offers, who it suits
 and how to get access, and the [gallery](/gallery/) shows how to work on each.
 
+Other providers are welcome to join. The [RFCs](/rfc/) set what the research community expects of
+a resource.
+
 <!-- md:replace decision-table -->
 <div class="not-prose my-8 overflow-x-auto">
   <table class="w-full border-collapse text-sm">

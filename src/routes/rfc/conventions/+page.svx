@@ -1,0 +1,99 @@
+---
+title: RFC conventions
+description: The keywords, structure, versions, responsibilities, provider review and conformance steps that every RFC uses.
+authors: [Benjamin Starostka Jakobsen]
+created: 2026-11-06
+updated: 2026-11-06
+version: '0.1'
+changes:
+  - version: '0.1'
+    date: 2026-11-06
+    note: First draft.
+---
+
+## 1. Scope
+
+These conventions apply to every RFC. They have no RFC number and no status.
+
+## 2. Keywords
+
+| Keyword | Meaning |
+| --- | --- |
+| MUST | The requirement is necessary for conformance. |
+| MUST&nbsp;NOT | The action is not permitted. |
+| SHOULD | The requirement is expected. A provider that does not meet it gives the reason in its confirmation. |
+| MAY | The action is permitted, but not necessary. |
+
+A requirement states a capability. It does not name a product. A product name in an RFC is an
+example only. An RFC names no provider and no dataset. A section marked informative contains no
+requirements.
+
+## 3. Structure
+
+Every RFC uses these sections, in this sequence:
+
+1. Scope.
+2. Terms.
+3. Requirements, with IDs and the keywords in section 2.
+4. Conformance, if the RFC adds steps to section 7.
+5. Example implementations (informative).
+6. Rationale (informative).
+7. Open questions.
+
+An RFC MAY add sections of its own, such as a classification procedure or a clause map. Numbers
+follow the sequence of the sections in the RFC. The page adds a Changes section at the end.
+
+## 4. Versions
+
+| Change | Version |
+| --- | --- |
+| A draft | 0.1, 0.2 and so on |
+| The first accepted text | 1.0 |
+| A change to a requirement | The first number goes up, such as 1.0 to 2.0 |
+| A change to wording, examples or rationale | The second number goes up, such as 1.0 to 1.1 |
+
+Each change gets a line in the Changes section. A confirmation names the RFC and its version, such
+as RFC 0001 version 1.0. These conventions use the same versions.
+
+## 5. Responsibilities
+
+| Party | Responsible for |
+| --- | --- |
+| Provider | The controls that an RFC requires, the records of those controls, and its terms of service. The terms of service carry the researcher requirements of each RFC, and the provider enforces them. |
+| Researcher | Their agreements with data owners, and their conduct on a resource. |
+| Researcher's university | The decision whether data is personal data, made by its data protection officer. The university is the data controller under GDPR. |
+| P1 | The publication of the RFCs, the record of confirmations, and the routing of researchers to providers. P1 holds no research data, keys, group memberships or approvals, and gives no legal advice. |
+
+## 6. Provider review
+
+1. The research engineers send each draft RFC to the providers before the board decides.
+2. Each provider states, for each requirement, if it can meet it and what it costs.
+3. Each provider also states which of its own rules apply.
+4. The answers are published with the RFC.
+
+A provider MAY meet a requirement with an equivalent control, which gives the same protection.
+Its confirmation then describes the control and the reason it is equivalent.
+
+## 7. Conformance
+
+1. The provider sends P1 a confirmation that names the RFC version and lists the requirements it meets.
+2. The provider names a contact who is responsible for the controls.
+3. P1 checks that the confirmation lists every requirement of the RFC.
+4. P1 lists the RFC on the page of the provider, with the date of the confirmation.
+5. The provider sends a new confirmation when the first number of the version changes.
+6. The provider also sends a new confirmation at least once each year.
+7. If the provider stops meeting a MUST requirement, it tells P1 and the affected researchers.
+8. P1 then removes the RFC from the page of the provider.
+9. If researchers report that a provider does not meet a requirement, P1 asks for a new
+   confirmation.
+
+A provider conforms to an RFC when it meets every MUST requirement. P1 does not audit providers.
+Compute budgets go to providers that conform. The process is best effort, and it relies on public
+confirmations and decisions.
+
+## 8. Open questions
+
+1. Does this split of responsibilities hold legally? The legal office at the host institution of P1
+   should review it.
+2. Who at a provider can sign a confirmation that binds the provider?
+3. Should P1 list a provider that meets part of an RFC, with the gaps shown?

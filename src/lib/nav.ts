@@ -1,5 +1,6 @@
 import { getClusters } from '#lib/content.ts';
 import { getEvents } from '#lib/events.ts';
+import { getRfcs } from '#lib/rfcs.ts';
 
 export type NavBadgeVariant = 'caution' | 'note';
 
@@ -46,7 +47,14 @@ export function getNav(): NavEntry[] {
       label: 'Resources',
       items: [
         { label: 'Ecosystem', href: '/ecosystem/' },
-        { label: 'Learn', href: '/learn/' }
+        { label: 'Learn', href: '/learn/' },
+        {
+          label: 'RFCs',
+          href: '/rfc/',
+          badge: getRfcs().some((r) => r.meta.status === 'open')
+            ? { text: 'Open', variant: 'note' as const }
+            : undefined
+        }
       ]
     },
     {
