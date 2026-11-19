@@ -171,7 +171,9 @@ fn jupyter_gets_its_token_from_the_environment_opens_the_notebook_by_url_and_log
     assert_eq!(path, format!("/lab/tree/my%20nb.ipynb?token={token}"));
     let args = std::fs::read_to_string(format!("{}/uvx.args", r.path)).unwrap();
     assert!(
-        args.starts_with("--from jupyterlab jupyter-lab --no-browser --ip 127.0.0.1 --port "),
+        args.starts_with(
+            "--managed-python --from jupyterlab jupyter-lab --no-browser --ip 127.0.0.1 --port "
+        ),
         "{args}"
     );
     assert!(!args.contains(&token));

@@ -349,7 +349,7 @@ start_gate() {
 		            pair[s].sendall(data)
 	EOF
 	(umask 077 && : >"$gate_log") || die "cannot create $gate_log"
-	"$python" "$keys/gate.py" "$bind" "$gate_port" "$keys/secret" "$ips" "$mode" "$target" "$config" "$keys/busy" >>"$gate_log" 2>&1 &
+	"$python" -I "$keys/gate.py" "$bind" "$gate_port" "$keys/secret" "$ips" "$mode" "$target" "$config" "$keys/busy" >>"$gate_log" 2>&1 &
 	gate_pid=$!
 	[ "$mode" = sshd ] && tag HOSTKEY "$(cat "$keys/host.pub")"
 	tag SECRET "$(cat "$keys/secret")"
@@ -372,7 +372,7 @@ marimo)
 	if [ -f pyproject.toml ]; then
 		marimo=(uv run --with marimo marimo)
 	else
-		marimo=(uvx marimo)
+		marimo=(uvx --managed-python marimo)
 	fi
 	serve "${marimo[@]}" edit ${file:+"$file"} --headless --skip-update-check --host 127.0.0.1 --port "$port" \
 		--token-password-file "$token_file" >"$log" 2>&1 &
@@ -385,7 +385,7 @@ jupyter)
 	if [ -f pyproject.toml ]; then
 		jupyter=(uv run --with jupyterlab jupyter-lab)
 	else
-		jupyter=(uvx --from jupyterlab jupyter-lab)
+		jupyter=(uvx --managed-python --from jupyterlab jupyter-lab)
 	fi
 	cull=()
 	[ -z "$in_job" ] && cull=(--MappingKernelManager.cull_idle_timeout=3600 --ServerApp.shutdown_no_activity_timeout=3600)

@@ -135,10 +135,18 @@ value.
 The launcher installs uv into `<data>/bin` when it is missing, for marimo,
 JupyterLab and the user's own `uv run`. marimo runs with
 `uv run --with marimo` when the directory has a `pyproject.toml`, and with
-`uvx marimo` otherwise. JupyterLab works the same way, with
-`uv run --with jupyterlab jupyter-lab` or `uvx --from jupyterlab jupyter-lab`.
+`uvx --managed-python marimo` otherwise. JupyterLab works the same way, with
+`uv run --with jupyterlab jupyter-lab` or
+`uvx --managed-python --from jupyterlab jupyter-lab`.
 jupyterlab depends on ipykernel, so the kernel is in the same environment, and
-with a `pyproject.toml` it sees the project's packages. `code` fetches the VS
+with a `pyproject.toml` it sees the project's packages.
+
+Without a project, `--managed-python` makes uv use a Python it installed
+itself, in `<data>/uv/python`. The launcher runs under `bash -l`, so the
+user's login profile is loaded, and a conda or pixi environment on the PATH
+would otherwise become the session's Python. That brings its compiler flags
+and include paths into every package build. A project keeps the Python its
+`.venv` and `requires-python` choose. `code` fetches the VS
 Code CLI and runs `serve-web`, or fetches openvscode-server from GitHub.
 `sshd` is for [desktop VS Code on a GPU node](#on-a-gpu-node).
 
