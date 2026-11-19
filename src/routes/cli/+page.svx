@@ -1,6 +1,7 @@
 <script>
   import Meta from '#lib/components/Meta.svelte';
   import Aside from '#lib/components/Aside.svelte';
+  import AgentPrompt from '#lib/components/AgentPrompt.svelte';
   import { headingAnchors } from '#lib/actions/headingAnchors.ts';
 </script>
 
@@ -56,6 +57,15 @@ curl -fsSL https://hpc.aicentre.dk/install | AICENTRE_VERSION=0.1.0 sh
 ```
 
 With Nix, see [With Nix](#with-nix).
+
+### With your agent
+
+Paste this into Claude Code, Codex or another agent tool. It reads the script first, installs,
+runs the check, and asks before it adds `aicentre` as an MCP server.
+
+<!-- md:replace agent-prompt -->
+<AgentPrompt />
+<!-- md:end -->
 
 ## Check your setup
 
@@ -244,8 +254,8 @@ aicentre gallery get int-gpu        # one of them onto the cluster, in examples/
 
 ## In your agent tool
 
-`aicentre mcp` gives an agent tool you already use tools that read this site, your setup, your
-jobs and their output. Add it once:
+`aicentre mcp` gives an agent tool you already use tools that read this site, your setup and
+your jobs. Add it once:
 
 ```bash
 claude mcp add --scope user aicentre -- aicentre mcp     # Claude Code
@@ -263,7 +273,8 @@ For opencode, add this to `opencode.json`:
 ```
 
 Other agent tools that take an MCP server on stdio start it the same way: the command
-`aicentre mcp`. Its tools only read: the docs, your jobs and your setup.
+`aicentre mcp`. Its tools only read: the docs, your jobs and your setup. The prompt under
+[With your agent](#with-your-agent) installs `aicentre` and offers this step at the end.
 
 Versions before 0.2 had `aicentre chat`, which kept model logins and conversations of its own.
 `aicentre` no longer reads them. Remove them with

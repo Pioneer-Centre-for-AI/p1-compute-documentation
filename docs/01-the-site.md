@@ -259,6 +259,16 @@ including blocks that appear after client-side navigation. It sets
 variables. Setting `background-color` on the token spans as well drew a box
 around every token.
 
+The install prompt for agent tools is one string, `INSTALL_PROMPT` in
+`src/lib/installPrompt.ts`. Three places read it: `AgentPrompt.svelte` on the
+CLI page, the "Copy a prompt for your agent" button in `InstallCommand.svelte`
+on the landing page, and the `cli` block in `twins.ts`, which puts it in
+`/cli.md` and `llms-full.txt`. `AgentPrompt.svelte` draws the same markup as a
+fenced block, so the layout's listener copies it. The copy button's HTML lives
+in `src/lib/markdown/copyButton.js` because `highlight.js` imports shiki, and
+a page component must not pull that into the browser bundle. When the
+installer or the MCP commands change, change the prompt with them.
+
 ## Styling
 
 `src/app.css` holds the theme. Its points are easy to undo by mistake:

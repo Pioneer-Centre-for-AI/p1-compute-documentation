@@ -8,6 +8,7 @@ import {
   superAgentOrganizers,
   superAgentProgramme
 } from '#lib/events.ts';
+import { INSTALL_PROMPT } from '#lib/installPrompt.ts';
 import { FORMS } from '#lib/links.ts';
 import { MARKDOWN_PAGES } from '#lib/markdownPages.ts';
 import {
@@ -87,6 +88,7 @@ const BLOCKS: Record<string, () => Record<string, string>> = {
       )
       .join('\n')
   }),
+  cli: () => ({ 'agent-prompt': '```text\n' + INSTALL_PROMPT + '\n```' }),
   forms: () => ({
     'forms-table': markdownTable(
       ['Form', 'Purpose', 'Provider'],

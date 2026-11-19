@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { INSTALL_PROMPT } from '#lib/installPrompt.ts';
   import { SITE_URL } from '#lib/site.ts';
 
   type Props = { class?: string };
@@ -12,6 +13,16 @@
       await navigator.clipboard.writeText(command);
       copied = true;
       setTimeout(() => (copied = false), 1500);
+    } catch {}
+  }
+
+  let promptCopied = $state(false);
+
+  async function copyPrompt() {
+    try {
+      await navigator.clipboard.writeText(INSTALL_PROMPT);
+      promptCopied = true;
+      setTimeout(() => (promptCopied = false), 1500);
     } catch {}
   }
 </script>
@@ -45,10 +56,19 @@
       <span class="mr-1.5 rounded bg-amber-100 px-1.5 py-0.5 font-semibold text-amber-900 dark:bg-amber-900/40 dark:text-amber-200">Concept</span>
       A command line tool for P1 compute, illustrative for now.
     </p>
-    <p class="flex items-center gap-2">
+    <p class="flex flex-wrap items-center gap-x-2">
       <a href="/cli/" class="font-medium text-slate-600 underline decoration-slate-300 underline-offset-2 hover:text-[var(--color-brand)] dark:text-slate-300 dark:decoration-slate-600">What it does</a>
       <span aria-hidden="true">·</span>
       <a href="/install.txt" class="font-medium text-slate-600 underline decoration-slate-300 underline-offset-2 hover:text-[var(--color-brand)] dark:text-slate-300 dark:decoration-slate-600">Read the script</a>
+      <span aria-hidden="true">·</span>
+      <button
+        type="button"
+        onclick={copyPrompt}
+        class="cursor-pointer font-medium text-slate-600 underline decoration-slate-300 underline-offset-2 hover:text-[var(--color-brand)] dark:text-slate-300 dark:decoration-slate-600"
+      >
+        {promptCopied ? '✓ Prompt copied' : 'Copy a prompt for your agent'}
+      </button>
+      <span class="sr-only" aria-live="polite">{promptCopied ? 'Agent prompt copied' : ''}</span>
     </p>
   </div>
 </div>

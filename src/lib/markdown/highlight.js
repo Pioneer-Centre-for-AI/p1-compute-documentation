@@ -1,4 +1,5 @@
 import { createHighlighter } from 'shiki';
+import { COPY_BUTTON } from './copyButton.js';
 
 /** @type {Promise<import('shiki').Highlighter> | null} */
 let highlighterPromise = null;
@@ -36,14 +37,6 @@ function escapeHtml(s) {
 
 const FILE_ICON =
   '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14,2 14,8 20,8" /></svg>';
-
-const COPY_ICON =
-  '<svg class="copy-icon-idle" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" /></svg>';
-
-const CHECK_ICON =
-  '<svg class="copy-icon-done" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20,6 9,17 4,12" /></svg>';
-
-const COPY_BUTTON = `<button type="button" class="copy-btn" data-copy aria-label="Copy code">${COPY_ICON}${CHECK_ICON}</button>`;
 
 /**
  * @param {string} code

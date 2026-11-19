@@ -167,7 +167,7 @@ fn page(topic: &str) -> Option<Page> {
                 ],
             )],
             Some(
-                "An MCP server, started by your agent tool. It gives the agent the P1 docs, your jobs, your setup and job output. It submits or cancels a job only after you say yes; an agent tool that cannot ask gets the command to run instead. The docs show other agent tools.",
+                "An MCP server, started by your agent tool. It gives the agent the P1 docs, your jobs and your setup. Its tools only read: it does not submit or cancel jobs. The docs show other agent tools.",
             ),
         ),
         "proxy" => p(
