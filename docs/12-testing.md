@@ -85,10 +85,17 @@ The install tests sign their fake releases with a key they make, so they
 need a real `ssh-keygen`. The launcher tests need `python3` on the PATH: the gate is Python, and so is
 the stand-in server. The real-sshd test also needs `ssh` and `sshd`.
 
+The launcher tests build on Linux only (`#![cfg(target_os = "linux")]`).
+`launcher.sh` runs on the cluster's compute and login nodes, never on the
+researcher's machine. On macOS the gate cannot resolve the login node, because
+there is no `getent`, and the Nix build sandbox there has neither `ss` nor
+`lsof` for the port check.
+
 ## CI and Nix
 
 `.github/workflows/cli.yaml` runs rustfmt, clippy and the tests with
-`AICENTRE_E2E=1` on Linux and macOS for every change under `pkgs/cli`, and
+`AICENTRE_E2E=1` on Linux and macOS (macOS without the launcher tests) for
+every change under `pkgs/cli`, and
 shellcheck on Linux. Every release also runs `scripts/install-check.sh`
 against its real downloads ([07](07-install-and-release.md#release)).
 

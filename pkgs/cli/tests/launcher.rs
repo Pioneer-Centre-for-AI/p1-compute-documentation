@@ -1,3 +1,5 @@
+#![cfg(target_os = "linux")]
+
 mod common;
 
 use std::collections::HashMap;
