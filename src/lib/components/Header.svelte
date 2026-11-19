@@ -38,14 +38,14 @@
           class="truncate text-sm font-semibold whitespace-nowrap text-slate-900 max-[359px]:sr-only sm:text-base dark:text-slate-100"
         >
           Pioneer Centre for AI
-          <span class="hidden font-normal text-slate-500 sm:inline dark:text-slate-400">· Compute</span>
+          <span class="hidden font-normal text-slate-500 min-[42rem]:inline md:hidden min-[52rem]:inline dark:text-slate-400">· Compute</span>
         </span>
       </a>
     </div>
     <div class="flex shrink-0 items-center gap-2">
       <a
         href={GALLERY_HREF}
-        class="inline-flex h-9 items-center rounded-full border border-slate-400 px-4 text-sm font-medium whitespace-nowrap text-slate-700 no-underline transition-colors hover:bg-slate-100 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-800"
+        class="hidden h-9 items-center rounded-full border border-slate-400 px-4 text-sm font-medium whitespace-nowrap text-slate-700 no-underline transition-colors hover:bg-slate-100 sm:inline-flex dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-800"
       >
         Gallery
       </a>
@@ -59,7 +59,7 @@
         href={PROFILE_URL}
         target="_blank"
         rel="noopener noreferrer"
-        class="hidden h-9 items-center rounded-full border border-slate-400 px-4 text-sm font-medium whitespace-nowrap text-slate-700 no-underline transition-colors hover:bg-slate-100 md:inline-flex dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-800"
+        class="hidden h-9 items-center rounded-full border border-slate-400 px-4 text-sm font-medium whitespace-nowrap text-slate-700 no-underline transition-colors hover:bg-slate-100 lg:inline-flex dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-800"
       >
         Update Profile
       </a>
@@ -81,7 +81,7 @@
         target="_blank"
         rel="noopener noreferrer"
         aria-label="GitHub"
-        class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-slate-200 text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
+        class="hidden h-9 w-9 items-center justify-center rounded-md border border-slate-200 text-slate-700 hover:bg-slate-100 lg:inline-flex dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
       >
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
           <path

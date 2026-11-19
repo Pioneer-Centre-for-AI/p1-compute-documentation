@@ -19,8 +19,7 @@ export const GET: RequestHandler = () => {
   const newest = rfcs[0]?.meta.updated ?? '2026-11-06';
 
   const entries = rfcs.map((rfc) => {
-    const [change] = rfc.meta.changes;
-    const summary = `${STATUS_LABELS[rfc.meta.status]}. Version ${rfc.meta.version}: ${change.note} ${rfc.meta.description}`;
+    const summary = `${STATUS_LABELS[rfc.meta.status]}. ${rfc.meta.description}`;
     const authors = rfc.meta.authors.map((name) => `    <author><name>${escape(name)}</name></author>`).join('\n');
     return `  <entry>
     <title>${escape(rfcTitle(rfc))}</title>

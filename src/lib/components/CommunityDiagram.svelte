@@ -21,6 +21,20 @@
       <rect x="2" y="3" width="20" height="5" rx="1" />
       <rect x="2" y="10" width="20" height="5" rx="1" />
       <rect x="2" y="17" width="20" height="5" rx="1" />
+    {:else if name === 'institution'}
+      <path d="M3 9 L12 4 L21 9 Z" />
+      <line x1="6" y1="11" x2="6" y2="18" />
+      <line x1="10" y1="11" x2="10" y2="18" />
+      <line x1="14" y1="11" x2="14" y2="18" />
+      <line x1="18" y1="11" x2="18" y2="18" />
+      <line x1="3" y1="21" x2="21" y2="21" />
+    {:else if name === 'flag'}
+      <line x1="5" y1="21" x2="5" y2="3" />
+      <path d="M5 4 H18 L15 8.5 L18 13 H5" />
+    {:else if name === 'globe'}
+      <circle cx="12" cy="12" r="9" />
+      <ellipse cx="12" cy="12" rx="4" ry="9" />
+      <line x1="3" y1="12" x2="21" y2="12" />
     {:else if name === 'plus'}
       <circle cx="12" cy="12" r="9" stroke-dasharray="3 3" />
       <line x1="12" y1="8" x2="12" y2="16" />
@@ -36,6 +50,11 @@
   <text x={x + width / 2} y={y + 84} text-anchor="middle" class="mono">{mono}</text>
 {/snippet}
 
+{#snippet guide(x: number, name: string, label: string)}
+  {@render icon(name, x + 12, 560)}
+  <text x={x + 32} y="564.5" class="label">{label}</text>
+{/snippet}
+
 {#snippet arrow(x: number, y1: number, y2: number)}
   {@const down = y2 > y1}
   <path d="M{x} {y1} L{x} {y2}" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" fill="none" />
@@ -49,8 +68,64 @@
   />
 {/snippet}
 
-<div class="text-slate-700 dark:text-slate-300 {className}">
-  <svg viewBox="0 0 440 520" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="h-auto w-full">
+{#snippet row(y: number, name: string, label: string, mono: string)}
+  {@render icon(name, 28, y + 17)}
+  <text x="50" y={y + 21.5} class="label">{label}</text>
+  <text x="322" y={y + 21.5} text-anchor="end" class="mono">{mono}</text>
+{/snippet}
+
+{#snippet card(x: number, name: string, label: string, mono: string, dashed = false)}
+  <rect {x} y="354" width="154" height="96" rx="10" class="tile" stroke-width="1.2" stroke-dasharray={dashed ? '4 4' : undefined} />
+  {@render icon(name, x + 77, 386)}
+  <text x={x + 77} y="416" text-anchor="middle" class="label">{label}</text>
+  <text x={x + 77} y="433" text-anchor="middle" class="mono">{mono}</text>
+{/snippet}
+
+{#snippet place(x: number, name: string, label: string)}
+  {@render icon(name, x, 506)}
+  <text {x} y="537" text-anchor="middle" class="label">{label}</text>
+{/snippet}
+
+<div
+  role="img"
+  aria-label="How it fits together. Researchers, research engineers and the governance board in academia bring needs and ideas to the research community. The research community sets standards for providers, and providers report back what is feasible. P1 funds partitions at DTU, NGC and Gefion, other providers are welcome to join, and we guide researchers to university, national and international compute."
+  class="text-slate-700 dark:text-slate-300 {className}"
+>
+  <svg viewBox="0 0 340 556" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="h-auto w-full sm:hidden">
+    <rect x="1" y="1" width="338" height="150" rx="14" class="panel academia" stroke-width="1" />
+    <text x="18" y="25" class="mono heading">ACADEMIA</text>
+    {@render row(38, 'person', 'Researchers', 'NEEDS AND SKILLS')}
+    {@render row(74, 'code', 'Research engineers', 'OPEN NETWORK')}
+    {@render row(110, 'scales', 'Governance board', 'P1 CONSORTIUM')}
+
+    {@render arrow(170, 158, 190)}
+    <text x="180" y="178" class="note">needs and ideas</text>
+
+    <circle cx="170" cy="236" r="42" class="hub" stroke-width="2.5" />
+    <text x="170" y="228" text-anchor="middle" class="label">Research</text>
+    <text x="170" y="244" text-anchor="middle" class="label">community</text>
+    <text x="170" y="259" text-anchor="middle" class="mono">STANDARDS</text>
+
+    {@render arrow(152, 282, 314)}
+    <text x="142" y="303" text-anchor="end" class="note">standards</text>
+    {@render arrow(188, 314, 282)}
+    <text x="198" y="303" class="note">feasibility</text>
+
+    <rect x="1" y="322" width="338" height="230" rx="14" class="panel providers" stroke-width="1" />
+    <text x="18" y="344" class="mono heading">PROVIDERS</text>
+    {@render card(12, 'servers', 'P1-funded partitions', 'DTU, NGC, GEFION')}
+    <rect x="18" y="360" width="68" height="14" rx="7" class="tag" />
+    <text x="52" y="370.3" text-anchor="middle" class="mono tag-text">P1 FUNDING</text>
+    {@render card(174, 'plus', 'Other providers', 'WELCOME TO JOIN', true)}
+
+    <line x1="12" y1="466" x2="328" y2="466" class="divider" stroke-width="1" stroke-dasharray="3 4" />
+    <text x="18" y="485" class="mono heading">WE GUIDE YOU TO</text>
+    {@render place(62, 'institution', 'University')}
+    {@render place(170, 'flag', 'National')}
+    {@render place(278, 'globe', 'International')}
+  </svg>
+
+  <svg viewBox="0 0 440 588" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="hidden h-auto w-full sm:block">
     <!-- Academia -->
     <rect x="1" y="1" width="438" height="150" rx="14" class="panel academia" stroke-width="1" />
     <text x="18" y="25" class="mono heading">ACADEMIA</text>
@@ -59,7 +134,7 @@
     {@render tile(296, 38, 136, 'scales', 'Governance board', 'P1 CONSORTIUM')}
 
     {@render arrow(220, 160, 202)}
-    <text x="230" y="185" class="note">needs and drafts</text>
+    <text x="230" y="185" class="note">needs and ideas</text>
 
     <!-- Research community -->
     <circle cx="220" cy="260" r="52" class="hub" stroke-width="2.5" />
@@ -73,12 +148,18 @@
     <text x="250" y="344" class="note">feasibility</text>
 
     <!-- Providers -->
-    <rect x="1" y="370" width="438" height="149" rx="14" class="panel providers" stroke-width="1" />
+    <rect x="1" y="370" width="438" height="217" rx="14" class="panel providers" stroke-width="1" />
     <text x="18" y="394" class="mono heading">PROVIDERS</text>
     {@render tile(16, 406, 200, 'servers', 'P1-funded partitions', 'DTU, NGC, GEFION')}
     <rect x="138" y="414" width="70" height="16" rx="8" class="tag" />
     <text x="173" y="425.5" text-anchor="middle" class="mono tag-text">P1 FUNDING</text>
     {@render tile(224, 406, 200, 'plus', 'Other providers', 'WELCOME TO JOIN', true)}
+
+    <line x1="16" y1="520" x2="424" y2="520" class="divider" stroke-width="1" stroke-dasharray="3 4" />
+    <text x="18" y="539" class="mono heading">WE GUIDE YOU TO</text>
+    {@render guide(16, 'institution', 'University')}
+    {@render guide(158, 'flag', 'National')}
+    {@render guide(300, 'globe', 'International')}
   </svg>
 </div>
 
@@ -101,6 +182,9 @@
   }
   .tag {
     fill: var(--color-highlight);
+  }
+  .divider {
+    stroke: var(--color-slate-300);
   }
 
   .label {
@@ -141,6 +225,9 @@
   }
   :global(html.dark) .tile {
     stroke: var(--color-slate-700);
+  }
+  :global(html.dark) .divider {
+    stroke: var(--color-slate-600);
   }
   :global(html.dark) .mono:not(.tag-text),
   :global(html.dark) .note {

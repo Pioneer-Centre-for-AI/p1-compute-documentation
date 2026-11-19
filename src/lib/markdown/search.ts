@@ -54,8 +54,8 @@ function pageEntries(path: string): SearchEntry[] {
       continue;
     }
 
-    const requirement = /^\|\s*((?:RD|SL)\d+)\s*\|\s*(.+?)\s*\|\s*$/.exec(line);
-    if (requirement && /\b(MUST|SHOULD|MAY)\b/.test(requirement[2])) {
+    const requirement = /^\|\s*([A-Z]{2}\d+)\s*\|\s*(.+?)\s*\|\s*$/.exec(line);
+    if (requirement && /\b(must|should|may)\b/i.test(requirement[2])) {
       entries.push({
         kind: 'requirement',
         title: requirement[1],

@@ -3,6 +3,7 @@
   import NavList from './NavList.svelte';
   import BookingDialog from './BookingDialog.svelte';
   import { SURVEY_PAGE, PROFILE_URL } from '#lib/links.ts';
+  import { GALLERY_HREF } from '#lib/gallery.ts';
 
   let { open = $bindable(false) }: { open?: boolean } = $props();
   let panel = $state<HTMLElement | null>(null);
@@ -92,6 +93,7 @@
         >
           Book a consultation
         </button>
+        <a href={GALLERY_HREF} class="inline-flex h-9 items-center justify-center rounded-full border border-slate-400 px-4 text-sm font-medium text-slate-700 no-underline transition-colors hover:bg-slate-100 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-800">Gallery</a>
         <a
           href={PROFILE_URL}
           target="_blank"

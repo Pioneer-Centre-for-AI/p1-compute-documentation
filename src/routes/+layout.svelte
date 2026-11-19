@@ -13,7 +13,7 @@
 
   let { children } = $props();
   let isLanding = $derived(page.url.pathname === '/');
-  let isRfcDocument = $derived(/^\/rfc\/(\d{4}|conventions)\/$/.test(page.url.pathname));
+  let isRfcDocument = $derived(/^\/rfc\/\d{4}\/$/.test(page.url.pathname));
   let isWide = $derived(isLanding || isRfcDocument || page.url.pathname === GALLERY_HREF);
   let mdHref = $derived(markdownHref(page.url.pathname));
   let mobileNavOpen = $state(false);

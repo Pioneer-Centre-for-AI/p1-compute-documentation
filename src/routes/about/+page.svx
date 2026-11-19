@@ -83,9 +83,10 @@ More at the [P1 homepage](https://www.aicentre.dk/) and
 ## Available Compute Resources
 
 P1 prioritizes smaller projects, which make up most research needs. Larger projects can move up
-the [tiered compute resources](#hierarchy-of-compute-resources) to Tier 2 and Tier 1 facilities.
-Training a large language or vision model from scratch may not fit our Tier 3 facilities. It can
-fit Gefion, a Tier 2 national facility built for large-scale model training. Very large
+the [tiered compute resources](#hierarchy-of-compute-resources) to national (Tier 1) and European
+(Tier 0) facilities. Training a large language or vision model from scratch may not fit an
+institutional (Tier 3) cluster. It can fit Gefion, a national facility built for large-scale model
+training. Very large
 projects may be better served by their own funding.
 
 ## Support
@@ -123,15 +124,19 @@ An example:
 
 ## Hierarchy of Compute Resources
 
-Each tier suits a different scale of work.
+Each tier suits a different scale of work. Tiers 0 to 2 follow the
+[European scale defined by PRACE](https://prace-ri.eu/wp-content/uploads/2019/08/PRACEintheEuroHPCEra.pdf):
+European, national and regional systems. Tier 3, local clusters, comes from national schemes such
+as [Germany's](https://www.bmftr.bund.de/EN/Research/EmergingTechnologies/Supercomputing/supercomputing.html).
 
 <!-- md:replace tier-table -->
 <ComputeTiers />
 <!-- md:end -->
 
-The P1 DTU and NGC HPCs are Tier 3. Gefion is Tier 2 and can support some Tier 1 workloads. The
-P1 sandbox on it is Tier 3 capacity, for maturing a workload on the hardware it will later run
-on. Tier 2 scale on Gefion needs its own funding.
+The P1 DTU and NGC HPCs give institutional (Tier 3) scale. Gefion is a national (Tier 1) system
+and can take some workloads of European scale. The P1 sandbox on it is Tier 3 capacity, for
+maturing a workload on the hardware it will later run on. National scale on Gefion needs its own
+funding.
 
 ## Reading these docs with an AI agent
 

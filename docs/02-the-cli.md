@@ -1,11 +1,8 @@
 # The CLI
 
-**Status: work in progress.** The tool is mainly illustrative for now. From our
-position we can only really wrap stuff. So it's an idea of what researchers
-might need in terms of tooling from the Danish compute ecosystem. The
-integrations, tooling and platforms behind it are the providers' to build on
-their side; this is a place to show what they could look like from a
-researcher's chair. Commands may change, and parts have only been tested
+**Status: a concept.** The tool is optional. Researchers can keep using SSH,
+the scheduler and their own editor directly. The site's RFC 0002
+(`src/routes/rfc/0002/+page.svx`) says why P1 offers it. Commands may change, and parts have only been tested
 against fake clusters (`tests/common/mod.rs`), not the real ones.
 
 `aicentre` is the command line tool for P1 compute, in `pkgs/cli`. People

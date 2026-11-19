@@ -16,12 +16,12 @@
 
 # Command Line Tool
 
-<Aside type="caution" title="Work in progress">
+<Aside type="caution" title="A concept">
 
-This tool is mainly illustrative. An idea of what researchers might need for a more streamlined experience: one way to check setup, start sessions
-and follow jobs on any provider. Building the integrations, tooling and platforms is up to the
-providers. We can only really wrap stuff (unless maybe one day P1 gets its own control plane ofcs). Commands may change, and parts are not yet tried on the clusters. Send feedback to
-#ask-compute or the [compute needs survey](/survey/).
+This tool is a concept, and it is optional. You can keep using SSH, the scheduler and your own
+editor directly. [RFC 0002](/rfc/0002/) explains why P1 offers it. Commands may change, and parts
+are not yet tried on the clusters. Send feedback to #ask-compute or the
+[compute needs survey](/survey/).
 
 </Aside>
 
@@ -48,7 +48,8 @@ curl -fsSL https://hpc.aicentre.dk/install | sh
 
 It installs the [release](https://github.com/Pioneer-Centre-for-AI/p1-compute-documentation/releases)
 for your machine in your home directory, with no admin rights. It runs on Linux and macOS, and in
-WSL on Windows. Set `AICENTRE_VERSION` for a particular version:
+WSL on Windows. To read the script first, open [/install.txt](/install.txt) in your browser. It is
+the same file. Set `AICENTRE_VERSION` for a particular version:
 
 ```bash
 curl -fsSL https://hpc.aicentre.dk/install | AICENTRE_VERSION=0.1.0 sh

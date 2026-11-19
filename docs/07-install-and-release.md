@@ -54,8 +54,8 @@ including half-finished `.partial` ones.
 
 ## install.sh
 
-`pkgs/cli/install.sh` is served at `/install`
-([01 · The site](01-the-site.md#endpoints)). It only downloads and verifies a
+`pkgs/cli/install.sh` is served at `/install`, and the same file at `/install.txt` for reading
+in a browser ([01 · The site](01-the-site.md#endpoints)). It only downloads and verifies a
 release, then runs `aicentre self-install` from it, so the layout is written
 by one piece of code for a first install, a reinstall or an upgrade. Running
 it again reinstalls. It never edits shell startup files. `self-install`

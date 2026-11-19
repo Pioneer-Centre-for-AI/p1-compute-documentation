@@ -13,36 +13,15 @@ const day = z.preprocess(
 
 const STATUSES = ['open', 'accepted', 'rejected', 'deferred', 'withdrawn'] as const;
 
-const version = z.string().regex(/^\d+\.\d+$/, 'Write the version as a quoted string, such as "0.1"');
-
 export type RfcStatus = (typeof STATUSES)[number];
-
-const documentFields = {
-  title: z.string(),
-  description: z.string(),
-  authors: z.array(z.string()).min(1),
-  created: day,
-  updated: day,
-  version,
-  changes: z.array(z.object({ version, date: day, note: z.string() })).min(1)
-};
-
-type Versioned = { version: string; updated: string; changes: { version: string; date: string }[] };
-
-function checkChanges(meta: Versioned, ctx: z.RefinementCtx) {
-  const [newest] = meta.changes;
-  if (newest.version !== meta.version || newest.date !== meta.updated) {
-    ctx.addIssue({
-      code: 'custom',
-      path: ['changes', 0],
-      message: 'The first entry in changes must have the same version and date as version and updated.'
-    });
-  }
-}
 
 export const RfcFrontmatter = z
   .object({
-    ...documentFields,
+    title: z.string(),
+    description: z.string(),
+    authors: z.array(z.string()).min(1),
+    created: day,
+    updated: day,
     status: z.enum(STATUSES),
     decided: day.optional(),
     summary: z.string().optional()
@@ -54,15 +33,7 @@ export const RfcFrontmatter = z
     if (meta.status === 'open' && meta.decided) {
       ctx.addIssue({ code: 'custom', path: ['decided'], message: 'An open RFC has no decided date.' });
     }
-    checkChanges(meta, ctx);
-    if (meta.status === 'accepted' && Number(meta.version.split('.')[0]) < 1) {
-      ctx.addIssue({ code: 'custom', path: ['version'], message: 'An accepted RFC has version 1.0 or higher.' });
-    }
   });
-
-export const ConventionsFrontmatter = z.object(documentFields).superRefine(checkChanges);
-
-export type ConventionsMeta = z.infer<typeof ConventionsFrontmatter>;
 
 export type RfcMeta = z.infer<typeof RfcFrontmatter>;
 export type RfcEntry = { number: string; href: string; meta: RfcMeta };
@@ -75,22 +46,9 @@ export const STATUS_LABELS: Record<RfcStatus, string> = {
   withdrawn: 'Withdrawn'
 };
 
-const modules = import.meta.glob(['/src/routes/rfc/*/+page.svx', '!/src/routes/rfc/all/+page.svx', '!/src/routes/rfc/conventions/+page.svx'], {
+const modules = import.meta.glob(['/src/routes/rfc/*/+page.svx', '!/src/routes/rfc/all/+page.svx'], {
   eager: true
 }) as Record<string, { metadata?: unknown }>;
-
-export const CONVENTIONS_HREF = '/rfc/conventions/';
-
-const conventionsModule = import.meta.glob('/src/routes/rfc/conventions/+page.svx', {
-  eager: true
-}) as Record<string, { metadata?: unknown }>;
-
-var conventions: ConventionsMeta | undefined;
-
-export function getConventions(): ConventionsMeta {
-  conventions ??= ConventionsFrontmatter.parse(Object.values(conventionsModule)[0]?.metadata);
-  return conventions;
-}
 
 var parsed: RfcEntry[] | null | undefined;
 

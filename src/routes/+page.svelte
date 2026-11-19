@@ -35,8 +35,10 @@
 
 <div class="mx-auto w-full max-w-6xl px-4 md:px-6">
   <!-- Hero -->
-  <section class="grid grid-cols-1 items-center gap-12 pb-14 pt-28 md:pt-36 lg:grid-cols-[1.05fr_1fr] lg:gap-10">
-    <div class="flex flex-col items-start gap-6">
+  <section
+    class="grid grid-cols-1 gap-y-10 pb-14 pt-28 md:pt-36 lg:grid-cols-[1.05fr_1fr] lg:grid-rows-[auto_auto] lg:gap-x-10 lg:gap-y-6"
+  >
+    <div class="flex flex-col items-start gap-6 lg:col-start-1 lg:row-start-1 lg:self-end">
       <h1 class="text-4xl font-extrabold leading-[1.08] tracking-tight text-slate-900 sm:text-5xl lg:text-[3.25rem] dark:text-slate-50">
         Research compute,<br />
         <span class="text-slate-500 dark:text-slate-400">built together.</span>
@@ -58,6 +60,13 @@
           {/snippet}
         </Button>
       </div>
+    </div>
+
+    <div class="w-full max-w-xl lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:max-w-none lg:self-center">
+      <CommunityDiagram />
+    </div>
+
+    <div class="flex flex-col items-start gap-6 lg:col-start-1 lg:row-start-2 lg:self-start">
       <InstallCommand />
       <div class="flex flex-wrap items-center gap-3 pt-2">
         <span class="text-xs text-slate-500 dark:text-slate-400">
@@ -65,10 +74,6 @@
         </span>
         <DigitalObjectIdentifier />
       </div>
-    </div>
-
-    <div class="mx-auto hidden w-full max-w-md sm:block lg:max-w-none">
-      <CommunityDiagram />
     </div>
   </section>
 

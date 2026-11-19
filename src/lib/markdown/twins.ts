@@ -13,7 +13,6 @@ import { MARKDOWN_PAGES } from '#lib/markdownPages.ts';
 import {
   STATUS_LABELS,
   formatDay,
-  getConventions,
   getRfcs,
   openRfcs,
   rfcTitle,
@@ -129,25 +128,13 @@ function rfcLines(rfcs: RfcEntry[]): string {
     .join('\n');
 }
 
-function changesTable(changes: RfcEntry['meta']['changes']): string {
-  const rows = changes.map((c) => [c.version, formatDay(c.date), c.note]);
-  return `## Changes\n\n${markdownTable(['Version', 'Date', 'Change'], rows)}`;
-}
-
-function conventionsPreamble(): string {
-  const meta = getConventions();
-  return (
-    `**${meta.authors.length > 1 ? 'Authors' : 'Author'}:** ${meta.authors.join(', ')}. ` +
-    `**Updated:** ${formatDay(meta.updated)}. **Version:** ${meta.version}.`
-  );
-}
-
 function rfcPreamble(rfc: RfcEntry): string {
   const { meta } = rfc;
   const head =
     `**Status:** ${STATUS_LABELS[meta.status]}${meta.decided ? `, ${formatDay(meta.decided)}` : ''}. ` +
     `**${meta.authors.length > 1 ? 'Authors' : 'Author'}:** ${meta.authors.join(', ')}. ` +
-    `**Updated:** ${formatDay(meta.updated)}. **Version:** ${meta.version}.`;
+    `**Updated:** ${formatDay(meta.updated)}.\n\n` +
+    `**A concept:** this RFC shows how the process could work. Its requirements may change, and no provider has committed to them.`;
   const comments =
     meta.status === 'open'
       ? `\n\n**Comments:** any channel, such as the [compute needs survey](/survey/).`
@@ -164,17 +151,14 @@ export function renderTwin(path: string): string | null {
   const event = getEvents().find((e) => e.href === `/${path}/`);
   const example = getGallery().find((e) => e.href === `/${path}/`);
   const rfc = getRfcs().find((r) => r.href === `/${path}/`);
-  const conventions = path === 'rfc/conventions' ? getConventions() : null;
 
   return svxToMarkdown(source, {
     title:
       cluster?.meta.title ??
       event?.meta.title ??
       example?.meta.title ??
-      (rfc && rfcTitle(rfc)) ??
-      conventions?.title,
-    preamble: (rfc && rfcPreamble(rfc)) || (conventions ? conventionsPreamble() : undefined),
-    postscript: (rfc && changesTable(rfc.meta.changes)) || (conventions ? changesTable(conventions.changes) : undefined),
+      (rfc && rfcTitle(rfc)),
+    preamble: rfc && rfcPreamble(rfc),
     providerDocs: cluster?.meta.providerDocs,
     quotas: cluster?.meta.quotas,
     hardware: cluster?.meta.hardware,
@@ -189,10 +173,6 @@ export function twinMeta(path: string): { title: string; description: string } {
   const rfc = getRfcs().find((r) => r.href === `/${path}/`);
   if (rfc) {
     return { title: rfcTitle(rfc), description: rfc.meta.description };
-  }
-  if (path === 'rfc/conventions') {
-    const meta = getConventions();
-    return { title: meta.title, description: meta.description };
   }
   const fromRegistry = cluster?.meta ?? event?.meta ?? example?.meta;
   if (fromRegistry) {

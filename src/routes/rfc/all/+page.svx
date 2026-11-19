@@ -1,4 +1,5 @@
 <script>
+  import Aside from '#lib/components/Aside.svelte';
   import Meta from '#lib/components/Meta.svelte';
   import RfcList from '#lib/components/RfcList.svelte';
   import { headingAnchors } from '#lib/actions/headingAnchors.ts';
@@ -18,6 +19,14 @@
 # All RFCs
 
 Every RFC, newest first. [Requests for comments](/rfc/) explains how they work.
+
+<Aside type="caution" title="A concept">
+
+These RFCs show how researchers and providers could agree on what research needs from compute.
+Their process and requirements may change, and no provider has committed to them. Send feedback to
+#ask-compute or the [compute needs survey](/survey/).
+
+</Aside>
 
 <!-- md:replace rfc-all -->
 <RfcList rfcs={rfcsNewestFirst()} />

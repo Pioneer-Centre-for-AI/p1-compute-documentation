@@ -4,9 +4,9 @@
 
   const arms = ['var(--color-coral)', 'var(--color-brand)', 'currentColor'];
   const spiral = arms.flatMap((fill, k) =>
-    Array.from({ length: 14 }, (_, i) => {
-      const t = i / 13;
-      const r = 3 + 25 * t;
+    Array.from({ length: 12 }, (_, i) => {
+      const t = i / 11;
+      const r = 7 + 21 * t;
       const a = t * 2.4 * Math.PI + (k * 2 * Math.PI) / 3;
       return { x: 110 + r * Math.cos(a), y: 66 + r * Math.sin(a), fill };
     })
@@ -29,18 +29,18 @@
         <rect x="18" y="84" width="52" height="16" rx="1.5" />
       </g>
       <g stroke="var(--color-brand)" stroke-width="2" stroke-linecap="round">
-        <line x1="18" y1="33" x2="18" y2="49" />
-        <line x1="18" y1="57" x2="18" y2="77" />
-        <line x1="18" y1="85" x2="18" y2="99" />
+        <line x1="22" y1="36" x2="22" y2="46" />
+        <line x1="22" y1="60" x2="22" y2="74" />
+        <line x1="22" y1="88" x2="22" y2="96" />
       </g>
       <g stroke="currentColor" stroke-width="0.8" opacity="0.45" stroke-linecap="round">
-        <line x1="24" y1="38" x2="60" y2="38" />
-        <line x1="24" y1="43" x2="50" y2="43" />
-        <line x1="24" y1="62" x2="58" y2="62" />
-        <line x1="28" y1="67" x2="62" y2="67" />
-        <line x1="28" y1="72" x2="46" y2="72" />
-        <line x1="24" y1="90" x2="54" y2="90" />
-        <line x1="24" y1="95" x2="40" y2="95" />
+        <line x1="27" y1="38" x2="62" y2="38" />
+        <line x1="27" y1="43" x2="52" y2="43" />
+        <line x1="27" y1="62" x2="60" y2="62" />
+        <line x1="31" y1="67" x2="63" y2="67" />
+        <line x1="31" y1="72" x2="48" y2="72" />
+        <line x1="27" y1="90" x2="56" y2="90" />
+        <line x1="27" y1="95" x2="42" y2="95" />
       </g>
       <rect x="78" y="32" width="64" height="68" rx="1.5" stroke="currentColor" stroke-width="1.1" />
       {#each spiral as p}
@@ -58,13 +58,13 @@
       <g stroke="currentColor" stroke-width="0.8" opacity="0.45" stroke-linecap="round">
         <line x1="25" y1="33" x2="46" y2="33" />
         <line x1="29" y1="39" x2="62" y2="39" />
-        <line x1="29" y1="45" x2="54" y2="45" />
+        <line x1="29" y1="45" x2="51" y2="45" />
         <line x1="25" y1="51" x2="42" y2="51" />
         <line x1="29" y1="57" x2="60" y2="57" />
       </g>
       <line x1="54" y1="43" x2="54" y2="47" stroke="var(--color-coral)" stroke-width="1.3" />
       <line x1="72" y1="44" x2="100" y2="44" stroke="var(--color-coral)" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="3 3" />
-      <rect x="82" y="38" width="9" height="8" rx="1.5" stroke="var(--color-coral)" stroke-width="1.2" />
+      <rect x="82" y="38" width="9" height="8" rx="1.5" class="knock" stroke="var(--color-coral)" stroke-width="1.2" />
       <path d="M84 38 L84 35.5 Q86.5 32.5 89 35.5 L89 38" stroke="var(--color-coral)" stroke-width="1.2" />
       <rect x="102" y="20" width="46" height="50" rx="3" stroke="currentColor" stroke-width="1.5" />
       <g stroke="currentColor" stroke-width="1.1">
@@ -107,14 +107,14 @@
       <g stroke="var(--color-coral)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none">
         <path d="M48 32 Q56 26 64 32" />
         <path d="M61 28.5 L64 32 L59.5 33" />
-        <path d="M94 32 Q104 24 112 30" />
-        <path d="M109 26.5 L112 30 L107.5 31" />
+        <path d="M94 32 Q103 24 110 29" />
+        <path d="M107 25.5 L110 29 L105.5 30" />
       </g>
       <g stroke="var(--color-brand)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none">
         <path d="M112 86 Q82 100 50 78" />
         <path d="M53 77 L50 78 L51.5 81.5" />
       </g>
-      <rect x="78" y="88" width="8" height="10" rx="1" stroke="var(--color-brand)" stroke-width="1" />
+      <rect x="78" y="87" width="9" height="10" rx="1" class="knock" stroke="var(--color-brand)" stroke-width="1" />
     {:else}
       <rect x="56" y="36" width="48" height="48" rx="4" stroke="currentColor" stroke-width="1.5" />
       <rect x="67" y="47" width="26" height="26" rx="2" stroke="currentColor" stroke-width="1.1" />
@@ -132,3 +132,12 @@
     {/if}
   </svg>
 </span>
+
+<style>
+  .knock {
+    fill: #fff;
+  }
+  :global(html.dark) .knock {
+    fill: var(--color-slate-900);
+  }
+</style>

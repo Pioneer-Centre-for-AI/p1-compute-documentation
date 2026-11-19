@@ -251,9 +251,9 @@ command must be on the PATH, or `open` names the CLI inside the app bundle.
 With `--gpu`, the desktop editor is used only when `--desktop` asks for it.
 It needs an sshd of the user's own inside the job
 ([below](#on-a-gpu-node)), DTU refuses ssh from its login node to its compute
-nodes, and no DTU page says a user may run one. The site's RFC 0002 asks
-providers to document that. Until DTU does, plain `code --gpu` opens the
-browser and says why, so nobody runs the sshd without having chosen to.
+nodes, and no DTU page says a user may run one. Until DTU says so, plain
+`code --gpu` opens the browser and says why, so nobody runs the sshd without
+having chosen to.
 
 The desktop editor is picked when there is a display (always on macOS,
 `DISPLAY` or `WAYLAND_DISPLAY` on Linux, the same test `open_url` uses), an

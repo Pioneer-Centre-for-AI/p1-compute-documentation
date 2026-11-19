@@ -1,69 +1,74 @@
 ---
-title: Service levels
-description: Requirements for the service information that a provider publishes, so that researchers can compare the service with its targets.
+title: A helper tool for every researcher
+description: Why P1 offers a small, optional tool for interactive GPU sessions, so every researcher gets the same safe way in.
 authors: [Benjamin Starostka Jakobsen]
-created: 2026-11-06
-updated: 2026-11-06
+created: 2026-11-14
+updated: 2026-11-19
 status: open
-version: '0.1'
-changes:
-  - version: '0.1'
-    date: 2026-11-06
-    note: First draft.
 ---
 
 ## 1. Scope
 
-Requirements for the service information that a provider publishes. This RFC sets no target
-values. Providers propose them in the [provider review](/rfc/conventions/#6-provider-review).
+When researchers start on P1 compute, one of the first things they ask is how to get an interactive
+session on a GPU, ideally in the editor or notebook they already use. Getting there takes several
+steps, and they differ from one cluster to the next. This RFC is about why P1 offers a small command
+line tool that takes care of them.
 
-## 2. Terms
+Using it is optional. If you're happy with SSH, the scheduler and your own setup, keep it.
 
-| Term | Meaning |
-| --- | --- |
-| Target | A value that a provider sets for a service measure, such as two working days. |
-| Figure | A measured value for a service measure over a period. |
-| First response | The first reply from a person to a support request. |
-| Availability | The part of the time that a resource accepts jobs, outside announced maintenance. |
-| Queue wait | The time from the submission of a job to its start. |
+## 2. Why
 
-## 3. Requirements
+So what do researchers do today? Often they ask an AI agent, which will happily write a script
+that runs an SSH server inside the job, opens a tunnel, or routes traffic through a relay. Every
+researcher ends up with a slightly different version, and some are a lot more invasive than others.
+It's easy to end up with a port that anyone on the cluster can connect to, a token in a log that
+other users can read, or a GPU left allocated for hours after the work ended. What a shared system
+allows isn't always easy to tell, yet the researcher is the one carrying the risk.
+
+And that's only for those who know to ask. HPC and IT experience varies a lot between researchers.
+Some have run jobs on clusters for years, some are just starting out, and many are somewhere in
+between. Should how much you get out of the compute depend on where you are on that scale, or on
+whether someone happened to point you to the right setup?
+
+We think everyone with access to P1 compute should be able to use it productively, whatever their
+background. A shared tool like this could help with that:
+
+- One command starts a GPU session, opens your editor or notebook in it, and ends the job when
+  you're done.
+- Everyone uses the same approach, reviewed in the open, instead of a different script each.
+- It checks your setup and tells you what to fix.
+- The commands are the same on every provider.
+
+## 3. Proposal
+
+P1 offers one small command line tool for interactive sessions and the other everyday steps on its
+compute. It sits on top of what the providers offer and doesn't replace any of it. If you prefer
+your own workflow, nothing changes for you. Where a provider has its own recommended way to reach
+a job, the tool uses it.
+
+## 4. Requirements
 
 | ID | Requirement |
 | --- | --- |
-| SL1 | The provider MUST publish a support channel and a target for first response. |
-| SL2 | The provider MUST publish a target for the time from an approved request to a working account. |
-| SL3 | The provider MUST announce planned maintenance, with a stated notice period. |
-| SL4 | The provider MUST report each unplanned outage, with its cause and its duration. |
-| SL5 | The provider MUST state the quota, the backups and the retention for each storage area. |
-| SL6 | The provider MUST keep public documentation in English for access, the scheduler, storage and software requests. |
-| SL7 | The provider MUST let a researcher move their data off the resource before a project ends. |
-| SL8 | The provider SHOULD publish monthly figures for availability and queue wait. |
-| SL9 | The provider MUST publish its figures against its targets once each year. |
+| CL1 | The tool must be optional. Everything it does must also be possible without it, using the access methods the provider documents. |
+| CL2 | The tool must work for someone with no custom setup. It sets up what it needs, or explains what's missing and how to fix it. |
+| CL3 | The tool must only use the access the researcher already has, and must only run work through the provider's scheduler. |
+| CL4 | Where a provider recommends a way to reach a job, the tool must use it. Otherwise, it must use the least invasive method that works, and tell the researcher which one it's using. |
+| CL5 | The tool must not let other users reach a session or read its tokens. |
+| CL6 | The tool must end the job when the session ends, and must end an idle GPU job after a set time. |
+| CL7 | The tool must not collect data about the researcher or their work. |
+| CL8 | The tool's source code must be public. |
+| CL9 | The tool should offer the same commands on every provider. |
 
-## 4. Conformance
+## 5. Example (informative)
 
-These steps add to the [conformance steps](/rfc/conventions/#7-conformance):
+The [aicentre CLI](/cli/) is a concept of such a tool. Running `aicentre code --gpu` starts a GPU
+job and opens an editor in your browser. Press Ctrl-C and the job is cancelled. Leave the browser
+closed for 10 minutes and the job ends on its own. The
+[source is on GitHub](https://github.com/Pioneer-Centre-for-AI/p1-compute-documentation).
 
-1. The provider publishes its targets and figures, and its page on this site links to them.
-2. The compute needs survey asks researchers to compare the service with the figures.
-3. If the survey shows a gap, P1 asks the provider for a new confirmation.
+## 6. Open questions
 
-## 5. Example implementations (informative)
-
-| ID | Example |
-| --- | --- |
-| SL1 | A ticket system or a mailbox |
-| SL3, SL4 | A status page or a mailing list |
-| SL8 | Scheduler statistics |
-
-## 6. Rationale (informative)
-
-A confirmation states what a provider offers, and figures show if the service holds. The providers
-know their costs, so they propose the targets.
-
-## 7. Open questions
-
-1. Should SL1 and SL2 set minimums, such as two and five working days?
-2. Should SL3 set a minimum notice, such as one week?
-3. Should SL8 set a minimum availability?
+1. Which methods should the tool be allowed to use? Should the providers or the
+   [HPC governance board](/about/#hpc-governance-board) sign off on each one?
+2. Should the tool grow into a web interface, for researchers who don't use a terminal?

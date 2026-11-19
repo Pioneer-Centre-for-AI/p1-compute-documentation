@@ -102,34 +102,34 @@ export type ComputeTier = { tier: string; level: string; description: string };
 
 export const computeTiers: ComputeTier[] = [
   {
-    tier: '4',
-    level: 'Personal',
+    tier: '0',
+    level: 'European',
     description:
-      'Personal laptop and/or desktop with either no GPUs or a single one. At this level compute is limited and mostly consists of code development and running experiments with small datasets and models.'
+      'The supercomputers of the EuroHPC Joint Undertaking, for the largest projects. Projects usually start with 8-16 GPUs and can scale to hundreds, and to more than a thousand on the largest systems. Limits are set on total GPU hours rather than wall time. Danish researchers reach them through DeiC and EuroHPC calls. See the <a href="https://eurohpc-ju.europa.eu/supercomputers/our-supercomputers_en">EuroHPC supercomputers</a>, such as LUMI, Karolina and MeluXina.'
+  },
+  {
+    tier: '1',
+    level: 'National',
+    description:
+      'National HPC facilities provide the resources for large-scale model training. Expect fewer restrictions to wall time (1-2 weeks), storage (around 1-10 TB) and number of nodes/GPUs used (around 16-64). In Denmark these are Gefion, where P1 holds a sandbox partition, and the <a href="https://www.deic.dk/en/supercomputing-hpc/computing-power-through-deic/national-facilities">DeiC national HPC systems</a>.'
+  },
+  {
+    tier: '2',
+    level: 'Regional',
+    description:
+      'Regional systems, open to researchers across a region. Denmark has no separate regional level: clusters shared across Danish universities are national (Tier 1).'
   },
   {
     tier: '3',
-    level: 'Institute',
+    level: 'Institutional',
     description:
       'Compute clusters containing either several smaller GPUs or a few larger ones. Multiple experiments can be run in parallel and models can be parallelized over a few GPUs, but it is not feasible to train very large models from scratch. Expect limitations to wall time (a couple of days), storage (around 0.5-1 TB) and number of nodes/GPUs used (around 2-16).'
   },
   {
-    tier: '2',
-    level: 'National',
+    tier: '–',
+    level: 'Personal',
     description:
-      'National HPC facilities provide the necessary resources for large-scale model training. Expect fewer restrictions to wall time (1-2 weeks), storage (around 1-10 TB) and number of nodes/GPUs used (around 16-64). Some national facilities can also support European-level (Tier 1) workloads. For example, Gefion, where P1 holds a sandbox partition, is a national facility that can support both Tier 2 and possibly Tier 1 workloads.'
-  },
-  {
-    tier: '1',
-    level: 'European',
-    description:
-      'European HPC centers offer significantly larger scale compute resources, typically providing easy access to 8-16 GPUs with the possibility of scaling up to 500-800 GPUs depending on project requirements and the specific HPC center. Unlike lower tiers, walltime is usually not restricted; instead, limitations are set on total GPU hours used. See <a href="https://eurohpc-ju.europa.eu/supercomputers/our-supercomputers_en#karolina">Karolina</a> and <a href="https://eurohpc-ju.europa.eu/supercomputers/our-supercomputers_en#meluxina">Meluxina</a> for examples of European HPC centers with GPUs.'
-  },
-  {
-    tier: '0',
-    level: 'Global',
-    description:
-      'The highest level of compute. Possibility to use above 1000 GPUs and perform calculations at exascale. Usually only available to large research projects and collaborations with industry. See <a href="https://eurohpc-ju.europa.eu/supercomputers/our-supercomputers_en#lumi">LUMI</a> for an example of a global HPC center with GPUs.'
+      'Personal laptop and/or desktop with either no GPUs or a single one, outside the European scale. At this level compute is limited and mostly consists of code development and running experiments with small datasets and models.'
   }
 ];
 

@@ -1,6 +1,5 @@
 import { getClusters } from '#lib/content.ts';
 import { getEvents } from '#lib/events.ts';
-import { getRfcs } from '#lib/rfcs.ts';
 
 export type NavBadgeVariant = 'caution' | 'note';
 
@@ -27,7 +26,7 @@ export function getNav(): NavEntry[] {
       items: [
         { label: 'About', href: '/about/' },
         { label: 'Your Compute Needs', href: '/survey/' },
-        { label: 'Command Line Tool', href: '/cli/', badge: { text: 'WIP', variant: 'caution' } },
+        { label: 'Command Line Tool', href: '/cli/', badge: { text: 'Concept', variant: 'caution' } },
         { label: 'Forms & Bookings', href: '/forms/' }
       ]
     },
@@ -51,9 +50,7 @@ export function getNav(): NavEntry[] {
         {
           label: 'RFCs',
           href: '/rfc/',
-          badge: getRfcs().some((r) => r.meta.status === 'open')
-            ? { text: 'Open', variant: 'note' as const }
-            : undefined
+          badge: { text: 'Concept', variant: 'caution' as const }
         }
       ]
     },

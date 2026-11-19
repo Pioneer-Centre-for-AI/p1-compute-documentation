@@ -19,7 +19,6 @@ export const MARKDOWN_PAGES = [
   'rfc/0001',
   'rfc/0002',
   'rfc/all',
-  'rfc/conventions',
   'survey',
   'terms'
 ];

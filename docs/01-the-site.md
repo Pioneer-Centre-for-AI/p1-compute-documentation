@@ -64,17 +64,11 @@ An RFC's folder name is its number, four digits, as in `src/routes/rfc/0001/`.
 number is the address, so the title can change without breaking a link.
 
 An RFC is a standard the research community sets for HPC providers, and PIs at
-the partner institutions carry its mandate. P1 publishes the standards and
-records which providers meet them. An RFC takes one concern and
-numbers the requirements a provider and its users must meet, so a provider can
-confirm each one. It names no provider or dataset. `/rfc/conventions/` holds
-the keywords (MUST, MUST NOT, SHOULD, MAY), the section structure, the
-responsibilities, the provider review and the conformance steps. It is a plain
-page with no number or status, and the glob in `rfcs.ts` skips it. It has the
-same frontmatter as an RFC without `status`, `decided` and `summary`, and it
-uses the same document layout and Changes table. RFC text keeps to about 80% of
-ASD-STE100: one requirement per row, an actor in each requirement, and the
-terms in a Terms table. The index page says who
+the partner institutions carry its mandate. P1 publishes the standards. An RFC
+takes one concern and numbers the requirements a provider and its users must
+meet, in plain "must" and "should". It names no provider or dataset. RFC prose
+is plain and conversational, with a Why section that says what motivates it.
+Each requirement row names its actor. The index page says who
 takes part: researchers voice needs through any channel (the survey, events,
 the P1 consortium, networks), research engineers with an open expert network
 draft RFCs from that feedback, and the HPC governance board decides. An RFC page carries the
@@ -88,10 +82,10 @@ decision in a sentence or two.
 To record a decision, set `status`, `decided` and `summary`, and move
 `updated`. `/rfc/` shows up to three open RFCs, newest update first, and
 `/rfc/all/` lists every RFC, newest number first. The glob skips the `all`
-folder too.
+folder.
 
-An RFC page and the conventions page read as standalone documents. The root
-layout gives `/rfc/NNNN/` and `/rfc/conventions/` the full width, as it does for `/` and `/gallery/`, so the site sidebar is
+An RFC page reads as a standalone document. The root
+layout gives `/rfc/NNNN/` the full width, as it does for `/` and `/gallery/`, so the site sidebar is
 gone. `src/routes/rfc/+layout.svelte` draws the frame: a back link, the number
 beside the title, a ruled block of metadata with the permanent address, the
 body at reading width, and the page outline. `src/lib/markdown/sectionNumbers.js`
@@ -99,11 +93,8 @@ wraps a leading "1." in an h2 or h3 in `.section-number`, after `rehype-slug`,
 so anchors such as `#1-scope` keep the number. The markdown twin keeps the
 number as text.
 
-Each RFC has a quoted `version` ("0.1") and a `changes` list, newest first.
-The build fails if the first change does not match `version` and `updated`, or
-if an accepted RFC is below 1.0. The layout shows the version in the metadata
-and renders the list as a Changes table at the end of the body. The twin has
-the same table.
+RFCs carry no version number or change list. Git keeps their history, and
+`created` and `updated` give readers the dates.
 
 `/rfc/feed.xml` is an Atom feed with one entry per RFC, newest update first.
 Every page under `/rfc/` links it in `<head>`. `llms.txt` lists the RFC pages
@@ -189,7 +180,8 @@ All prerendered, so they become files in `build/`.
 
 | Path | Source | What |
 | --- | --- | --- |
-| `/install` | `src/routes/install/+server.ts` | `pkgs/cli/install.sh` as it is, so the site and the release agree. The file has no extension, which is why the CLI's page is `/cli/`. |
+| `/install` | `src/routes/install/+server.ts` | `pkgs/cli/install.sh` as it is, so the site and the release agree. The file has no extension, which is why the CLI's page is `/cli/`. GitHub Pages serves a file without an extension as `application/octet-stream`, so a browser downloads it. |
+| `/install.txt` | `src/routes/install.txt/+server.ts` | The same script. GitHub Pages serves `.txt` as `text/plain`, so a browser shows it, and people can read it before they run it. |
 | `/gallery/<code>.tar.gz` | `src/routes/gallery/[slug].tar.gz/` | An example's files from `pkgs/gallery/<code>/`. |
 | `/gallery/index.json` | `src/routes/gallery/index.json/` | The published examples, for `aicentre gallery`. |
 | `/<path>.md`, `/llms.txt`, `/llms-full.txt` | see above | Markdown for scripts and models. |
@@ -202,8 +194,8 @@ All prerendered, so they become files in `build/`.
 Ctrl K, Cmd K or `/` opens the launcher in `src/lib/components/SiteSearch.svelte`, and so does
 the search button in the header. `src/lib/search.svelte.ts` holds whether it is open.
 `src/lib/markdown/search.ts` builds `/search.json` from the markdown twins: one entry per page,
-one per h2 or h3 with a short snippet, and one per RFC requirement row (RD, SL) that holds MUST,
-SHOULD or MAY. Section links copy the slugs of `rehype-slug`, so a heading in a twin needs the same
+one per h2 or h3 with a short snippet, and one per RFC requirement row (an ID such as RD1 or CL1) that holds must,
+should or may, in any case. Section links copy the slugs of `rehype-slug`, so a heading in a twin needs the same
 heading on the page. The launcher fetches the index the first time it opens and ranks results in
 the browser.
 

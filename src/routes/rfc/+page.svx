@@ -1,4 +1,5 @@
 <script>
+  import Aside from '#lib/components/Aside.svelte';
   import Meta from '#lib/components/Meta.svelte';
   import RfcDiagram from '#lib/components/RfcDiagram.svelte';
   import RfcList from '#lib/components/RfcList.svelte';
@@ -17,6 +18,13 @@
 <p class="eyebrow not-prose mb-4">P1 Compute</p>
 
 # Requests for comments
+
+<Aside type="caution" title="A concept">
+
+These RFCs show how researchers and providers could agree on what research needs from compute. Send feedback to
+#ask-compute or the [compute needs survey](/survey/).
+
+</Aside>
 
 Compute is central to research. RFCs are how the research community and providers agree on what
 researchers need from it.
@@ -37,11 +45,10 @@ See [all RFCs](/rfc/all/), with their status, or follow changes in the [Atom fee
 | --- | --- |
 | Researchers | Say what they need: in the [compute needs survey](/survey/), at [events](/events/), in the P1 consortium. Nobody has to write an RFC. |
 | Research engineers | Draft RFCs from that feedback, with an open network of DevOps, MLOps and domain experts. |
-| [HPC governance board](/about/#hpc-governance-board) | Decides each RFC. In the P1 consortium it has one PI per partner institution, and they carry the research community's mandate. |
-| Providers | Review drafts, meet the requirements and confirm it. Compute budgets go to providers that conform. |
+| [HPC governance board](/about/#hpc-governance-board) | Decides each RFC. In the P1 consortium it has one PI per partner institution, and they carry the mandate regarding compute decisions. |
+| Providers | Review drafts and meet the requirements. |
 
-Each RFC covers one concern. The [conventions](/rfc/conventions/) give the keywords, the structure
-and the conformance steps.
+Each RFC covers one concern.
 
 ## Why RFCs
 
