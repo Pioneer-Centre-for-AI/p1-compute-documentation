@@ -3,7 +3,7 @@ export const URLS = {
   surveyPage: '/survey/',
   gpuAllowance: 'https://forms.cloud.microsoft/e/yN8Vxi7KTc',
   computeBudget: 'https://forms.cloud.microsoft/e/b6wcjy5kDy',
-  booking: 'https://book.starostka.io/benjamin/compute-needs',
+  booking: 'https://book.starostka.io/benjamin/30min',
   coordinatorEmail: 'bstja@dtu.dk',
   coordinatorOrcid: 'https://orcid.org/0000-0002-2740-1651',
   governanceEmail: 'compute-governance-p1@aicentre.dk',
