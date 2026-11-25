@@ -363,6 +363,15 @@ only a release signed with aicentre's release key, and so does the install scrip
 asks before it removes your settings, and `--purge` skips the question. It ends with the command
 that removes `aicentre` from each cluster.
 
+On a cluster, `aicentre upgrade` from 0.1.x stops with `EBUSY` and leaves no working `aicentre`.
+Run the install script there to repair it or to upgrade in its place:
+
+```bash
+curl -fsSL https://hpc.aicentre.dk/install | sh
+```
+
+A session started from an upgraded laptop also brings the cluster up to date.
+
 ## With Nix
 
 Run it from this site's flake without installing:

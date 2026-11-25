@@ -89,7 +89,13 @@ pub async fn upgrade(ctx: &Ctx, version: Option<&str>, keep_current: bool) -> an
 
     let mut work = Work { stage: None };
     let result = fetch_and_switch(ctx, version, keep_current, &base, &mut work).await;
-    if let Some(stage) = &work.stage {
+    // Never the version that `current` already points at: removing it
+    // would leave no aicentre at all.
+    let in_use = |dir: &str| {
+        let real = |p: &str| std::fs::canonicalize(p).ok();
+        real(dir).is_some() && real(dir) == real(&ctx.paths.current)
+    };
+    if let Some(stage) = work.stage.as_ref().filter(|dir| !in_use(dir)) {
         safe_remove(stage, &ctx.paths)?;
     }
     drop(held);

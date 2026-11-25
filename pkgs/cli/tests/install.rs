@@ -142,6 +142,22 @@ async fn upgrade_switches_to_the_new_version_and_removes_the_old_one_and_the_dow
 }
 
 #[tokio::test]
+async fn an_old_version_that_cannot_be_removed_stays_and_the_upgrade_still_holds() {
+    use std::os::unix::fs::PermissionsExt;
+    let sb = Sandbox::new();
+    let ctx = installed(&sb);
+    // As on a network home, where the folder of the running program is busy.
+    let old = format!("{}/0.1.0", ctx.paths.versions);
+    fs::set_permissions(&old, fs::Permissions::from_mode(0o555)).unwrap();
+    let code = upgrade(&from(&sb, &release(&sb, "0.2.0", false)), None, false).await.unwrap();
+    fs::set_permissions(&old, fs::Permissions::from_mode(0o755)).unwrap();
+    assert_eq!((code, sb.err.text().as_str()), (0, ""));
+    assert_eq!(fs::read_link(&ctx.paths.current).unwrap().to_string_lossy(), "versions/0.2.0");
+    assert!(Path::new(&ctx.paths.current).join("aicentre").exists());
+    assert_eq!(versions(&ctx), ["0.1.0", "0.2.0"]);
+}
+
+#[tokio::test]
 async fn an_upgrade_without_the_release_keys_signature_changes_nothing() {
     let sb = Sandbox::new();
     let ctx = installed(&sb);

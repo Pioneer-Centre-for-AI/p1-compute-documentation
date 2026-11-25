@@ -233,8 +233,11 @@ pub fn prune_versions(paths: &Paths, keep: &str) -> anyhow::Result<Vec<String>> 
         if name == keep {
             continue;
         }
-        safe_remove(&join(&[&paths.versions, &name]), paths)?;
-        removed.push(name);
+        // On a network home the folder of the program that is running
+        // cannot be removed (EBUSY). It goes the next time.
+        if safe_remove(&join(&[&paths.versions, &name]), paths).is_ok() {
+            removed.push(name);
+        }
     }
     Ok(removed)
 }
@@ -269,6 +272,22 @@ mod tests {
         safe_remove(&format!("{}/versions/0.1.0", paths.data), &paths).unwrap();
         assert!(!Path::new(&file).exists());
         safe_remove(&format!("{}/gone", paths.cache), &paths).unwrap();
+    }
+
+    #[test]
+    fn an_old_version_that_cannot_be_removed_does_not_fail_the_install() {
+        use std::os::unix::fs::PermissionsExt;
+        let (_dir, paths) = sandbox();
+        for version in ["0.1.0", "0.1.1", "0.2.0"] {
+            let dir = format!("{}/{version}", paths.versions);
+            fs::create_dir_all(&dir).unwrap();
+            fs::write(format!("{dir}/aicentre"), "x").unwrap();
+        }
+        let stuck = format!("{}/0.1.0", paths.versions);
+        fs::set_permissions(&stuck, fs::Permissions::from_mode(0o555)).unwrap();
+        assert_eq!(prune_versions(&paths, "0.2.0").unwrap(), ["0.1.1"]);
+        assert!(Path::new(&stuck).exists() && Path::new(&paths.versions).join("0.2.0").exists());
+        fs::set_permissions(&stuck, fs::Permissions::from_mode(0o755)).unwrap();
     }
 
     #[test]
