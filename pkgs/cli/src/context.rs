@@ -9,6 +9,14 @@ use crate::version::VERSION;
 
 pub type Env = BTreeMap<String, String>;
 
+pub fn for_tests<'a>(env: &'a Env, name: &str) -> Option<&'a str> {
+    // Debug builds too, so `cargo run` and `cargo test` build the same binary.
+    if !cfg!(any(feature = "test-overrides", debug_assertions)) {
+        return None;
+    }
+    env.get(name).map(String::as_str).filter(|v| !v.is_empty())
+}
+
 #[derive(Clone, Copy)]
 enum Size {
     Fixed { columns: Option<usize>, rows: Option<usize> },
@@ -63,7 +71,7 @@ impl Output {
     }
 
     pub fn write(&self, text: &str) {
-        let mut sink = self.sink.lock().unwrap_or_else(|e| e.into_inner());
+        let mut sink = crate::lock(&self.sink);
         let _ = sink.write_all(text.as_bytes());
         let _ = sink.flush();
     }
@@ -95,17 +103,17 @@ pub struct Captured(Arc<Mutex<Vec<u8>>>);
 
 impl Captured {
     pub fn text(&self) -> String {
-        String::from_utf8_lossy(&self.0.lock().unwrap_or_else(|e| e.into_inner())).into_owned()
+        String::from_utf8_lossy(&crate::lock(&self.0)).into_owned()
     }
 
     pub fn clear(&self) {
-        self.0.lock().unwrap_or_else(|e| e.into_inner()).clear();
+        crate::lock(&self.0).clear();
     }
 }
 
 impl Write for Captured {
     fn write(&mut self, buf: &[u8]) -> std::io::Result<usize> {
-        self.0.lock().unwrap_or_else(|e| e.into_inner()).extend_from_slice(buf);
+        crate::lock(&self.0).extend_from_slice(buf);
         Ok(buf.len())
     }
 

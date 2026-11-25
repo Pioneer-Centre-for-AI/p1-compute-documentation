@@ -32,4 +32,4 @@ aicentre jupyter examples/int-gpu --gpu                # or JupyterLab, with the
 - `gallery get` has the login node download the example into your project directory, so there
   is nothing to clone or copy.
 - `--gpu` asks `p1i` for a GPU, starts marimo with the example's own packages, and opens it in
-  your browser through the login node. Ctrl-C ends the job; `--time 2h` asks for longer.
+  your browser through the login node. Ctrl-C ends the job; `--size medium` or `--time 4h` asks for longer.

@@ -87,7 +87,7 @@ impl Steps {
     }
 
     fn lock(&self) -> std::sync::MutexGuard<'_, Inner> {
-        self.inner.lock().unwrap_or_else(|e| e.into_inner())
+        crate::lock(&self.inner)
     }
 
     pub fn step(&self, text: &str) {

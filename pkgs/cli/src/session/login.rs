@@ -2,7 +2,9 @@ use std::future::Future;
 use std::path::Path;
 
 use super::here::here;
-use super::sync::{PATH_PROBE, Probe, VERSION_PROBE, sync};
+use super::sync::{
+    Launcher, PATH_PROBE, Probe, VERSION_PROBE, ensure_launcher, launcher_probe, sync,
+};
 use crate::check::aliases::{Resolver, resolver};
 use crate::check::clusters::{ClusterId, DTU, GEFION};
 use crate::check::probes::connect::{classify_ssh_failure, parse_tags, provider_context};
@@ -10,13 +12,11 @@ use crate::check::select::in_use;
 use crate::config::{Config, load_config_or_say};
 use crate::context::Ctx;
 use crate::exec::login_shell;
-use crate::paths::join;
+use crate::install::release::is_version;
 use crate::remote::master::{KEEP, Master, is_open, shared_socket};
 use crate::remote::shell::{LocalShell, Shell};
 use crate::ui::say::fail;
 use crate::ui::style::make_style;
-
-pub const LAUNCHER: &str = include_str!("launcher.sh");
 
 #[derive(Clone)]
 pub struct Login {
@@ -29,11 +29,33 @@ pub struct Login {
     pub base: String,
     pub data: String,
     pub launcher: String,
+    launches: String,
+    there: String,
 }
 
 impl Login {
     pub fn path(&self, path: &str) -> String {
         remote_path(&self.home, &self.base, path)
+    }
+
+    pub async fn ready_to_launch(
+        &mut self,
+        ctx: &Ctx,
+        config: &Config,
+        step: &dyn Fn(&str),
+    ) -> Result<(), (String, Vec<String>)> {
+        if self.local {
+            return Ok(());
+        }
+        let launcher = Launcher { runs: self.launches.clone(), there: self.there.clone() };
+        let moved =
+            ensure_launcher(ctx, config, &self.master, self.provider, &self.alias, &launcher, step)
+                .await?;
+        if let Some(path) = moved {
+            self.launcher = path;
+            self.launches = ctx.version.clone();
+        }
+        Ok(())
     }
 }
 
@@ -139,14 +161,6 @@ fn local_login(ctx: &Ctx, provider: ClusterId) -> anyhow::Result<Option<Login>> 
         fail(ctx, &format!("{base} does not exist."), &[NO_PROJECT_DIR.into()]);
         return Ok(None);
     }
-    let cache = match ctx.env_set("XDG_CACHE_HOME") {
-        Some(dir) => dir.to_string(),
-        None => join(&[&home, ".cache"]),
-    };
-    let dir = join(&[&cache, "aicentre"]);
-    std::fs::create_dir_all(&dir)?;
-    let file = join(&[&dir, &format!("session-{}.sh", ctx.version)]);
-    std::fs::write(&file, LAUNCHER)?;
     Ok(Some(Login {
         provider,
         master: Shell::Local(LocalShell::new(ctx)),
@@ -156,19 +170,20 @@ fn local_login(ctx: &Ctx, provider: ClusterId) -> anyhow::Result<Option<Login>> 
         home,
         data: format!("{base}/.aicentre"),
         base,
-        launcher: file,
+        launcher: ctx.exec_path.clone(),
+        launches: ctx.version.clone(),
+        there: ctx.version.clone(),
     }))
 }
 
-fn setup_command(name: &str) -> String {
+fn setup_command(version: &str) -> String {
+    let launcher = if is_version(version) { launcher_probe(version) } else { "true".into() };
     login_shell(
         &[
-            format!(
-                r#"d="${{XDG_CACHE_HOME:-$HOME/.cache}}/aicentre" && mkdir -p "$d" && cat > "$d/{name}""#
-            ),
-            format!(r#"echo "@@FILE $d/{name}" && echo "@@USER $USER" && echo "@@HOME $HOME""#),
+            r#"echo "@@USER $USER" && echo "@@HOME $HOME""#.to_string(),
             format!("{VERSION_PROBE} && {{ {PATH_PROBE}; }}"),
             format!(r#"{{ [ -d "{}/$USER" ] && echo "@@P1 yes"; true; }}"#, DTU.project_dir),
+            format!("{{ {launcher}; }}"),
         ]
         .join(" && "),
     )
@@ -213,12 +228,11 @@ pub async fn open_login(
         return Ok(None);
     }
 
-    let name = format!("session-{}.sh", ctx.version);
-    let r = master.run_input(&setup_command(&name), LAUNCHER, 30_000).await;
+    let r = master.run(&setup_command(&ctx.version), 30_000).await;
     let tags = parse_tags(&r.stdout);
     let tag = |k: &str| tags.get(k).filter(|v| !v.is_empty()).cloned();
-    let (file, user, home) = match (tag("FILE"), tag("USER"), tag("HOME")) {
-        (Some(file), Some(user), Some(home)) if r.code == 0 => (file, user, home),
+    let (user, home) = match (tag("USER"), tag("HOME")) {
+        (Some(user), Some(home)) if r.code == 0 => (user, home),
         _ => {
             let why = match r.stderr.trim() {
                 "" => format!("exit {}", r.code),
@@ -247,6 +261,14 @@ pub async fn open_login(
     } else {
         home.clone()
     };
+    let own = ctx.env_set("AICENTRE_REMOTE_BIN").filter(|p| p.starts_with('/'));
+    let (launcher, launches) = match own {
+        Some(path) => (path.to_string(), ctx.version.clone()),
+        None => (
+            tag("LAUNCHER").filter(|p| p.starts_with('/')).unwrap_or_default(),
+            tag("LAUNCHES").unwrap_or_default(),
+        ),
+    };
     Ok(Some(Login {
         provider,
         master: shell,
@@ -256,7 +278,9 @@ pub async fn open_login(
         home,
         data: format!("{base}/.aicentre"),
         base,
-        launcher: file,
+        launcher,
+        launches,
+        there: probe.there.clone(),
     }))
 }
 
@@ -288,8 +312,9 @@ mod tests {
         assert_eq!(remote_path("/h", "/dtu/p1/s1", "/abs"), "/abs");
         assert_eq!(remote_path("/h", "/dtu/p1/s1", "rel/a"), "/dtu/p1/s1/rel/a");
         assert_eq!(not_reachable(ClusterId::Dtu), None);
-        assert!(setup_command("session-0.1.0.sh").starts_with(
-            r#"bash -lc 'd="${XDG_CACHE_HOME:-$HOME/.cache}/aicentre" && mkdir -p "$d" && cat > "$d/session-0.1.0.sh" && echo"#
-        ));
+        assert!(
+            setup_command("0.1.0")
+                .starts_with(r#"bash -lc 'echo "@@USER $USER" && echo "@@HOME $HOME" && echo"#)
+        );
     }
 }

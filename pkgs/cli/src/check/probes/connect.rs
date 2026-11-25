@@ -8,6 +8,7 @@ use crate::check::clusters::{ClusterId, DTU, DTU_NO_ANSWER_HINT, GEFION, tsh_log
 use crate::check::types::Status;
 use crate::context::Env;
 use crate::exec::{RunOptions, run};
+use crate::ui::say::printable;
 
 pub fn probe_args(
     alias: &str,
@@ -279,7 +280,7 @@ pub fn classify_ssh_failure(stderr: &str, c: &FailureContext) -> Failure {
     Failure {
         kind: "other",
         status: Status::Fail,
-        message: last.unwrap_or("ssh failed without saying why").to_string(),
+        message: printable(last.unwrap_or("ssh failed without saying why")),
         hint: vec![format!("Run ssh -v {} to see where it stops.", c.alias)],
     }
 }
@@ -292,7 +293,7 @@ pub fn parse_tags(stdout: &str) -> Tags {
     let mut tags = Tags::new();
     for line in stdout.split('\n') {
         if let Some(m) = TAG.captures(line.trim()) {
-            tags.insert(m[1].to_string(), m[2].to_string());
+            tags.insert(m[1].to_string(), printable(&m[2]));
         }
     }
     tags

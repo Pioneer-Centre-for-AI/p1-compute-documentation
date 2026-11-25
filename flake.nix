@@ -1,159 +1,60 @@
 {
-  description = "P1 HPC documentation site (SvelteKit + bun)";
+  description = "P1 HPC: the documentation site and the aicentre CLI";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    flake-utils.url = "github:numtide/flake-utils";
+    # Development only: cross builds for the clusters.
+    rust-overlay.url = "github:oxalica/rust-overlay";
+    rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, flake-utils }:
-    flake-utils.lib.eachSystem [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" ] (system:
-      let
-        pkgs = import nixpkgs { inherit system; };
+  outputs = { self, nixpkgs, rust-overlay }:
+    let
+      systems = [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" ];
 
-        nodeModulesHash = {
-          aarch64-linux = "sha256-D6qiX9h+s45aHQEw3SEFKIVPflhknwAl54F4eoDqTz8=";
-          aarch64-darwin = "sha256-sQZi8cujOoeNM9bZBR+n2cl1aNHTWEo6UxdciJFzn4w=";
-          x86_64-linux = "sha256-gJL+Gpsn4py9rxemFhESTElCtR+p5HFGbVr00T3rUbw=";
-        }.${system} or (throw
-          "No node_modules hash recorded for ${system}. Run `nix build .#website`, then paste the printed `got:` hash into nodeModulesHash in flake.nix.");
-
-        nodeModules = pkgs.stdenvNoCC.mkDerivation {
-          pname = "p1-hpc-node-modules";
-          version = "0.1.0";
-
-          src = pkgs.lib.fileset.toSource {
-            root = ./.;
-            fileset = pkgs.lib.fileset.unions [
-              ./package.json
-              ./bun.lock
-            ];
+      forEachSystem = outputs: nixpkgs.lib.genAttrs systems (system:
+        let pkgs = nixpkgs.legacyPackages.${system}; in
+        outputs {
+          inherit pkgs;
+          site = pkgs.callPackage ./nix/website.nix { };
+          aicentre = pkgs.callPackage ./pkgs/cli/nix/package.nix { };
+          cross = pkgs.callPackage ./pkgs/cli/nix/cross.nix {
+            rustBin = rust-overlay.lib.mkRustBin { } pkgs;
           };
+        });
 
-          nativeBuildInputs = [ pkgs.bun ];
+      app = program: { type = "app"; inherit program; };
+    in
+    {
+      packages = forEachSystem ({ site, aicentre, ... }: {
+        inherit (site) website;
+        inherit aicentre;
+        default = site.website;
+      });
 
-          dontConfigure = true;
+      checks = forEachSystem ({ site, ... }: {
+        inherit (site) website typecheck;
+      });
 
-          buildPhase = ''
-            runHook preBuild
-            export HOME=$(mktemp -d)
-            bun install --frozen-lockfile --no-progress
-            runHook postBuild
-          '';
+      apps = forEachSystem ({ site, aicentre, cross, ... }: {
+        website = app "${site.serve}";
+        default = app "${site.serve}";
+        aicentre = app "${aicentre}/bin/aicentre";
+        static-x64 = app "${cross.build}/bin/aicentre-static-x64";
+      });
 
-          installPhase = ''
-            runHook preInstall
-            mkdir -p $out
-            cp -R node_modules $out/
-            runHook postInstall
-          '';
-
-          outputHashMode = "recursive";
-          outputHashAlgo = "sha256";
-          outputHash = nodeModulesHash;
-        };
-
-        website = pkgs.stdenvNoCC.mkDerivation {
-          pname = "p1-hpc-website";
-          version = "0.1.0";
-
-          src = pkgs.lib.fileset.toSource {
-            root = ./.;
-            fileset = pkgs.lib.fileset.unions [
-              ./package.json
-              ./bun.lock
-              ./vite.config.ts
-              ./tsconfig.json
-              ./src
-              ./static
-              ./pkgs/cli/install.sh
-              ./pkgs/gallery
-            ];
-          };
-
-          nativeBuildInputs = [ pkgs.bun pkgs.nodejs_22 ];
-
-          buildPhase = ''
-            runHook preBuild
-            export HOME=$(mktemp -d)
-            cp -R ${nodeModules}/node_modules ./node_modules
-            chmod -R u+w node_modules
-            patchShebangs node_modules
-            bun run build
-            runHook postBuild
-          '';
-
-          installPhase = ''
-            runHook preInstall
-            mkdir -p $out
-            cp -R build/. $out/
-            runHook postInstall
-          '';
-        };
-
-        typecheck = pkgs.stdenvNoCC.mkDerivation {
-          pname = "p1-hpc-typecheck";
-          version = "0.1.0";
-
-          src = website.src;
-
-          nativeBuildInputs = [ pkgs.bun pkgs.nodejs_22 ];
-
-          buildPhase = ''
-            runHook preBuild
-            export HOME=$(mktemp -d)
-            cp -R ${nodeModules}/node_modules ./node_modules
-            chmod -R u+w node_modules
-            patchShebangs node_modules
-            bun run check
-            runHook postBuild
-          '';
-
-          installPhase = ''
-            runHook preInstall
-            touch $out
-            runHook postInstall
-          '';
-        };
-
-        aicentre = pkgs.callPackage ./pkgs/cli/nix/package.nix { };
-
-        serveScript = pkgs.writeShellScript "serve-p1-hpc" ''
-          exec ${pkgs.miniserve}/bin/miniserve \
-            --index index.html \
-            --port "''${PORT:-8080}" \
-            --interfaces 127.0.0.1 \
-            ${website}
-        '';
-      in
-      {
-        packages.website = website;
-        packages.default = website;
-        packages.aicentre = aicentre;
-
-        checks.typecheck = typecheck;
-        checks.website = website;
-
-        apps.website = {
-          type = "app";
-          program = "${serveScript}";
-        };
-        apps.default = self.apps.${system}.website;
-        apps.aicentre = {
-          type = "app";
-          program = "${aicentre}/bin/aicentre";
-        };
-
-        devShells.default = pkgs.mkShell {
+      devShells = forEachSystem ({ pkgs, cross, ... }: {
+        default = pkgs.mkShell {
           packages = with pkgs; [
             bun
             nodejs_22
-            shellcheck
             cargo
             rustc
             clippy
             rustfmt
             rust-analyzer
+            shellcheck
+            secretspec
           ];
 
           shellHook = ''
@@ -161,15 +62,23 @@
           '';
         };
 
-        formatter = pkgs.nixpkgs-fmt;
-      })
-    // {
-      homeManagerModules.default = import ./pkgs/cli/nix/home-manager.nix self;
-      homeManagerModules.aicentre = self.homeManagerModules.default;
-      nixosModules.default = import ./pkgs/cli/nix/nixos.nix self;
-      nixosModules.aicentre = self.nixosModules.default;
+        cross = cross.shell;
+      });
+
+      formatter = forEachSystem ({ pkgs, ... }: pkgs.nixpkgs-fmt);
+
       overlays.default = final: _prev: {
         aicentre = final.callPackage ./pkgs/cli/nix/package.nix { };
+      };
+
+      nixosModules = rec {
+        default = import ./pkgs/cli/nix/nixos.nix self;
+        aicentre = default;
+      };
+
+      homeManagerModules = rec {
+        default = import ./pkgs/cli/nix/home-manager.nix self;
+        aicentre = default;
       };
     };
 }

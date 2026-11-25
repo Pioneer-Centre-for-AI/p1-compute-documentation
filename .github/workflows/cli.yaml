@@ -30,15 +30,15 @@ jobs:
         working-directory: pkgs/cli
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       - name: Set up Rust
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@39008827e6b4319a349e9a42dfc90579dd25f1ca # stable
         with:
           components: clippy, rustfmt
 
       - name: Cache
-        uses: Swatinem/rust-cache@v2
+        uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2
         with:
           workspaces: pkgs/cli
 
@@ -57,7 +57,41 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           shellcheck -s sh install.sh
-          shellcheck -s bash src/session/launcher.sh scripts/install-check.sh scripts/sign-release.sh
+          shellcheck -s bash scripts/install-check.sh scripts/sign-release.sh
+
+  static:
+    name: Static Linux build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: pkgs/cli
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@39008827e6b4319a349e9a42dfc90579dd25f1ca # stable
+        with:
+          targets: x86_64-unknown-linux-musl
+
+      - name: Install musl
+        run: sudo apt-get update && sudo apt-get install -y musl-tools
+
+      # For development. Not signed, not a release.
+      - name: Build
+        env:
+          CC_x86_64_unknown_linux_musl: musl-gcc
+        run: |
+          cargo build --release --locked --target x86_64-unknown-linux-musl
+          file target/x86_64-unknown-linux-musl/release/aicentre | grep -Eq 'statically linked|static-pie linked'
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: aicentre-linux-x64-static
+          path: pkgs/cli/target/x86_64-unknown-linux-musl/release/aicentre
+          if-no-files-found: error
+          retention-days: 14
 
   nix:
     name: Nix package (${{ matrix.os }})
@@ -69,10 +103,10 @@ jobs:
     timeout-minutes: 20
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       - name: Install nix
-        uses: cachix/install-nix-action@v31
+        uses: cachix/install-nix-action@3dc140bfc76c49fbd4dd958429132e3746bcb086 # v31
         with:
           extra_nix_config: |
             experimental-features = nix-command flakes

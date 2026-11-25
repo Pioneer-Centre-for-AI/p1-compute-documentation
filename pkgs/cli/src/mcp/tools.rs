@@ -10,7 +10,7 @@ use crate::check::clusters::{ClusterId, SITE};
 use crate::check::command::check;
 use crate::context::{Captured, Ctx, Output};
 use crate::http::Fetched;
-use crate::jobs::list::list_jobs;
+use crate::jobs::list::{self, What};
 
 pub const MCP_INSTRUCTIONS: &str = r#"The p1_* tools come from aicentre, the command line tool for P1 compute. They help researchers at the Pioneer Centre for AI use P1 compute, which is three providers:
 
@@ -179,8 +179,11 @@ impl P1Tools {
                 }))
             }
             "p1_jobs" | "p1_check" => {
-                let asked = providers(&params["providers"]);
-                let key = format!("{name} {asked:?} {}", flag("connect"));
+                let mut asked = providers(&params["providers"]);
+                asked.sort();
+                asked.dedup();
+                let connect = name == "p1_check" && flag("connect");
+                let key = format!("{name} {asked:?} {connect}");
                 let mut seen = self.asked.lock().await;
                 if let Some((at, keep, answer)) = seen.get(&key)
                     && at.elapsed() < *keep
@@ -189,9 +192,9 @@ impl P1Tools {
                 }
                 let (c, out) = quiet(ctx);
                 let code = if name == "p1_jobs" {
-                    list_jobs(&c, &asked, true).await?
+                    list::list(&c, &asked, true, What::Jobs).await?
                 } else {
-                    check(&c, &asked, flag("connect"), true).await?
+                    check(&c, &asked, connect, true).await?
                 };
                 let answer = said(&out, code);
                 let keep = if code == 0 { FRESH } else { RETRY };

@@ -4,12 +4,13 @@ use serde::{Deserialize, Serialize};
 
 use crate::check::clusters::{ClusterId, SITE};
 use crate::check::types::Status;
-use crate::context::Ctx;
-use crate::exec::{login_shell, shq};
+use crate::context::{Ctx, for_tests};
+use crate::exec::shq;
 use crate::session::login::{Choice, with_provider};
 use crate::ui::say::{fail, printable};
 use crate::ui::style::make_style;
 use crate::ui::table::{TableOptions, table};
+use crate::unpack::{Rules, unpack};
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct Example {
@@ -79,12 +80,51 @@ pub async fn examples(ctx: &Ctx) -> Result<Vec<Example>, String> {
     Ok(all)
 }
 
+const TAKEN: i32 = 17;
+
+fn slug_ok(slug: &str) -> bool {
+    !slug.is_empty()
+        && slug.bytes().all(|b| b.is_ascii_lowercase() || b.is_ascii_digit() || b == b'-')
+}
+
+pub async fn unpack_example(ctx: &Ctx, url: &str, slug: &str, parent: &str) -> anyhow::Result<i32> {
+    let local = for_tests(&ctx.env, "AICENTRE_SITE").and_then(|_| url.strip_prefix("file://"));
+    let named = slug_ok(slug) && url.ends_with(&format!("/gallery/{slug}.tar.gz"));
+    if !named || !(url.starts_with("https://") || local.is_some()) || !parent.starts_with('/') {
+        return Ok(fail(ctx, &format!("{url} is not the archive of the example {slug}"), &[]));
+    }
+    let folder = format!("{parent}/{slug}");
+    if std::fs::symlink_metadata(&folder).is_ok() {
+        return Ok(TAKEN);
+    }
+    let archive = match local {
+        Some(path) => std::fs::read(file_path(path)).map_err(|e| e.to_string()),
+        None => match crate::http::get(url, Duration::from_secs(120)).await {
+            Ok(got) if got.ok() => Ok(got.body),
+            Ok(got) => Err(format!("HTTP {}", got.status)),
+            Err(e) => Err(e),
+        },
+    };
+    let archive = match archive {
+        Ok(bytes) => bytes,
+        Err(why) => return Ok(fail(ctx, &format!("cannot download {url}: {why}"), &[])),
+    };
+    if let Err(e) = crate::install::layout::mkdirp(parent) {
+        return Ok(fail(ctx, &format!("cannot create {parent}: {e}"), &[]));
+    }
+    match unpack(&archive, parent, Rules { under: Some(slug), ..Default::default() }) {
+        Ok(0) => Ok(fail(ctx, &format!("the archive at {url} has no {slug} folder"), &[])),
+        Ok(_) => Ok(0),
+        Err(why) => {
+            let _ = std::fs::remove_dir_all(&folder);
+            Ok(fail(ctx, &format!("cannot unpack {url}: {why}"), &[]))
+        }
+    }
+}
+
 fn archive(ctx: &Ctx, example: &Example, files: &str) -> bool {
-    let named =
-        example.slug.bytes().all(|b| b.is_ascii_lowercase() || b.is_ascii_digit() || b == b'-');
     let tail = format!("/gallery/{}.tar.gz", example.slug);
-    named
-        && !example.slug.is_empty()
+    slug_ok(&example.slug)
         && (files == format!("{SITE}{tail}") || files == format!("{}{tail}", site(ctx)))
 }
 
@@ -196,16 +236,25 @@ async fn get(
             "aicentre check --all shows what each provider needs.".into(),
         ]),
     };
-    with_provider(ctx, &choice, |login, _config| async move {
+    with_provider(ctx, &choice, |mut login, config| async move {
+        let installing = |text: &str| ctx.out.write(&format!("{text}...\n"));
+        if let Err((error, hints)) = login.ready_to_launch(ctx, &config, &installing).await {
+            return Ok(fail(ctx, &error, &hints));
+        }
         let parent = login.path(dir.unwrap_or("examples"));
-        let url = shq(files);
-        let command = format!(
-            "mkdir -p {p} && {{ curl -fsSL --proto =https,file {url} || wget -qO- {url}; }} | tar -xz -C {p}",
-            p = shq(&parent)
-        );
-        let r = login.master.run(&login_shell(&command), 120_000).await;
+        let words = [login.launcher.as_str(), "unpack-example", files, &example.slug, &parent];
+        let command = words.iter().map(|w| shq(w)).collect::<Vec<_>>().join(" ");
+        let r = login.master.run(&command, 180_000).await;
+        if r.code == TAKEN {
+            return Ok(fail(
+                ctx,
+                &format!("{parent}/{} is already on {}.", example.slug, login.alias),
+                &["Move it away, or give another folder: aicentre gallery get <code> <dir>."
+                    .into()],
+            ));
+        }
         if r.code != 0 {
-            let said = r.stderr.trim().split('\n').next_back().unwrap_or("").to_string();
+            let said = printable(r.stderr.trim().split('\n').next_back().unwrap_or(""));
             return Ok(fail(
                 ctx,
                 &format!("cannot fetch {} on {}: {said}", example.code, login.alias),

@@ -246,6 +246,29 @@ async fn an_agent_that_asks_for_the_jobs_again_and_again_reaches_the_cluster_onc
 }
 
 #[tokio::test]
+async fn the_same_question_in_other_words_does_not_reach_the_cluster_again() {
+    let sb = sandbox();
+    sb.answer("bjobs", "123|RUN|p1|train|1*n-62-30-1|60 second(s)|0:59 L|-\n");
+    let (c, input) = Client::new();
+    let ctx = c.ctx(&sb);
+    c.post("initialize", json!({ "capabilities": {} }), Some(json!(1)));
+    for (id, arguments) in [
+        json!({ "providers": ["dtu"] }),
+        json!({ "providers": ["dtu", "dtu"] }),
+        json!({ "providers": ["dtu"], "connect": true }),
+    ]
+    .into_iter()
+    .enumerate()
+    {
+        let call = json!({ "name": "p1_jobs", "arguments": arguments });
+        c.post("tools/call", call, Some(json!(id + 2)));
+    }
+    c.close();
+    assert_eq!(serve(&ctx, input).await, 0);
+    assert_eq!(sb.read("calls").matches("bjobs").count(), 1, "{}", sb.read("calls"));
+}
+
+#[tokio::test]
 async fn an_answer_with_a_failure_in_it_is_not_asked_for_again_at_once_either() {
     let sb = sandbox();
     sb.answer("bjobs-stderr", "bjobs: LSF is down\n");

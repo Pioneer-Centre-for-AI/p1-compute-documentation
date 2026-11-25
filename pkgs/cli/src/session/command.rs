@@ -8,6 +8,7 @@ use crate::context::Ctx;
 use crate::session::editor::open_folder;
 use crate::session::interactive::{InteractiveRequest, SessionDeps, interactive};
 use crate::session::lsf::App;
+use crate::ui::pick::pick;
 
 pub async fn session(ctx: &Ctx, request: &InteractiveRequest) -> anyhow::Result<i32> {
     let cancel = CancellationToken::new();
@@ -44,6 +45,10 @@ pub async fn session(ctx: &Ctx, request: &InteractiveRequest) -> anyhow::Result<
             Box::pin(async move { open_folder(&ctx, &argv).await })
         }),
         free_port: Arc::new(|| Box::pin(free_port())),
+        choose: {
+            let out = ctx.out.clone();
+            Arc::new(move |title, rows, at| Box::pin(pick(out.clone(), title, rows, at)))
+        },
     };
     let code = interactive(ctx, request, &deps).await;
     watch.abort();

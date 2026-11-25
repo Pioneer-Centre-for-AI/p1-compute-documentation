@@ -73,14 +73,16 @@ async fn open(base: &str, name: &str) -> Result<Vec<u8>, DownloadError> {
     Ok(res.body)
 }
 
+pub async fn fetch_bytes(base: &str, name: &str) -> Result<Vec<u8>, DownloadError> {
+    open(base, name).await
+}
+
 pub async fn fetch_text(base: &str, name: &str) -> Result<String, DownloadError> {
     Ok(String::from_utf8_lossy(&open(base, name).await?).into_owned())
 }
 
-pub async fn download(base: &str, name: &str, dest: &str) -> anyhow::Result<()> {
-    let body = open(base, name).await?;
-    std::fs::write(dest, body)?;
-    Ok(())
+pub fn sha256_hex(bytes: &[u8]) -> String {
+    hex::encode(Sha256::digest(bytes))
 }
 
 static SUM: LazyLock<Regex> =

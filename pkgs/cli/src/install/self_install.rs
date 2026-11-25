@@ -63,7 +63,7 @@ pub fn session_line(shell: &str, dir: &str) -> Option<String> {
 
 pub const DEFAULT_BIN: &str = "$HOME/.local/bin";
 
-pub async fn self_install(ctx: &Ctx) -> anyhow::Result<i32> {
+pub async fn self_install(ctx: &Ctx, keep_current: bool) -> anyhow::Result<i32> {
     let s = make_style(&ctx.env, &ctx.out);
     if !ctx.compiled {
         ctx.err.write("aicentre: self-install runs from a release binary; install.sh calls it.\n");
@@ -76,10 +76,18 @@ pub async fn self_install(ctx: &Ctx) -> anyhow::Result<i32> {
         remove_if_empty(&placed.created);
         return Ok(fail(ctx, &format!("the new binary does not run: {problem}"), &[]));
     }
-    let link = commit(ctx, &ctx.version, &placed.created)?;
-
     let ok = s.symbol(Status::Ok);
     let warn = s.symbol(Status::Warn);
+    if keep_current && std::fs::symlink_metadata(&ctx.paths.current).is_ok() {
+        ctx.out.write(&format!(
+            "{ok} Added aicentre {} in {}; the installed version stays.\n",
+            ctx.version,
+            tilde(&ctx.paths.data, home)
+        ));
+        return Ok(0);
+    }
+    let link = commit(ctx, &ctx.version, &placed.created)?;
+
     ctx.out.write(&format!(
         "{ok} Installed aicentre {} in {}\n",
         ctx.version,

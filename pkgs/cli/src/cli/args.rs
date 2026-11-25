@@ -4,8 +4,27 @@ use serde::Serialize;
 
 use crate::check::clusters::{CLUSTER_IDS, ClusterId};
 use crate::gallery::gallery::GalleryRequest;
+use crate::launch::LaunchRequest;
 use crate::session::interactive::InteractiveRequest;
 use crate::session::lsf::{App, Server, View, gigabytes, is_memory, parse_minutes};
+
+/// What a --gpu session asks p1i for, by name. Memory is for each of the 4
+/// cores, as LSF counts it: 32, 96 and 200 GB in all. The largest stays
+/// under the 225 GB at which the queue's profile ends a job.
+pub struct Size {
+    pub name: &'static str,
+    pub gpus: u32,
+    pub time: &'static str,
+    pub mem_per_cpu: &'static str,
+}
+
+pub const SIZE_CPUS: u32 = 4;
+
+pub const SIZES: [Size; 3] = [
+    Size { name: "small", gpus: 1, time: "2h", mem_per_cpu: "8GB" },
+    Size { name: "medium", gpus: 1, time: "4h", mem_per_cpu: "24GB" },
+    Size { name: "large", gpus: 2, time: "4h", mem_per_cpu: "50GB" },
+];
 
 const MAX_MINUTES: u32 = 240;
 const MAX_CPUS: i64 = 4;
@@ -27,11 +46,23 @@ pub enum Command {
     Upgrade {
         #[serde(skip_serializing_if = "Option::is_none")]
         version: Option<String>,
+        #[serde(skip_serializing_if = "std::ops::Not::not")]
+        keep_current: bool,
     },
     Uninstall {
         purge: bool,
     },
-    SelfInstall,
+    SelfInstall {
+        keep_current: bool,
+    },
+    Launch {
+        launch: LaunchRequest,
+    },
+    UnpackExample {
+        url: String,
+        slug: String,
+        parent: String,
+    },
     List {
         what: String,
         clusters: Vec<ClusterId>,
@@ -81,41 +112,26 @@ fn usage<T>(message: impl Into<String>) -> Result<T> {
     Err(UsageError(message.into()))
 }
 
-#[derive(Clone, Copy, PartialEq, Eq)]
-enum Kind {
-    String,
-    Boolean,
-}
-
 #[derive(Clone, Copy)]
 struct Opt {
     long: &'static str,
-    kind: Kind,
+    takes_value: bool,
     short: Option<char>,
-    multiple: bool,
 }
 
 const fn flag(long: &'static str) -> Opt {
-    Opt { long, kind: Kind::Boolean, short: None, multiple: false }
+    Opt { long, takes_value: false, short: None }
 }
 
 const fn string(long: &'static str) -> Opt {
-    Opt { long, kind: Kind::String, short: None, multiple: false }
+    Opt { long, takes_value: true, short: None }
 }
 
-const PROVIDER: Opt =
-    Opt { long: "provider", kind: Kind::String, short: Some('p'), multiple: true };
-const HELP: Opt = Opt { long: "help", kind: Kind::Boolean, short: Some('h'), multiple: false };
+const PROVIDER: Opt = Opt { long: "provider", takes_value: true, short: Some('p') };
+const HELP: Opt = Opt { long: "help", takes_value: false, short: Some('h') };
 
-#[derive(Clone, Debug, PartialEq, Eq)]
-enum Value {
-    Flag,
-    Text(String),
-    List(Vec<String>),
-}
-
-#[derive(Default, Debug)]
-struct Values(BTreeMap<String, Value>);
+#[derive(Default)]
+struct Values(BTreeMap<&'static str, Vec<String>>);
 
 impl Values {
     fn flag(&self, name: &str) -> bool {
@@ -123,31 +139,12 @@ impl Values {
     }
 
     fn text(&self, name: &str) -> Option<&str> {
-        match self.0.get(name) {
-            Some(Value::Text(s)) => Some(s),
-            _ => None,
-        }
+        self.0.get(name)?.last().map(String::as_str)
     }
 
-    fn list(&self, name: &str) -> Vec<String> {
-        match self.0.get(name) {
-            Some(Value::List(v)) => v.clone(),
-            _ => vec![],
-        }
+    fn list(&self, name: &str) -> &[String] {
+        self.0.get(name).map_or(&[], Vec::as_slice)
     }
-}
-
-struct Token {
-    name: String,
-    raw: String,
-    value: Option<String>,
-    inline: bool,
-    grouped: bool,
-}
-
-enum Item {
-    Opt(Token),
-    Positional(String),
 }
 
 fn parse_args(
@@ -155,146 +152,48 @@ fn parse_args(
     options: &[Opt],
     allow_positionals: bool,
 ) -> Result<(Values, Vec<String>)> {
-    let mut all: Vec<Opt> = options.to_vec();
-    all.push(HELP);
-    let find = |name: &str| all.iter().find(|o| o.long == name).copied();
-    let long_for_short = |c: char| -> String {
-        all.iter().find(|o| o.short == Some(c)).map_or(c.to_string(), |o| o.long.to_string())
-    };
-    let kind_of = |name: &str| find(name).map(|o| o.kind);
-
-    let mut items = Vec::new();
-    let mut remaining: std::collections::VecDeque<(String, bool)> =
-        args.iter().map(|a| (a.clone(), false)).collect();
-    while let Some((arg, grouped)) = remaining.pop_front() {
-        let chars: Vec<char> = arg.chars().collect();
-        if arg == "--" {
-            items.extend(remaining.drain(..).map(|(a, _)| Item::Positional(a)));
-            break;
-        }
-        let short_start = chars.len() >= 2 && chars[0] == '-' && chars[1] != '-';
-        if short_start && chars.len() == 2 {
-            let name = long_for_short(chars[1]);
-            let mut value = None;
-            if kind_of(&name) == Some(Kind::String) && !remaining.is_empty() {
-                value = remaining.pop_front().map(|(v, _)| v);
-            }
-            items.push(Item::Opt(Token { name, raw: arg.clone(), value, inline: false, grouped }));
-            continue;
-        }
-        if short_start && chars.len() > 2 {
-            let first = long_for_short(chars[1]);
-            if kind_of(&first) != Some(Kind::String) {
-                // -fn5
-                let mut expanded = Vec::new();
-                for (i, c) in chars.iter().enumerate().skip(1) {
-                    let name = long_for_short(*c);
-                    if kind_of(&name) != Some(Kind::String) || i == chars.len() - 1 {
-                        expanded.push(format!("-{c}"));
-                    } else {
-                        expanded.push(format!("-{}", chars[i..].iter().collect::<String>()));
-                        break;
-                    }
-                }
-                for e in expanded.into_iter().rev() {
-                    remaining.push_front((e, true));
-                }
-                continue;
-            }
-            // -n5
-            let value: String = chars[2..].iter().collect();
-            items.push(Item::Opt(Token {
-                name: first,
-                raw: format!("-{}", chars[1]),
-                value: Some(value),
-                inline: true,
-                grouped,
-            }));
-            continue;
-        }
-        if chars.len() > 2 && arg.starts_with("--") {
-            if let Some(eq) = arg.get(3..).and_then(|r| r.find('=')).map(|i| i + 3) {
-                let name = arg[2..eq].to_string();
-                items.push(Item::Opt(Token {
-                    raw: format!("--{name}"),
-                    name,
-                    value: Some(arg[eq + 1..].to_string()),
-                    inline: true,
-                    grouped: false,
-                }));
-            } else {
-                let name = arg[2..].to_string();
-                let mut value = None;
-                if kind_of(&name) == Some(Kind::String) && !remaining.is_empty() {
-                    value = remaining.pop_front().map(|(v, _)| v);
-                }
-                items.push(Item::Opt(Token {
-                    name,
-                    raw: arg.clone(),
-                    value,
-                    inline: false,
-                    grouped: false,
-                }));
-            }
-            continue;
-        }
-        items.push(Item::Positional(arg));
-    }
-
+    let known = || options.iter().chain([&HELP]);
     let mut values = Values::default();
     let mut positionals = Vec::new();
-    for item in items {
-        match item {
-            Item::Positional(p) => {
-                if !allow_positionals {
-                    return usage(format!(
-                        "Unexpected argument '{p}'. This command does not take positional arguments"
-                    ));
-                }
-                positionals.push(p);
+    let mut rest = args.iter().peekable();
+    while let Some(arg) = rest.next() {
+        let (opt, inline) = if arg == "--" {
+            positionals.extend(rest.by_ref().cloned());
+            break;
+        } else if let Some(long) = arg.strip_prefix("--") {
+            let (name, value) = long.split_once('=').map_or((long, None), |(n, v)| (n, Some(v)));
+            (known().find(|o| o.long == name), value)
+        } else if arg.len() > 1 && arg.starts_with('-') {
+            let mut letters = arg[1..].chars();
+            let short = letters.next();
+            (known().find(|o| o.short == short), Some(letters.as_str()).filter(|v| !v.is_empty()))
+        } else {
+            positionals.push(arg.clone());
+            continue;
+        };
+        let Some(opt) = opt else {
+            return usage(format!("Unknown option '{}'", arg.split('=').next().unwrap_or(arg)));
+        };
+        let value = match (opt.takes_value, inline) {
+            (false, None) => None,
+            (false, Some(_)) => {
+                return usage(format!("Option '--{}' does not take an argument", opt.long));
             }
-            Item::Opt(t) => {
-                let Some(opt) = find(&t.name) else {
-                    let raw = if t.grouped { t.raw.trim_start_matches('-') } else { &t.raw };
-                    return usage(format!("Unknown option '{raw}'"));
+            (true, Some(value)) => Some(value.to_string()),
+            (true, None) => {
+                let Some(value) = rest.next_if(|next| !(next.len() > 1 && next.starts_with('-')))
+                else {
+                    return usage(format!("Option '--{} <value>' argument missing", opt.long));
                 };
-                let short_and_long = match opt.short {
-                    Some(c) => format!("-{c}, --{}", opt.long),
-                    None => format!("--{}", opt.long),
-                };
-                if opt.kind == Kind::String && t.value.is_none() {
-                    return usage(format!("Option '{short_and_long} <value>' argument missing"));
-                }
-                if opt.kind == Kind::Boolean && t.value.is_some() {
-                    return usage(format!("Option '{short_and_long}' does not take an argument"));
-                }
-                if let Some(v) = &t.value
-                    && !t.inline
-                    && v.chars().count() > 1
-                    && v.starts_with('-')
-                {
-                    let example = if t.raw.starts_with("--") {
-                        format!("'{}=-XYZ'", t.raw)
-                    } else {
-                        format!("'--{}=-XYZ' or '{}-XYZ'", t.name, t.raw)
-                    };
-                    return usage(format!(
-                        "Option '{raw}' argument is ambiguous.\nDid you forget to specify the option argument for '{raw}'?\nTo specify an option argument starting with a dash use {example}.",
-                        raw = t.raw
-                    ));
-                }
-                let value = match t.value {
-                    None => Value::Flag,
-                    Some(v) if opt.multiple => {
-                        let mut list = values.list(opt.long);
-                        list.push(v);
-                        Value::List(list)
-                    }
-                    Some(v) => Value::Text(v),
-                };
-                values.0.insert(opt.long.to_string(), value);
+                Some(value.clone())
             }
-        }
+        };
+        values.0.entry(opt.long).or_default().extend(value);
+    }
+    if let Some(first) = positionals.first().filter(|_| !allow_positionals) {
+        return usage(format!(
+            "Unexpected argument '{first}'. This command does not take positional arguments"
+        ));
     }
     Ok((values, positionals))
 }
@@ -342,15 +241,22 @@ fn session(values: &Values, args: &[String], app: App) -> Result<Command> {
         return usage(format!("aicentre {} takes one path, not {}", app.as_str(), args.len()));
     }
     let gpu = values.flag("gpu");
-    for f in ["time", "cpus", "mem"] {
+    if gpu && values.flag("login") {
+        return usage("choose --gpu or --login, not both");
+    }
+    for f in ["size", "time", "cpus", "mem"] {
         if values.text(f).is_some() && !gpu {
             return usage(format!(
                 "--{f} sizes a --gpu session; a login-node session runs until you end it"
             ));
         }
     }
+    let size = values.text("size").unwrap_or("small");
+    let Some(preset) = SIZES.iter().find(|s| s.name == size) else {
+        return usage(format!("--size \"{size}\" is not small, medium or large"));
+    };
     let time = values.text("time");
-    let Some(minutes) = parse_minutes(time.unwrap_or("60")) else {
+    let Some(minutes) = parse_minutes(time.unwrap_or(preset.time)) else {
         return usage(format!(
             "--time \"{}\" is not a duration like 90, 2h or 1:30",
             time.unwrap_or("undefined")
@@ -365,7 +271,7 @@ fn session(values: &Values, args: &[String], app: App) -> Result<Command> {
     }
     let cpus_text = values.text("cpus");
     let cpus = match cpus_text {
-        None => Some(4),
+        None => Some(i64::from(SIZE_CPUS)),
         Some(t) => t.trim().parse::<i64>().ok().filter(|c| *c >= 1),
     };
     let Some(cpus) = cpus else {
@@ -377,7 +283,7 @@ fn session(values: &Values, args: &[String], app: App) -> Result<Command> {
         ));
     }
     let mem_text = values.text("mem");
-    let mem_per_cpu = mem_text.unwrap_or("8GB").to_uppercase();
+    let mem_per_cpu = mem_text.unwrap_or(preset.mem_per_cpu).to_uppercase();
     if !is_memory(&mem_per_cpu) {
         return usage(format!("--mem \"{}\" is not a size like 8GB", mem_text.unwrap_or("")));
     }
@@ -433,9 +339,13 @@ fn session(values: &Values, args: &[String], app: App) -> Result<Command> {
             minutes,
             cpus: cpus as u32,
             mem_per_cpu,
+            gpus: preset.gpus,
+            ask_size: !values.flag("login")
+                && ["size", "time", "cpus", "mem"].iter().all(|f| values.text(f).is_none()),
             browser: !no_browser,
             view,
             another: values.flag("another"),
+            yes: values.flag("yes"),
         },
     })
 }
@@ -457,7 +367,10 @@ fn transfer(values: &Values, args: &[String], direction: Direction) -> Result<Co
 
 const SESSION_OPTIONS: &[Opt] = &[
     flag("gpu"),
+    flag("login"),
+    string("size"),
     flag("another"),
+    flag("yes"),
     string("time"),
     string("cpus"),
     string("mem"),
@@ -469,7 +382,7 @@ const SESSION_OPTIONS: &[Opt] = &[
 ];
 
 const CHECK: &[Opt] = &[flag("connect"), flag("json"), flag("all"), PROVIDER];
-const UPGRADE: &[Opt] = &[string("version")];
+const UPGRADE: &[Opt] = &[string("version"), flag("keep-current")];
 const UNINSTALL: &[Opt] = &[flag("purge")];
 const LIST: &[Opt] = &[flag("json"), PROVIDER];
 const ONLY_PROVIDER: &[Opt] = &[PROVIDER];
@@ -503,16 +416,19 @@ fn build(name: &str, values: &Values, args: &[String]) -> Result<Command> {
                 json: values.flag("json"),
             })
         }
-        "upgrade" => Ok(Command::Upgrade { version: values.text("version").map(str::to_string) }),
+        "upgrade" => Ok(Command::Upgrade {
+            version: values.text("version").map(str::to_string),
+            keep_current: values.flag("keep-current"),
+        }),
         "uninstall" => Ok(Command::Uninstall { purge: values.flag("purge") }),
         "list" => {
             let what = args.first().map(String::as_str);
-            let Some(what) = what.filter(|w| ["jobs", "gpus"].contains(w)) else {
+            let Some(what) = what.filter(|w| ["jobs", "gpus", "sizes"].contains(w)) else {
                 return usage(match what {
                     Some(w) if !w.is_empty() => {
-                        format!("cannot list \"{w}\"; try aicentre list jobs or aicentre list gpus")
+                        format!("cannot list \"{w}\"; try aicentre list jobs, gpus or sizes")
                     }
-                    _ => "aicentre list needs something to list: jobs or gpus".into(),
+                    _ => "aicentre list needs something to list: jobs, gpus or sizes".into(),
                 });
             };
             no_positionals(&format!("list {what}"), &args[1..])?;
@@ -562,40 +478,77 @@ fn build(name: &str, values: &Values, args: &[String]) -> Result<Command> {
     }
 }
 
+const GONE: &[(&str, &str)] = &[
+    (
+        "chat",
+        "chat is now aicentre mcp, added to the agent tool you already use; see aicentre help mcp",
+    ),
+    ("profiles", "the sizes of a --gpu session are listed by aicentre list sizes"),
+    ("sizes", "the sizes of a --gpu session are listed by aicentre list sizes"),
+    ("gpu", "interactive GPU sessions are now aicentre shell, marimo, jupyter or code with --gpu"),
+    ("submit", "submit is gone; in aicentre shell, submit with bsub on DTU or sbatch on Gefion"),
+    ("logs", "logs is gone; in aicentre shell, read the job's output file"),
+    (
+        "cancel",
+        "cancel is gone; Ctrl-C ends a session, and in aicentre shell bkill or scancel ends a job",
+    ),
+];
+
 pub fn parse_command(argv: &[String]) -> Result<Command> {
     let Some(first) = argv.first() else { return Ok(Command::Help { topic: None }) };
     let rest = &argv[1..];
+    if let Some((_, says)) = GONE.iter().find(|(name, _)| name == first) {
+        return usage(*says);
+    }
     match first.as_str() {
         "help" => return Ok(Command::Help { topic: rest.first().cloned() }),
         "-h" | "--help" => return Ok(Command::Help { topic: None }),
         "-V" | "--version" | "version" => return Ok(Command::Version),
-        "chat" => {
-            return usage(
-                "chat is now aicentre mcp, added to the agent tool you already use; see aicentre help mcp",
-            );
-        }
-        "gpu" => {
-            return usage(
-                "interactive GPU sessions are now aicentre shell, marimo, jupyter or code with --gpu",
-            );
-        }
-        "submit" => {
-            return usage(
-                "submit is gone; in aicentre shell, submit with bsub on DTU or sbatch on Gefion",
-            );
-        }
-        "logs" => return usage("logs is gone; in aicentre shell, read the job's output file"),
-        "cancel" => {
-            return usage(
-                "cancel is gone; Ctrl-C ends a session, and in aicentre shell bkill or scancel ends a job",
-            );
-        }
         "self-install" => {
-            let (values, _) = parse_args(rest, &[], false)?;
+            let (values, _) = parse_args(rest, &[flag("keep-current")], false)?;
             if values.flag("help") {
                 return Ok(Command::Help { topic: None });
             }
-            return Ok(Command::SelfInstall);
+            return Ok(Command::SelfInstall { keep_current: values.flag("keep-current") });
+        }
+        "unpack-example" => {
+            let [url, slug, parent] = rest else {
+                return usage("aicentre unpack-example is run by aicentre itself, on a cluster");
+            };
+            return Ok(Command::UnpackExample {
+                url: url.clone(),
+                slug: slug.clone(),
+                parent: parent.clone(),
+            });
+        }
+        "launch" => {
+            let mut words = rest;
+            let (mut login, mut needs, mut approved) = (false, false, false);
+            while let Some((first, tail)) = words.split_first() {
+                match first.as_str() {
+                    "--login" => login = true,
+                    "--needs" => needs = true,
+                    "--yes" => approved = true,
+                    _ => break,
+                }
+                words = tail;
+            }
+            let [app, target, server, data, base, bind] = words else {
+                return usage("aicentre launch is run by aicentre itself, on a cluster");
+            };
+            return Ok(Command::Launch {
+                launch: LaunchRequest {
+                    login,
+                    needs,
+                    approved,
+                    app: app.clone(),
+                    target: target.clone(),
+                    server: server.clone(),
+                    data: data.clone(),
+                    base: base.clone(),
+                    bind: bind.clone(),
+                },
+            });
         }
         _ => {}
     }
@@ -631,10 +584,54 @@ mod tests {
         );
         assert_eq!(
             parse(&["update", "--version", "0.2.0"]).unwrap(),
-            Command::Upgrade { version: Some("0.2.0".into()) }
+            Command::Upgrade { version: Some("0.2.0".into()), keep_current: false }
         );
         assert_eq!(parse(&["mcp", "--help"]).unwrap(), Command::Help { topic: Some("mcp".into()) });
         assert_eq!(parse(&["self-install", "--help"]).unwrap(), Command::Help { topic: None });
+        let dtu = parse(&["list", "jobs", "-p", "dtu"]).unwrap();
+        for same in [&["list", "jobs", "-pdtu"][..], &["list", "--provider=dtu", "--", "jobs"]] {
+            assert_eq!(parse(same).unwrap(), dtu, "{same:?}");
+        }
+        for (argv, says) in [
+            (&["upgrade", "--version"][..], "'--version <value>' argument missing"),
+            (&["list", "jobs", "-p", "--json"], "'--provider <value>' argument missing"),
+            (&["check", "--json=1"], "'--json' does not take an argument"),
+            (&["check", "-x"], "Unknown option '-x'"),
+            (&["upgrade", "now"], "Unexpected argument 'now'"),
+        ] {
+            assert!(parse(argv).unwrap_err().0.contains(says), "{argv:?}");
+        }
+    }
+
+    #[test]
+    fn a_size_names_what_a_gpu_session_asks_for_and_single_options_change_one_part() {
+        let asked = |argv: &[&str]| match parse(argv).unwrap() {
+            Command::Session { session: s } => (s.gpus, s.cpus, s.mem_per_cpu, s.minutes),
+            other => panic!("{other:?}"),
+        };
+        assert_eq!(asked(&["marimo", "--gpu"]), (1, 4, "8GB".into(), 120));
+        assert_eq!(asked(&["marimo", "--gpu", "--size", "small"]), (1, 4, "8GB".into(), 120));
+        assert_eq!(asked(&["marimo", "--gpu", "--size", "medium"]), (1, 4, "24GB".into(), 240));
+        assert_eq!(asked(&["shell", "--gpu", "--size", "large"]), (2, 4, "50GB".into(), 240));
+        assert_eq!(
+            asked(&["code", "--gpu", "--size", "large", "--time", "30", "--mem", "16gb"]),
+            (2, 4, "16GB".into(), 30)
+        );
+        for size in SIZES {
+            let total = gigabytes(size.mem_per_cpu).unwrap() * 4.0;
+            assert!(total <= MAX_GB && parse_minutes(size.time).unwrap() <= MAX_MINUTES);
+        }
+        let asks = |argv: &[&str]| match parse(argv).unwrap() {
+            Command::Session { session: s } => s.ask_size,
+            other => panic!("{other:?}"),
+        };
+        assert!(asks(&["marimo", "--gpu"]) && asks(&["marimo"]) && !asks(&["marimo", "--login"]));
+        assert!(parse(&["marimo", "--gpu", "--login"]).is_err());
+        assert!(!asks(&["marimo", "--gpu", "--size", "small"]));
+        assert!(!asks(&["marimo", "--gpu", "--time", "30"]));
+        for argv in [&["marimo", "--size", "large"][..], &["marimo", "--gpu", "--size", "huge"]] {
+            assert!(parse(argv).is_err(), "{argv:?}");
+        }
     }
 
     #[test]

@@ -8,7 +8,7 @@ use std::process::Command;
 use aicentre::context::{Ctx, Env};
 use aicentre::install::layout::{place_binary, read_manifest};
 use aicentre::install::release::sha256;
-use aicentre::install::self_install::commit;
+use aicentre::install::self_install::{commit, self_install};
 use aicentre::install::uninstall::uninstall;
 use aicentre::install::upgrade::upgrade;
 use aicentre::platform::{asset_name, current_platform};
@@ -24,7 +24,8 @@ fn tar(env: &Env, args: &[&str]) {
 fn sums(dir: &str, asset: &str, version: &str) {
     fs::write(format!("{dir}/VERSION"), format!("{version}\n")).unwrap();
     let hex = sha256(&format!("{dir}/{asset}")).unwrap();
-    fs::write(format!("{dir}/SHA256SUMS"), format!("{hex}  {asset}\n")).unwrap();
+    let named = sha256(&format!("{dir}/VERSION")).unwrap();
+    fs::write(format!("{dir}/SHA256SUMS"), format!("{hex}  {asset}\n{named}  VERSION\n")).unwrap();
     sign(dir, key());
 }
 
@@ -55,9 +56,13 @@ fn key() -> &'static Key {
 
 fn sign(dir: &str, key: &Key) {
     let _ = fs::remove_file(format!("{dir}/SHA256SUMS.sig"));
+    // Without the agent: ssh-keygen asks it first, and one that does not
+    // answer would hold the test up.
     let out = Command::new("ssh-keygen")
         .args(["-Y", "sign", "-f", &key.file, "-n", "aicentre-release"])
         .arg(format!("{dir}/SHA256SUMS"))
+        .env_remove("SSH_AUTH_SOCK")
+        .stdin(std::process::Stdio::null())
         .output()
         .unwrap();
     assert!(out.status.success(), "{}", String::from_utf8_lossy(&out.stderr));
@@ -123,7 +128,7 @@ fn versions(ctx: &Ctx) -> Vec<String> {
 async fn upgrade_switches_to_the_new_version_and_removes_the_old_one_and_the_download() {
     let sb = Sandbox::new();
     let ctx = installed(&sb);
-    let code = upgrade(&from(&sb, &release(&sb, "0.2.0", false)), None).await.unwrap();
+    let code = upgrade(&from(&sb, &release(&sb, "0.2.0", false)), None, false).await.unwrap();
     assert_eq!(sb.err.text(), "");
     assert_eq!(code, 0);
     assert_eq!(fs::read_link(&ctx.paths.current).unwrap().to_string_lossy(), "versions/0.2.0");
@@ -144,17 +149,17 @@ async fn an_upgrade_without_the_release_keys_signature_changes_nothing() {
     let dir = release(&sb, "0.2.0", false);
 
     let ours = sb.ctx_env(&[("AICENTRE_DOWNLOAD_BASE", &dir)]);
-    assert_eq!(upgrade(&ours, None).await.unwrap(), 1);
+    assert_eq!(upgrade(&ours, None, false).await.unwrap(), 1);
     let err = sb.err.text();
     assert!(err.contains("it is signed with a key that is not aicentre's release key"), "{err}");
 
     let sums = format!("{dir}/SHA256SUMS");
     fs::write(&sums, fs::read_to_string(&sums).unwrap().replace("  ", "  ./")).unwrap();
-    assert_eq!(upgrade(&from(&sb, &dir), None).await.unwrap(), 1);
+    assert_eq!(upgrade(&from(&sb, &dir), None, false).await.unwrap(), 1);
     assert!(sb.err.text().contains("its signature does not match its checksums"));
 
     fs::remove_file(format!("{dir}/SHA256SUMS.sig")).unwrap();
-    assert_eq!(upgrade(&from(&sb, &dir), None).await.unwrap(), 1);
+    assert_eq!(upgrade(&from(&sb, &dir), None, false).await.unwrap(), 1);
     assert!(sb.err.text().contains("the 0.2.0 release cannot be trusted: it has no signature"));
 
     assert_eq!(tree(&sb), before);
@@ -166,11 +171,97 @@ async fn an_upgrade_with_a_bad_checksum_changes_nothing() {
     let sb = Sandbox::new();
     let ctx = installed(&sb);
     let before = tree(&sb);
-    let code = upgrade(&from(&sb, &release(&sb, "0.2.0", true)), None).await.unwrap();
+    let code = upgrade(&from(&sb, &release(&sb, "0.2.0", true)), None, false).await.unwrap();
     assert_eq!(code, 1);
     assert!(sb.err.text().contains("does not match its checksum"), "{}", sb.err.text());
     assert_eq!(tree(&sb), before);
     assert_eq!(fs::read_link(&ctx.paths.current).unwrap().to_string_lossy(), "versions/0.1.0");
+}
+
+#[tokio::test]
+async fn an_upgrade_to_a_release_that_holds_another_versions_files_changes_nothing() {
+    let sb = Sandbox::new();
+    let ctx = installed(&sb);
+    let before = tree(&sb);
+    let dir = release(&sb, "0.2.0", false);
+
+    assert_eq!(upgrade(&from(&sb, &dir), Some("0.3.0"), false).await.unwrap(), 1);
+    let err = sb.err.text();
+    assert!(err.contains("the signed checksums of this release are not those of 0.3.0"), "{err}");
+
+    fs::write(format!("{dir}/VERSION"), "0.9.0\n").unwrap();
+    assert_eq!(upgrade(&from(&sb, &dir), None, false).await.unwrap(), 1);
+    let err = sb.err.text();
+    assert!(err.contains("the signed checksums of this release are not those of 0.9.0"), "{err}");
+
+    assert_eq!(tree(&sb), before);
+    assert_eq!(versions(&ctx), ["0.1.0"]);
+}
+
+#[tokio::test]
+async fn an_archive_whose_binary_is_a_link_or_that_brings_other_files_is_not_installed() {
+    let sb = Sandbox::new();
+    let ctx = installed(&sb);
+    let dir = format!("{}/rel-link", sb.root);
+    let stage = format!("{dir}/stage");
+    fs::create_dir_all(&stage).unwrap();
+    std::os::unix::fs::symlink("/bin/sh", format!("{stage}/aicentre")).unwrap();
+    tar(&sb.env, &["-czf", &format!("{dir}/{ASSET}"), "-C", &stage, "aicentre"]);
+    sums(&dir, ASSET, "0.2.0");
+    assert_eq!(upgrade(&from(&sb, &dir), None, false).await.unwrap(), 1);
+    assert!(sb.err.text().contains("cannot unpack"), "{}", sb.err.text());
+    assert_eq!(versions(&ctx), ["0.1.0"]);
+
+    let dir = format!("{}/rel-extra", sb.root);
+    let stage = format!("{dir}/stage");
+    fs::create_dir_all(&stage).unwrap();
+    fs::write(format!("{stage}/aicentre"), "#!/bin/sh\necho 0.2.0\n").unwrap();
+    fs::set_permissions(format!("{stage}/aicentre"), fs::Permissions::from_mode(0o755)).unwrap();
+    fs::write(format!("{stage}/extra"), "x").unwrap();
+    tar(&sb.env, &["-czf", &format!("{dir}/{ASSET}"), "-C", &stage, "aicentre", "extra"]);
+    sums(&dir, ASSET, "0.2.0");
+    assert_eq!(upgrade(&from(&sb, &dir), None, false).await.unwrap(), 0);
+    assert!(!Path::new(&format!("{}/0.2.0/extra", ctx.paths.versions)).exists());
+    let mode = fs::metadata(format!("{}/0.2.0", ctx.paths.versions)).unwrap().permissions().mode();
+    assert_eq!(mode & 0o022, 0);
+}
+
+#[tokio::test]
+async fn keep_current_adds_a_version_next_to_the_installed_one() {
+    let sb = Sandbox::new();
+    let ctx = installed(&sb);
+    let older = format!("{}/fake-0.0.9", sb.root);
+    fs::write(&older, "#!/bin/sh\necho 0.0.9\n").unwrap();
+    fs::set_permissions(&older, fs::Permissions::from_mode(0o755)).unwrap();
+    let from_laptop = sb.ctx_with(|c| {
+        c.version = "0.0.9".into();
+        c.exec_path = older.clone();
+    });
+    assert_eq!(self_install(&from_laptop, true).await.unwrap(), 0);
+    assert_eq!(versions(&ctx), ["0.0.9", "0.1.0"]);
+    assert_eq!(fs::read_link(&ctx.paths.current).unwrap().to_string_lossy(), "versions/0.1.0");
+    assert_eq!(read_manifest(&ctx.paths).unwrap().version, "0.1.0");
+    assert!(sb.out.text().contains("Added aicentre 0.0.9"), "{}", sb.out.text());
+
+    assert_eq!(self_install(&from_laptop, false).await.unwrap(), 0);
+    assert_eq!(versions(&ctx), ["0.0.9"]);
+}
+
+#[tokio::test]
+async fn upgrade_keep_current_checks_a_version_and_adds_it_without_switching() {
+    let sb = Sandbox::new();
+    let ctx = installed(&sb);
+    let dir = release(&sb, "0.0.9", false);
+    assert_eq!(upgrade(&from(&sb, &dir), Some("0.0.9"), true).await.unwrap(), 0);
+    assert_eq!(sb.err.text(), "");
+    assert_eq!(versions(&ctx), ["0.0.9", "0.1.0"]);
+    assert_eq!(fs::read_link(&ctx.paths.current).unwrap().to_string_lossy(), "versions/0.1.0");
+    assert!(sb.out.text().contains("Added aicentre 0.0.9; 0.1.0 stays the installed version."));
+
+    fs::remove_file(format!("{dir}/SHA256SUMS.sig")).unwrap();
+    fs::remove_dir_all(format!("{}/0.0.9", ctx.paths.versions)).unwrap();
+    assert_eq!(upgrade(&from(&sb, &dir), Some("0.0.9"), true).await.unwrap(), 1);
+    assert_eq!(versions(&ctx), ["0.1.0"]);
 }
 
 #[tokio::test]
@@ -209,7 +300,7 @@ fn build(version: &str, into: &str) {
     let target = concat!(env!("CARGO_TARGET_TMPDIR"), "/e2e-target");
     let cargo = std::env::var("CARGO").unwrap_or_else(|_| "cargo".into());
     let status = Command::new(cargo)
-        .args(["build", "--release", "--bin", "aicentre"])
+        .args(["build", "--release", "--bin", "aicentre", "--features", "test-overrides"])
         .current_dir(env!("CARGO_MANIFEST_DIR"))
         .env("AICENTRE_BUILD_VERSION", version)
         .env("CARGO_TARGET_DIR", target)
@@ -256,6 +347,16 @@ fn end_to_end_install_sh_upgrade_uninstall() {
     assert!(!refused.status.success());
     assert!(
         text(&refused.stderr).contains("SHA256SUMS is not signed with aicentre's release key"),
+        "{}",
+        text(&refused.stderr)
+    );
+
+    let mut other = first.clone();
+    other.insert("AICENTRE_VERSION".into(), "0.3.0".into());
+    let refused = run("sh", &[&format!("{cli}/install.sh")], &other);
+    assert!(!refused.status.success());
+    assert!(
+        text(&refused.stderr).contains("asked for 0.3.0, but the release is 0.1.0"),
         "{}",
         text(&refused.stderr)
     );

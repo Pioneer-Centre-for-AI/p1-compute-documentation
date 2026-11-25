@@ -3,7 +3,7 @@ use base64::engine::general_purpose::STANDARD;
 use ring::digest::{SHA256, SHA512, digest};
 use ring::signature::{ED25519, UnparsedPublicKey};
 
-use crate::context::Env;
+use crate::context::{Env, for_tests};
 
 pub const SIGNERS: &str = include_str!("../../release.pub");
 pub const NAMESPACE: &str = "aicentre-release";
@@ -12,8 +12,9 @@ const KIND: &str = "ssh-ed25519";
 const MAGIC: &[u8] = b"SSHSIG";
 
 pub fn signers(env: &Env) -> String {
-    match (env.get("AICENTRE_DOWNLOAD_BASE"), env.get("AICENTRE_RELEASE_SIGNERS")) {
-        (Some(base), Some(own)) if !base.is_empty() && !own.is_empty() => own.clone(),
+    let base = env.get("AICENTRE_DOWNLOAD_BASE").filter(|b| !b.is_empty());
+    match (base, for_tests(env, "AICENTRE_RELEASE_SIGNERS")) {
+        (Some(_), Some(own)) => own.to_string(),
         _ => SIGNERS.to_string(),
     }
 }

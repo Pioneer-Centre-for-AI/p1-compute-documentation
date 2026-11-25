@@ -1,4 +1,4 @@
-use std::sync::LazyLock;
+use std::sync::{Arc, LazyLock, Mutex};
 use std::time::Duration;
 
 use regex::Regex;
@@ -6,7 +6,8 @@ use tokio::task::JoinHandle;
 use unicode_segmentation::UnicodeSegmentation;
 
 use super::width::string_width;
-use crate::context::Output;
+use crate::context::{Env, Output};
+use crate::lock;
 
 static ESCAPE: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"^(?:\x1b\[[0-9;?]*[A-Za-z]|\x1b\][^\x07\x1b]*(?:\x07|\x1b\\))").unwrap()
@@ -115,5 +116,35 @@ impl Ticker {
 impl Drop for Ticker {
     fn drop(&mut self) {
         self.stop();
+    }
+}
+
+pub fn animates(env: &Env, out: &Output) -> bool {
+    out.is_tty && env.get("TERM").map(String::as_str) != Some("dumb")
+}
+
+pub struct Animation {
+    area: Arc<Mutex<LiveArea>>,
+    ticker: Ticker,
+}
+
+impl Animation {
+    pub fn start(
+        out: &Output,
+        every: Duration,
+        mut draw: impl FnMut(&mut LiveArea) + Send + 'static,
+    ) -> Animation {
+        let mut area = LiveArea::new(out.clone());
+        area.start();
+        draw(&mut area);
+        let area = Arc::new(Mutex::new(area));
+        let shared = area.clone();
+        let ticker = Ticker::every(every, move || draw(&mut lock(&shared)));
+        Animation { area, ticker }
+    }
+
+    pub fn stop(mut self) {
+        self.ticker.stop();
+        lock(&self.area).stop();
     }
 }

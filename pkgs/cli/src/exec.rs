@@ -99,7 +99,7 @@ fn took(since: Instant) -> String {
 static LIVE: LazyLock<Mutex<HashSet<i32>>> = LazyLock::new(|| Mutex::new(HashSet::new()));
 
 fn live() -> std::sync::MutexGuard<'static, HashSet<i32>> {
-    LIVE.lock().unwrap_or_else(|e| e.into_inner())
+    crate::lock(&LIVE)
 }
 
 fn kill(pid: i32, group: bool) {

@@ -15,13 +15,21 @@ rec() { printf '%s\n' "$last" >> "$FAKE/$1"; }
 hold() { if [ -f "$A/$1" ]; then trap 'exit 143' TERM; while :; do sleep 0.1; done; fi; }
 case "$last" in
   *"@@KIND"*) rec kind; if [ -f "$A/kind" ]; then cat "$A/kind"; else echo '@@KIND dir'; fi; exit 0 ;;
-  *"sync.lock"*) rec sync; exit 0 ;;
-  *"cat > "*)
-    cat > /dev/null
-    printf '@@FILE /home/s123456/.cache/aicentre/session.sh\n@@USER s123456\n@@HOME /home/s123456\n'
-    printf '@@AICENTRE\n@@BINPATH yes\n@@SHELL bash\n'
-    [ -f "$A/no-p1" ] || echo '@@P1 yes'
+  *"AICENTRE_VERSION="*"@@LAUNCHES"*)
+    rec install; cat > /dev/null
+    if [ -f "$A/install.out" ]; then cat "$A/install.out"; else echo '@@LAUNCHES 0.1.0'; fi
     exit 0 ;;
+  *"base64 -d"*) rec push; cat > "$FAKE/pushed"; cat "$A/push.out" 2>/dev/null; exit 0 ;;
+  *"@@SUM"*) cat "$A/sum.out" 2>/dev/null; exit 0 ;;
+  *"sync.lock"*) rec sync; exit 0 ;;
+  *"@@USER"*)
+    printf '@@USER s123456\n@@HOME /home/s123456\n'
+    printf '@@AICENTRE %s\n@@BINPATH yes\n@@SHELL bash\n' "$(cat "$A/there" 2>/dev/null)"
+    [ -f "$A/no-p1" ] || echo '@@P1 yes'
+    echo '@@LAUNCHER /home/s123456/.local/share/aicentre/versions/0.1.0/aicentre'
+    if [ -f "$A/launches" ]; then echo "@@LAUNCHES $(cat "$A/launches")"; else echo '@@LAUNCHES 0.1.0'; fi
+    exit 0 ;;
+  *" unpack-example "*) rec example; cat "$A/example.err" >&2 2>/dev/null; exit "$(cat "$A/example.code" 2>/dev/null || echo 0)" ;;
   *"bkill"*) rec bkill; cat "$A/bkill.out" 2>/dev/null || echo "Job <123> is being terminated"; exit "$(cat "$A/bkill.code" 2>/dev/null || echo 0)" ;;
   *"bjobs"*)
     if [ -f "$A/needs-login" ] && [ ! -f "$FAKE/master.up" ]; then echo "s123456@login9.hpc.dtu.dk: Permission denied (password)." >&2; exit 255; fi
@@ -34,7 +42,8 @@ case "$last" in
     cat "$A/bsub.out" 2>/dev/null
     hold bsub.hold
     exit "$(cat "$A/bsub.code" 2>/dev/null || echo 0)" ;;
-  *"session-"*|*"session.sh"*)
+  *" launch --login --needs "*) rec needs; cat "$A/needs.out" 2>/dev/null; exit 0 ;;
+  *"/aicentre launch --login "*)
     rec login
     cat "$A/login.out" 2>/dev/null
     hold login.hold

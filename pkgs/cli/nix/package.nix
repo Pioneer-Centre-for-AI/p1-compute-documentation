@@ -3,8 +3,6 @@
 , python3
 , procps
 , openssh
-, iproute2
-, stdenv
 ,
 }:
 
@@ -20,7 +18,7 @@ rustPlatform.buildRustPackage {
     fileset = lib.fileset.unions [
       ../Cargo.toml
       ../Cargo.lock
-      (lib.fileset.fileFilter (file: file.hasExt "rs" || file.name == "launcher.sh") ../src)
+      (lib.fileset.fileFilter (file: file.hasExt "rs") ../src)
       ../tests
       ../install.sh
       ../release.pub
@@ -33,7 +31,7 @@ rustPlatform.buildRustPackage {
     python3
     procps
     openssh
-  ] ++ lib.optionals stdenv.hostPlatform.isLinux [ iproute2 ];
+  ];
 
   checkFlags = [
     "--skip=in_a_job_a_browser_server_ends_once_no_browser_has_been_connected_for_the_idle_limit"

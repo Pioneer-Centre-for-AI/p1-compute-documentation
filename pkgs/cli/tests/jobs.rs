@@ -128,9 +128,10 @@ async fn gallery_get_has_the_login_node_fetch_the_example_then_says_what_to_run(
     );
     let ctx = sb.ctx_env(&[("AICENTRE_SITE", &url)]);
     assert_eq!(sb.run(&["gallery", "get", "INT-GPU"], &ctx).await, 0);
-    assert!(sb.read("calls").contains(
-        "mkdir -p /dtu/p1/s123456/examples && { curl -fsSL --proto =https,file https://hpc.aicentre.dk/gallery/int-gpu.tar.gz || wget -qO-"
-    ));
+    assert_eq!(
+        sb.read("example"),
+        "/home/s123456/.local/share/aicentre/versions/0.1.0/aicentre unpack-example https://hpc.aicentre.dk/gallery/int-gpu.tar.gz int-gpu /dtu/p1/s123456/examples\n"
+    );
     let out = sb.out.text();
     assert!(out.contains("INT-GPU is in /dtu/p1/s123456/examples/int-gpu on P1 DTU HPC"), "{out}");
     assert!(out.contains("$ aicentre marimo examples/int-gpu/notebook.py --gpu"), "{out}");
@@ -143,7 +144,7 @@ async fn push_copies_into_the_project_directory_with_rsync_through_the_shared_lo
     assert_eq!(sb.run(&["push", "datasets/", "data"], &sb.ctx()).await, 0);
     let said = sb.read("rsync");
     let args: Vec<&str> = said.trim().split('\n').collect();
-    assert_eq!(args[args.len() - 2..], ["datasets", "dtu:/dtu/p1/s123456/data/"]);
+    assert_eq!(args[args.len() - 3..], ["--", "datasets", "dtu:/dtu/p1/s123456/data/"]);
     let rsh = args[args.iter().position(|a| *a == "-e").unwrap() + 1];
     let want = Regex::new(r"^ssh -S \S+cm-[0-9a-f]{12} -o ControlMaster=no$").unwrap();
     assert!(want.is_match(rsh), "{rsh}");
@@ -166,8 +167,97 @@ async fn gallery_get_refuses_files_that_are_not_the_examples_own_archive_on_the_
         let ctx = sb.ctx_env(&[("AICENTRE_SITE", &at)]);
         assert_eq!(sb.run(&["gallery", "get", "int-gpu"], &ctx).await, 1);
         assert!(sb.err.text().contains("that are not its own archive"), "{}", sb.err.text());
-        assert!(!sb.read("calls").contains("curl"));
+        assert_eq!(sb.read("example"), "");
         assert_eq!(sb.run(&["gallery"], &ctx).await, 0);
         assert!(!sb.out.text().contains('\u{1b}'));
     }
+}
+
+#[tokio::test]
+async fn gallery_get_says_so_when_the_example_is_already_on_the_cluster() {
+    let sb = sandbox();
+    let url = site(
+        &sb,
+        &[json!({
+            "code": "INT-GPU", "slug": "int-gpu", "title": "x", "providers": ["dtu"],
+            "page": "https://hpc.aicentre.dk/gallery/int-gpu/",
+            "files": "https://hpc.aicentre.dk/gallery/int-gpu.tar.gz", "commands": [],
+        })],
+    );
+    sb.answer("example.code", "17");
+    let ctx = sb.ctx_env(&[("AICENTRE_SITE", &url)]);
+    assert_eq!(sb.run(&["gallery", "get", "int-gpu"], &ctx).await, 1);
+    let err = sb.err.text();
+    assert!(err.contains("/dtu/p1/s123456/examples/int-gpu is already on dtu."), "{err}");
+}
+
+#[tokio::test]
+async fn on_the_cluster_only_the_examples_own_folder_is_unpacked_and_never_over_one() {
+    let sb = sandbox();
+    let packed = format!("{}/site/gallery", sb.root);
+    std::fs::create_dir_all(format!("{packed}/src/int-gpu")).unwrap();
+    std::fs::create_dir_all(format!("{packed}/src/other")).unwrap();
+    std::fs::write(format!("{packed}/src/int-gpu/notebook.py"), "x").unwrap();
+    std::fs::write(format!("{packed}/src/other/planted"), "x").unwrap();
+    std::fs::write(format!("{packed}/src/.bashrc"), "x").unwrap();
+    let archive = format!("{packed}/int-gpu.tar.gz");
+    let made = std::process::Command::new("tar")
+        .args(["-czf", &archive, "-C", &format!("{packed}/src"), "int-gpu", "other", ".bashrc"])
+        .status()
+        .unwrap();
+    assert!(made.success());
+    let url = format!("file://{archive}");
+    let into = format!("{}/work/examples", sb.root);
+    let ctx = sb.ctx_env(&[("AICENTRE_SITE", &format!("file://{}/site", sb.root))]);
+
+    assert_eq!(sb.run(&["unpack-example", &url, "int-gpu", &into], &ctx).await, 0);
+    assert_eq!(sb.err.text(), "");
+    let got: Vec<String> = std::fs::read_dir(&into)
+        .unwrap()
+        .flatten()
+        .map(|e| e.file_name().to_string_lossy().into_owned())
+        .collect();
+    assert_eq!(got, ["int-gpu"]);
+    assert!(std::path::Path::new(&format!("{into}/int-gpu/notebook.py")).exists());
+    assert_eq!(sb.run(&["unpack-example", &url, "int-gpu", &into], &ctx).await, 17);
+
+    for (url, slug) in [
+        ("http://hpc.aicentre.dk/gallery/int-gpu.tar.gz", "int-gpu"),
+        ("https://hpc.aicentre.dk/gallery/other.tar.gz", "int-gpu"),
+        ("https://hpc.aicentre.dk/gallery/../x.tar.gz", "../x"),
+    ] {
+        assert_eq!(sb.run(&["unpack-example", url, slug, &into], &ctx).await, 1);
+    }
+    assert_eq!(sb.run(&["unpack-example", &url, "int-gpu", "relative"], &sb.ctx()).await, 1);
+}
+
+#[tokio::test]
+async fn list_sizes_shows_what_each_size_asks_for_without_reaching_a_cluster() {
+    let sb = sandbox();
+    assert_eq!(sb.run(&["list", "sizes"], &sb.ctx()).await, 0);
+    let out = sb.out.text();
+    assert!(
+        Regex::new(r"small\s+1 GPU\s+4 cores\s+32 GB\s+2 h\s+default").unwrap().is_match(&out),
+        "{out}"
+    );
+    assert!(Regex::new(r"medium\s+1 GPU\s+4 cores\s+96 GB\s+4 h").unwrap().is_match(&out), "{out}");
+    assert!(
+        Regex::new(r"large\s+2 GPUs\s+4 cores\s+200 GB\s+4 h").unwrap().is_match(&out),
+        "{out}"
+    );
+    assert_eq!(sb.read("calls"), "");
+
+    sb.out.clear();
+    assert_eq!(sb.run(&["list", "sizes", "--json"], &sb.ctx()).await, 0);
+    let said: serde_json::Value = serde_json::from_str(&sb.out.text()).unwrap();
+    assert_eq!(said["queue"], "p1i");
+    assert_eq!(
+        said["sizes"][2],
+        json!({
+            "name": "large", "gpus": 2, "cpus": 4, "memoryGb": 200.0, "minutes": 240, "default": false
+        })
+    );
+    assert_eq!(said["sizes"][0]["default"], true);
+    assert_eq!(sb.run(&["profiles"], &sb.ctx()).await, 2);
+    assert!(sb.err.text().contains("aicentre list sizes"));
 }

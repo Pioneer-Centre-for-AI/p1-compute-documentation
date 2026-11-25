@@ -30,16 +30,19 @@ const PROVIDER: Row = ("-p, --provider <name>", "Only these providers: dtu, gefi
 const JSON_ROW: Row = ("--json", "Print JSON");
 const ANOTHER_PROVIDER: Row = ("-p, --provider <name>", "Another provider than the first you use");
 
-const SESSION_OPTIONS: [Row; 6] = [
-    ("--gpu", "On a GPU node instead of the login node"),
-    ("--time <2h>", "With --gpu: run limit, as 90, 2h or 1:30 (1h; max 4h)"),
+const SESSION_OPTIONS: [Row; 9] = [
+    ("--gpu", "On a GPU node"),
+    ("--login", "On the login node"),
+    ("--size <name>", "With --gpu: small, medium or large (default small)"),
+    ("--time <2h>", "With --gpu: run limit, as 90, 2h or 1:30 (max 4h)"),
     ("--cpus <n>", "With --gpu: CPU cores (default 4, the most p1i gives)"),
-    ("--mem <8GB>", "With --gpu: memory per core (default 8GB)"),
+    ("--mem <8GB>", "With --gpu: memory per core, in place of the size's"),
     ("--another", "With --gpu: although a session of yours holds a GPU"),
+    ("--yes", "Install what the session needs, without asking"),
     ANOTHER_PROVIDER,
 ];
 
-const SESSION_NOTE: &str = "Without --gpu it runs on the login node: for editing, installs and light runs. With --gpu it is a job with one GPU on p1i, P1 DTU HPC's interactive queue, which also ends after 10 min with nothing connected. With no path it opens your home directory on the cluster; other paths are relative to your project directory. Ctrl-C ends the session.";
+const SESSION_NOTE: &str = "In a terminal it asks where to run, unless --gpu or --login says. The login node is for editing, installs and light runs. With --gpu it is a job on p1i, P1 DTU HPC's interactive queue, which also ends after 10 min with nothing connected. small is 1 GPU, 32 GB and 2 h; medium is 1 GPU, 96 GB and 4 h; large is 2 GPUs, 200 GB and 4 h. aicentre list sizes shows them. With no path it opens your home directory on the cluster; other paths are relative to your project directory. Ctrl-C ends the session.";
 
 const CODE_NOTE: &str = "It opens your desktop editor over ssh when it finds one (VS Code and its forks with Remote-SSH, or Zed), or the command in [desktop] open in your settings. Otherwise VS Code opens in your browser. With --gpu the desktop editor needs --desktop. ";
 
@@ -99,6 +102,7 @@ fn page(topic: &str) -> Option<Page> {
                     vec![
                         ("list jobs", "Your jobs across every provider"),
                         ("list gpus", "The GPUs and how busy they are"),
+                        ("list sizes", "What --size asks for in a --gpu session"),
                     ],
                 ),
                 rows(
@@ -194,7 +198,11 @@ fn page(topic: &str) -> Option<Page> {
         ),
         "list" => p(
             "Your jobs and the GPUs across P1 compute",
-            &["aicentre list jobs [options]", "aicentre list gpus [options]"],
+            &[
+                "aicentre list jobs [options]",
+                "aicentre list gpus [options]",
+                "aicentre list sizes [--json]",
+            ],
             vec![rows("Options", vec![PROVIDER, JSON_ROW])],
             Some(
                 "Asks every provider you use at once. NGC is air-gapped: use qstat on its remote desktop.",

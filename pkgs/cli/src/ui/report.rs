@@ -152,17 +152,17 @@ impl LiveReporter {
         state.lock().unwrap().redraw();
         let shared = state.clone();
         let ticker = Ticker::every(Duration::from_millis(80), move || {
-            shared.lock().unwrap_or_else(|e| e.into_inner()).redraw();
+            crate::lock(&shared).redraw();
         });
         LiveReporter { state, ticker: Mutex::new(Some(ticker)), out: out.clone() }
     }
 
     fn lock(&self) -> std::sync::MutexGuard<'_, Live> {
-        self.state.lock().unwrap_or_else(|e| e.into_inner())
+        crate::lock(&self.state)
     }
 
     fn stop(&self) {
-        if let Some(mut t) = self.ticker.lock().unwrap_or_else(|e| e.into_inner()).take() {
+        if let Some(mut t) = crate::lock(&self.ticker).take() {
             t.stop();
         }
         self.lock().area.stop();
@@ -214,7 +214,7 @@ impl PlainReporter {
     }
 
     fn lock(&self) -> std::sync::MutexGuard<'_, Ordered> {
-        self.ordered.lock().unwrap_or_else(|e| e.into_inner())
+        crate::lock(&self.ordered)
     }
 
     fn emit(&self, lines: &[String]) {

@@ -2,19 +2,24 @@
 
 The site at [hpc.aicentre.dk](https://hpc.aicentre.dk) for P1 compute, and what it ships:
 
-- `src/`, `static/`: the site, SvelteKit on GitHub Pages. Its pages are the user manual.
-- `pkgs/cli/`: `aicentre`, the command line tool installed from `https://hpc.aicentre.dk/install`.
-- `pkgs/gallery/`: the files of the gallery's examples, served as `/gallery/<code>.tar.gz`.
-- `docs/`: the technical reference for maintainers. Start at [docs/README.md](docs/README.md).
+- `src/`, `static/`: the site, SvelteKit on GitHub Pages.
+- `pkgs/cli/`: `aicentre`, the command line tool.
+- `pkgs/gallery/`: the files of the gallery's examples.
 
 ## Develop
 
 ```sh
-nix develop    # bun and node for the site, cargo for the CLI, and shellcheck
+nix develop
 bun install
-bun run dev    # http://localhost:5173/
-bun run check
-bun run build
+bun run dev                      # the site, http://localhost:5173/
+
+cd pkgs/cli
+cargo test
+nix run .#static-x64             # the cluster's build, which sessions of cargo run use
+cargo run -- marimo
 ```
 
-The CLI has its own commands in `pkgs/cli`; see [docs/02-the-cli.md](docs/02-the-cli.md).
+## Release
+
+Set `version` in `pkgs/cli/Cargo.toml`, merge, then push a tag: `cli-v0.2.0`, or
+`cli-v0.2.0-rc.1` for a pre-release.

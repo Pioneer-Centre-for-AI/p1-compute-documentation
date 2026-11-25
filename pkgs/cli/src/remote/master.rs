@@ -140,14 +140,13 @@ impl Master {
         let args = ["-S", &self.socket, "-O", "forward", "-L", &spec, &self.alias];
         let r = run("ssh", &args, RunOptions::new(&self.ctx.env).timeout_ms(10_000)).await;
         if r.code == 0 {
-            self.forwards.lock().unwrap_or_else(|e| e.into_inner()).push(spec);
+            crate::lock(&self.forwards).push(spec);
         }
         r
     }
 
     pub async fn close(&self) {
-        let specs: Vec<String> =
-            std::mem::take(&mut *self.forwards.lock().unwrap_or_else(|e| e.into_inner()));
+        let specs: Vec<String> = std::mem::take(&mut *crate::lock(&self.forwards));
         for spec in specs {
             let args = ["-S", &self.socket, "-O", "cancel", "-L", &spec, &self.alias];
             run("ssh", &args, RunOptions::new(&self.ctx.env).timeout_ms(5_000)).await;

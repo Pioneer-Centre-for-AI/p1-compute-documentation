@@ -77,7 +77,15 @@ platform() {
 	fi
 }
 
+checked() {
+	expected=$(awk -v f="$1" '$2 == f || $2 == "*" f { print $1 }' "$tmp/SHA256SUMS")
+	[ -n "$expected" ] || err "SHA256SUMS has no line for $1"
+	actual=$(sha256 "$tmp/$1")
+	[ "$expected" = "$actual" ] || err "$1 does not match its checksum (expected $expected, got $actual)"
+}
+
 main() {
+	umask 022
 	allow_root=0
 	for arg in "$@"; do
 		case $arg in
@@ -119,16 +127,34 @@ main() {
 	ssh-keygen -Y verify -f "$tmp/signers" -I "$SIGNER" -n aicentre-release -s "$tmp/SHA256SUMS.sig" <"$tmp/SHA256SUMS" >/dev/null 2>&1 ||
 		err "SHA256SUMS is not signed with aicentre's release key, so nothing was installed"
 
-	expected=$(awk -v f="$asset" '$2 == f || $2 == "*" f { print $1 }' "$tmp/SHA256SUMS")
-	[ -n "$expected" ] || err "SHA256SUMS has no line for $asset"
-	actual=$(sha256 "$tmp/$asset")
-	[ "$expected" = "$actual" ] || err "$asset does not match its checksum (expected $expected, got $actual)"
+	checked "$asset"
 
-	tar -xzf "$tmp/$asset" -C "$tmp" || err "cannot unpack $asset"
-	[ -x "$tmp/aicentre" ] || err "$asset has no aicentre binary in it"
+	fetch "$base/VERSION" "$tmp/VERSION" || err "cannot download $base/VERSION"
+	checked VERSION
+	version=$(head -n 1 "$tmp/VERSION")
+	if [ -n "${AICENTRE_VERSION:-}" ] && [ "$version" != "$AICENTRE_VERSION" ]; then
+		err "asked for $AICENTRE_VERSION, but the release is $version, so nothing was installed"
+	fi
+
+	mkdir "$tmp/unpacked"
+	case $version in
+	# A 0.1 release keeps files next to its binary, and installs them too.
+	0.1.*) tar -xzf "$tmp/$asset" -C "$tmp/unpacked" || err "cannot unpack $asset" ;;
+	*) tar -xzf "$tmp/$asset" -C "$tmp/unpacked" aicentre || err "cannot unpack $asset" ;;
+	esac
+	bin="$tmp/unpacked/aicentre"
+	if [ -L "$bin" ] || [ ! -f "$bin" ] || [ ! -x "$bin" ]; then
+		err "$asset has no aicentre binary in it"
+	fi
+	got=$("$bin" --version </dev/null 2>/dev/null) || got=
+	[ "$got" = "$version" ] || err "the binary in $asset says it is \"$got\", not $version, so nothing was installed"
 
 	status=0
-	"$tmp/aicentre" self-install </dev/null || status=$?
+	if [ -n "${AICENTRE_KEEP_CURRENT:-}" ]; then
+		"$bin" self-install --keep-current </dev/null || status=$?
+	else
+		"$bin" self-install </dev/null || status=$?
+	fi
 	exit "$status"
 }
 

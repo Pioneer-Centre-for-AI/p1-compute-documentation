@@ -5,5 +5,7 @@ pub mod interactive;
 pub mod login;
 pub mod lsf;
 pub mod proxy;
+pub mod serve;
+pub mod sizes;
 pub mod state;
 pub mod sync;

@@ -14,7 +14,7 @@ use std::time::{Duration, Instant};
 use common::write_mode;
 use regex::Regex;
 
-const LAUNCHER: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/src/session/launcher.sh");
+const AICENTRE: &str = env!("CARGO_BIN_EXE_aicentre");
 
 const LISTEN: &str = r#"import os, socket
 s = socket.socket()
@@ -56,13 +56,28 @@ fn root() -> Root {
     let fake = |name: &str, body: &str| {
         write_mode(&format!("{bin}/{name}"), &format!("#!/bin/sh\n{body}\n"), 0o755);
     };
-    fake("uv", "exit 0");
     fake(
-        "uvx",
+        "server",
         &format!(
             "echo \"$*\" > {path}/uvx.args\necho \"JUPYTER_TOKEN=$JUPYTER_TOKEN\" > {path}/uvx.env\n\
+             echo \"$VIRTUAL_ENV\" > {path}/server.venv\n\
              port=$(echo \"$*\" | sed -n 's/.*--port \\([0-9]*\\).*/\\1/p')\n\
              PORT=$port exec python3 -c '{LISTEN}'"
+        ),
+    );
+    fake(
+        "uv",
+        &format!(
+            "echo \"$*\" >> {path}/uv.calls\n\
+             case \"$1\" in\n\
+             venv) for last; do :; done; mkdir -p \"$last/bin\"; : > \"$last/bin/python\" ;;\n\
+             pip) venv=; prev=; for a; do [ \"$prev\" = --python ] && venv=$a; prev=$a; done\n\
+               for a; do case $a in\n\
+                 marimo) cp {bin}/server \"$venv/bin/marimo\" ;;\n\
+                 jupyterlab) cp {bin}/server \"$venv/bin/jupyter-lab\" ;;\n\
+                 ipykernel) mkdir -p \"$venv/lib/python3.13/site-packages/ipykernel\" ;;\n\
+               esac; done ;;\n\
+             esac\nexit 0"
         ),
     );
     fake(
@@ -97,9 +112,21 @@ impl Launched {
 }
 
 fn launch(root: &Root, app: &str, target: &str, env: &[(&str, &str)]) -> Launched {
+    launch_with(root, &["--yes"], app, target, env)
+}
+
+fn launch_with(
+    root: &Root,
+    flags: &[&str],
+    app: &str,
+    target: &str,
+    env: &[(&str, &str)],
+) -> Launched {
     let data = format!("{}/data", root.path);
-    let mut child = Command::new("bash")
-        .args([LAUNCHER, app, target, "vscode", &data, &root.path, "127.0.0.1"])
+    let mut child = Command::new(AICENTRE)
+        .arg("launch")
+        .args(flags)
+        .args([app, target, "vscode", &data, &root.path, "127.0.0.1"])
         .env_clear()
         .env("PATH", format!("{}:{}", root.bin, std::env::var("PATH").unwrap_or_default()))
         .env("HOME", format!("{}/home", root.path))
@@ -127,7 +154,11 @@ fn launch(root: &Root, app: &str, target: &str, env: &[(&str, &str)]) -> Launche
         let left = deadline.saturating_duration_since(Instant::now());
         let Ok(line) = rx.recv_timeout(left) else { break };
         if let Some(m) = tag.captures(&line) {
-            tags.entry(m[1].to_string()).or_insert_with(|| m[2].to_string());
+            let value = tags.entry(m[1].to_string()).or_insert_with(String::new);
+            if !value.is_empty() {
+                value.push('\n');
+            }
+            value.push_str(&m[2]);
         }
     }
     Launched { tags, child, _lines: rx }
@@ -146,6 +177,38 @@ fn closes(port: u16) -> bool {
         }
     }
     false
+}
+
+struct Sealed {
+    runtime: tokio::runtime::Runtime,
+    stream: tokio_rustls::client::TlsStream<tokio::net::TcpStream>,
+}
+
+fn sealed(job: &Launched, secret: &str) -> Option<Sealed> {
+    use tokio::io::AsyncWriteExt;
+    let runtime = tokio::runtime::Builder::new_current_thread().enable_all().build().unwrap();
+    let (port, pin) = (job.port("GATE"), job.tag("GATECERT").unwrap().to_string());
+    let stream = runtime.block_on(async {
+        let conn = tokio::net::TcpStream::connect(("127.0.0.1", port)).await.ok()?;
+        let seal = aicentre::seal::connector(&pin).unwrap();
+        let mut tls = seal.connect(aicentre::seal::name(), conn).await.ok()?;
+        tls.write_all(secret.as_bytes()).await.ok()?;
+        Some(tls)
+    })?;
+    Some(Sealed { runtime, stream })
+}
+
+fn through(job: &Launched, secret: &str) -> String {
+    use tokio::io::AsyncReadExt;
+    let Some(mut conn) = sealed(job, secret) else { return String::new() };
+    conn.runtime.block_on(async {
+        let mut buf = [0u8; 4096];
+        let read = tokio::time::timeout(Duration::from_secs(8), conn.stream.read(&mut buf));
+        match read.await {
+            Ok(Ok(n)) => String::from_utf8_lossy(&buf[..n]).into_owned(),
+            _ => String::new(),
+        }
+    })
 }
 
 fn knock(port: u16, secret: &str) -> String {
@@ -170,17 +233,21 @@ fn jupyter_gets_its_token_from_the_environment_opens_the_notebook_by_url_and_log
     assert_eq!(job.tag("ERROR"), None);
     assert_eq!(path, format!("/lab/tree/my%20nb.ipynb?token={token}"));
     let args = std::fs::read_to_string(format!("{}/uvx.args", r.path)).unwrap();
-    assert!(
-        args.starts_with(
-            "--managed-python --from jupyterlab jupyter-lab --no-browser --ip 127.0.0.1 --port "
-        ),
-        "{args}"
-    );
+    assert!(args.starts_with("--no-browser --ip 127.0.0.1 --port "), "{args}");
     assert!(!args.contains(&token));
     assert_eq!(
         std::fs::read_to_string(format!("{}/uvx.env", r.path)).unwrap(),
         format!("JUPYTER_TOKEN={token}\n")
     );
+    let venv = format!("{}/data/venv", r.path);
+    let calls = std::fs::read_to_string(format!("{}/uv.calls", r.path)).unwrap();
+    assert_eq!(
+        calls,
+        format!(
+            "venv --python-preference only-managed --seed --python 3.13 {venv}\npip install --python {venv} jupyterlab\n"
+        )
+    );
+    assert_eq!(std::fs::read_to_string(format!("{}/server.venv", r.path)).unwrap().trim(), venv);
     assert_eq!(mode(&format!("{}/data", r.path)), 0o700);
     assert_eq!(mode(&format!("{}/data/logs", r.path)), 0o700);
     let log = std::fs::read_dir(format!("{}/data/logs", r.path))
@@ -192,6 +259,63 @@ fn jupyter_gets_its_token_from_the_environment_opens_the_notebook_by_url_and_log
     assert_eq!(mode(&format!("{}/data/logs/{log}", r.path)), 0o600);
     assert_eq!(job.tag("GATE"), None);
     job.stop();
+}
+
+#[test]
+fn what_a_session_would_download_is_named_first_and_installed_only_after_a_yes() {
+    let r = root();
+    let venv = format!("{}/data/venv", r.path);
+    let python = format!(
+        "Python 3.13, as a default environment in {venv}, from github.com/astral-sh/python-build-standalone"
+    );
+    let lab = format!("JupyterLab, from pypi.org, into {venv}");
+    let asked = launch_with(&r, &["--needs"], "jupyter", "work", &[]);
+    assert_eq!(asked.tag("NEED"), Some(format!("{python}\n{lab}").as_str()));
+    assert_eq!(asked.tag("PID"), None);
+    asked.stop();
+
+    let refused = launch_with(&r, &[], "jupyter", "work", &[]);
+    let error = refused.tag("ERROR").unwrap_or_default().to_string();
+    assert!(error.contains(&format!("{lab}, which nobody agreed to")), "{error}");
+    assert!(!Path::new(&format!("{}/uvx.args", r.path)).exists());
+    assert!(!Path::new(&venv).exists());
+    refused.stop();
+
+    launch(&r, "jupyter", "work", &[]).stop();
+    let again = launch_with(&r, &["--needs"], "jupyter", "work", &[]);
+    assert_eq!(again.tag("NEED"), None);
+    again.stop();
+    let started = launch_with(&r, &[], "jupyter", "work", &[]);
+    assert_eq!(started.tag("ERROR"), None);
+    started.stop();
+
+    std::fs::remove_file(format!("{}/uv", r.bin)).unwrap();
+    let path = [("PATH", r.bin.as_str())];
+    let bare = launch_with(&r, &["--needs"], "marimo", "work", &path);
+    assert_eq!(
+        bare.tag("NEED"),
+        Some(
+            format!("uv 0.13.9, from github.com/astral-sh/uv\nmarimo, from pypi.org, into {venv}")
+                .as_str()
+        )
+    );
+    bare.stop();
+
+    std::fs::create_dir_all(format!("{}/work/own/.venv/bin", r.path)).unwrap();
+    std::fs::write(format!("{}/work/own/.venv/bin/python", r.path), "").unwrap();
+    let own = launch_with(&r, &["--needs"], "marimo", "work/own", &path);
+    let need = own.tag("NEED").unwrap_or_default().to_string();
+    assert!(
+        need.ends_with(&format!("marimo, from pypi.org, into {}/work/own/.venv", r.path)),
+        "{need}"
+    );
+    own.stop();
+    std::fs::create_dir_all(format!("{}/work/proj", r.path)).unwrap();
+    std::fs::write(format!("{}/work/proj/pyproject.toml", r.path), "").unwrap();
+    let project = launch_with(&r, &["--needs"], "marimo", "work/proj", &path);
+    let need = project.tag("NEED").unwrap_or_default().to_string();
+    assert!(need.ends_with("marimo, from pypi.org, through uv"), "{need}");
+    project.stop();
 }
 
 #[test]
@@ -245,12 +369,8 @@ fn walk(dir: &str) -> Vec<String> {
 #[test]
 fn a_port_that_someone_else_listens_on_is_never_reported_with_the_token() {
     let r = root();
-    write_mode(
-        &format!("{}/ss", r.bin),
-        "#!/bin/sh\necho 'LISTEN 0 16 127.0.0.1:1 0.0.0.0:*'\n",
-        0o755,
-    );
-    let job = launch(&r, "jupyter", "work", &[]);
+    let other = (nix::unistd::getuid().as_raw() + 1).to_string();
+    let job = launch(&r, "jupyter", "work", &[("AICENTRE_LISTENER_UID", &other)]);
     assert!(job.tag("ERROR").unwrap_or_default().contains("is not this session's own"));
     assert_eq!(job.tag("PATH"), None);
     assert_eq!(job.tag("PORT"), None);
@@ -271,8 +391,9 @@ fn in_a_job_a_browser_server_stays_on_127_0_0_1_and_the_gate_forwards_to_it_afte
     assert!(args.contains("--ip 127.0.0.1 --port "), "{args}");
     assert_ne!(job.port("GATE"), job.port("PORT"));
     assert_eq!(job.tag("HOSTKEY"), None);
-    assert_eq!(knock(job.port("GATE"), &"0".repeat(64)), "");
-    assert_eq!(knock(job.port("GATE"), job.tag("SECRET").unwrap()), "fake server\n");
+    assert_eq!(through(&job, &"0".repeat(64)), "");
+    assert_eq!(through(&job, job.tag("SECRET").unwrap()), "fake server\n");
+    assert!(!knock(job.port("GATE"), job.tag("SECRET").unwrap()).contains("fake server"));
     assert_eq!(mode(&format!("{}/data/logs/777-gate.log", r.path)), 0o600);
     job.stop();
 }
@@ -286,7 +407,7 @@ fn the_gate_closes_a_connection_from_anywhere_but_the_submitting_login_node_secr
         "work",
         &[("LSB_JOBID", "777"), ("AICENTRE_GATE_ALLOW", "10.11.12.13")],
     );
-    assert_eq!(knock(job.port("GATE"), job.tag("SECRET").unwrap()), "");
+    assert_eq!(through(&job, job.tag("SECRET").unwrap()), "");
     job.stop();
 }
 
@@ -307,8 +428,7 @@ fn connections_that_never_send_the_secret_do_not_keep_the_job_alive_and_one_that
     drop(strangers);
 
     let job = launch(&r, "jupyter", "work", &env);
-    let mut held = TcpStream::connect(("127.0.0.1", job.port("GATE"))).unwrap();
-    held.write_all(job.tag("SECRET").unwrap().as_bytes()).unwrap();
+    let held = sealed(&job, job.tag("SECRET").unwrap()).unwrap();
     std::thread::sleep(Duration::from_secs(6));
     assert!(TcpStream::connect(("127.0.0.1", job.port("PORT"))).is_ok());
     drop(held);
@@ -447,6 +567,8 @@ fn end_to_end_a_real_ssh_client_reaches_a_real_sshd_i_only_through_the_gate() {
                 &client,
                 "-o",
                 "IdentitiesOnly=yes",
+                "-o",
+                "IdentityAgent=none",
                 "-o",
                 "BatchMode=yes",
                 "-o",

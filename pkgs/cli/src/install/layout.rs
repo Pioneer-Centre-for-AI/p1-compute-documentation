@@ -1,6 +1,6 @@
 use std::fs;
 use std::io::ErrorKind;
-use std::os::unix::fs::{PermissionsExt, symlink};
+use std::os::unix::fs::{DirBuilderExt, PermissionsExt, symlink};
 use std::path::Path;
 
 use anyhow::bail;
@@ -81,8 +81,11 @@ pub fn version_dir(paths: &Paths, version: &str) -> String {
     join(&[&paths.versions, version])
 }
 
-/// The directories it created, outermost first.
 pub fn mkdirp(path: &str) -> std::io::Result<Vec<String>> {
+    mkdirp_mode(path, 0o755)
+}
+
+pub fn mkdirp_mode(path: &str, mode: u32) -> std::io::Result<Vec<String>> {
     let mut created = Vec::new();
     let mut p = path.to_string();
     while !Path::new(&p).exists() {
@@ -93,7 +96,7 @@ pub fn mkdirp(path: &str) -> std::io::Result<Vec<String>> {
         }
         p = parent;
     }
-    fs::create_dir_all(path)?;
+    fs::DirBuilder::new().recursive(true).mode(mode).create(path)?;
     Ok(created)
 }
 
@@ -122,7 +125,12 @@ pub fn place_binary(paths: &Paths, version: &str, source: &str) -> anyhow::Resul
 }
 
 pub async fn smoke_test(binary: &str, version: &str, env: &Env) -> Option<String> {
-    let r = run(binary, &["--version"], RunOptions::new(env).timeout_ms(10_000)).await;
+    let mut r = run(binary, &["--version"], RunOptions::new(env).timeout_ms(10_000)).await;
+    if r.code != 0 && r.stdout.is_empty() {
+        // A file that was just written can be busy for a moment (ETXTBSY).
+        tokio::time::sleep(std::time::Duration::from_millis(200)).await;
+        r = run(binary, &["--version"], RunOptions::new(env).timeout_ms(10_000)).await;
+    }
     let got = r.stdout.trim();
     if r.code != 0 || got != version {
         let shown = if got.is_empty() { r.stderr.trim() } else { got };

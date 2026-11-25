@@ -1,6 +1,5 @@
 use std::collections::BTreeSet;
 use std::path::Path;
-use std::sync::{Arc, Mutex};
 use std::time::Duration;
 
 use serde::Serialize;
@@ -25,7 +24,8 @@ use crate::remote::master::{KEEP, is_open, log_in, shared_socket};
 use crate::remote::shell::LocalShell;
 use crate::session::here::here;
 use crate::session::state::live_notes;
-use crate::ui::live::{LiveArea, Ticker};
+use crate::ui::live::{Animation, animates};
+use crate::ui::say::printable_lines;
 use crate::ui::style::{Style, make_style};
 use crate::ui::table::{TableOptions, table};
 
@@ -48,11 +48,27 @@ pub struct ClusterJobs {
     pub login: Option<String>,
 }
 
+impl ClusterJobs {
+    fn new(id: ClusterId) -> ClusterJobs {
+        ClusterJobs {
+            id,
+            name: id.name().into(),
+            jobs: vec![],
+            gpus: vec![],
+            queues: vec![],
+            ok: false,
+            error: None,
+            hint: None,
+            login: None,
+        }
+    }
+}
+
 const NGC_GPUS: &str = "air-gapped, so what is free there is only visible on its remote desktop";
 const NGC_NOTE: &str = "air-gapped, so its queue is only visible on its remote desktop (qstat)";
 
 #[derive(Clone, Copy, PartialEq, Eq)]
-enum What {
+pub enum What {
     Jobs,
     Gpus,
 }
@@ -63,17 +79,7 @@ async fn query(
     hosts: &Resolver,
     what: What,
 ) -> anyhow::Result<ClusterJobs> {
-    let base = ClusterJobs {
-        id,
-        name: id.name().into(),
-        jobs: vec![],
-        gpus: vec![],
-        queues: vec![],
-        ok: false,
-        error: None,
-        hint: None,
-        login: None,
-    };
+    let base = ClusterJobs::new(id);
     let command = login_shell(&match (what, id == ClusterId::Dtu) {
         (What::Jobs, true) => bjobs_command(),
         (What::Jobs, false) => squeue_command(),
@@ -174,6 +180,11 @@ fn last_line(text: &str) -> Option<&str> {
 }
 
 fn parse(base: ClusterJobs, r: &RunResult, what: What) -> ClusterJobs {
+    let r = &RunResult {
+        stdout: printable_lines(&r.stdout),
+        stderr: printable_lines(&r.stderr),
+        ..r.clone()
+    };
     let dtu = base.id == ClusterId::Dtu;
     if what == What::Gpus {
         let (queues, gpus) =
@@ -406,49 +417,23 @@ async fn query_if(
     if chosen.contains(&id) { Some(query(ctx, id, hosts, what).await) } else { None }
 }
 
-struct Asking {
-    area: Arc<Mutex<LiveArea>>,
-    ticker: Ticker,
+fn asking(ctx: &Ctx, s: &Style, chosen: &[ClusterId], what: What) -> Animation {
+    let names: Vec<&str> = chosen.iter().map(|id| id.short_name()).collect();
+    let about = if what == What::Jobs { "for your jobs" } else { "what is free" };
+    let text = format!("Asking {} {about}", names.join(" and "));
+    let style = s.clone();
+    Animation::start(&ctx.out, Duration::from_millis(80), move |area| {
+        let frame = area.next_frame();
+        area.draw(vec![format!("{} {text}", style.spinner(frame))]);
+    })
 }
 
-impl Asking {
-    fn start(ctx: &Ctx, s: &Style, chosen: &[ClusterId], what: What) -> Asking {
-        let names: Vec<&str> = chosen.iter().map(|id| id.short_name()).collect();
-        let about = if what == What::Jobs { "for your jobs" } else { "what is free" };
-        let text = format!("Asking {} {about}", names.join(" and "));
-        let style = s.clone();
-        let draw = move |area: &mut LiveArea| {
-            let frame = area.next_frame();
-            area.draw(vec![format!("{} {text}", style.spinner(frame))]);
-        };
-        let area = Arc::new(Mutex::new(LiveArea::new(ctx.out.clone())));
-        {
-            let mut a = area.lock().unwrap_or_else(|e| e.into_inner());
-            a.start();
-            draw(&mut a);
-        }
-        let shared = area.clone();
-        let ticker = Ticker::every(Duration::from_millis(80), move || {
-            draw(&mut shared.lock().unwrap_or_else(|e| e.into_inner()));
-        });
-        Asking { area, ticker }
-    }
-
-    fn stop(mut self) {
-        self.ticker.stop();
-        self.area.lock().unwrap_or_else(|e| e.into_inner()).stop();
-    }
-}
-
-pub async fn list_jobs(ctx: &Ctx, clusters: &[ClusterId], json: bool) -> anyhow::Result<i32> {
-    list(ctx, clusters, json, What::Jobs).await
-}
-
-pub async fn list_gpus(ctx: &Ctx, clusters: &[ClusterId], json: bool) -> anyhow::Result<i32> {
-    list(ctx, clusters, json, What::Gpus).await
-}
-
-async fn list(ctx: &Ctx, clusters: &[ClusterId], json: bool, what: What) -> anyhow::Result<i32> {
+pub async fn list(
+    ctx: &Ctx,
+    clusters: &[ClusterId],
+    json: bool,
+    what: What,
+) -> anyhow::Result<i32> {
     let Some(config) = load_config_or_say(ctx) else { return Ok(2) };
     let s = make_style(&ctx.env, &ctx.out);
     let hosts = resolver(ctx, &config);
@@ -474,8 +459,8 @@ async fn list(ctx: &Ctx, clusters: &[ClusterId], json: bool, what: What) -> anyh
         return Ok(0);
     }
 
-    let live = (!json && !chosen.is_empty() && ctx.out.is_tty && ctx.env("TERM") != Some("dumb"))
-        .then(|| Asking::start(ctx, &s, &chosen, what));
+    let live = (!json && !chosen.is_empty() && animates(&ctx.env, &ctx.out))
+        .then(|| asking(ctx, &s, &chosen, what));
     let (a, b) = tokio::join!(
         query_if(ClusterId::Dtu, &chosen, ctx, &hosts, what),
         query_if(ClusterId::Gefion, &chosen, ctx, &hosts, what)
@@ -499,55 +484,41 @@ async fn list(ctx: &Ctx, clusters: &[ClusterId], json: bool, what: What) -> anyh
         }
     }
 
-    if what == What::Gpus {
-        if json {
-            #[derive(Serialize)]
-            struct Of<T> {
-                provider: ClusterId,
-                #[serde(flatten)]
-                it: T,
-            }
-            #[derive(Serialize)]
-            struct Doc<'a> {
-                gpus: Vec<Of<&'a Gpu>>,
-                queues: Vec<Of<&'a Queue>>,
-                providers: &'a [ClusterJobs],
-            }
-            let doc = Doc {
-                gpus: results
-                    .iter()
-                    .flat_map(|r| r.gpus.iter().map(|it| Of { provider: r.id, it }))
-                    .collect(),
-                queues: results
-                    .iter()
-                    .flat_map(|r| r.queues.iter().map(|it| Of { provider: r.id, it }))
-                    .collect(),
-                providers: &results,
-            };
-            ctx.out.write(&format!("{}\n", serde_json::to_string_pretty(&doc)?));
-        } else {
-            let text: String =
-                render_gpus(&results, &s, ngc).iter().map(|l| format!("{l}\n")).collect();
-            ctx.out.write(&text);
-        }
-        return Ok(if results.iter().all(|r| r.ok) { 0 } else { 1 });
+    #[derive(Serialize)]
+    struct Of<T> {
+        provider: ClusterId,
+        #[serde(flatten)]
+        it: T,
     }
-
-    if json {
-        #[derive(Serialize)]
-        struct Doc<'a> {
-            jobs: Vec<Row>,
-            providers: &'a [ClusterJobs],
+    let text = match (json, what) {
+        (true, What::Gpus) => {
+            let gpus: Vec<_> = results
+                .iter()
+                .flat_map(|r| r.gpus.iter().map(|it| Of { provider: r.id, it }))
+                .collect();
+            let queues: Vec<_> = results
+                .iter()
+                .flat_map(|r| r.queues.iter().map(|it| Of { provider: r.id, it }))
+                .collect();
+            let doc = serde_json::json!({ "gpus": gpus, "queues": queues, "providers": results });
+            serde_json::to_string_pretty(&doc)? + "\n"
         }
-        let doc = Doc { jobs: merge(&results), providers: &results };
-        ctx.out.write(&format!("{}\n", serde_json::to_string_pretty(&doc)?));
-    } else {
-        let held: BTreeSet<String> = live_notes(&ctx.paths).into_keys().collect();
-        let text: String =
-            render(&results, &s, &held, ngc).iter().map(|l| format!("{l}\n")).collect();
-        ctx.out.write(&text);
-    }
+        (true, What::Jobs) => {
+            let doc = serde_json::json!({ "jobs": merge(&results), "providers": results });
+            serde_json::to_string_pretty(&doc)? + "\n"
+        }
+        (false, What::Gpus) => lines(&render_gpus(&results, &s, ngc)),
+        (false, What::Jobs) => {
+            let held: BTreeSet<String> = live_notes(&ctx.paths).into_keys().collect();
+            lines(&render(&results, &s, &held, ngc))
+        }
+    };
+    ctx.out.write(&text);
     Ok(if results.iter().all(|r| r.ok) { 0 } else { 1 })
+}
+
+fn lines(lines: &[String]) -> String {
+    lines.iter().map(|l| format!("{l}\n")).collect()
 }
 
 #[cfg(test)]
@@ -562,26 +533,12 @@ mod tests {
     fn rows_run_first_then_by_id_then_provider() {
         let results = [
             ClusterJobs {
-                id: ClusterId::Gefion,
-                name: String::new(),
                 jobs: vec![job("98765", JobState::Running), job("12", JobState::Pending)],
-                gpus: vec![],
-                queues: vec![],
-                ok: true,
-                error: None,
-                hint: None,
-                login: None,
+                ..ClusterJobs::new(ClusterId::Gefion)
             },
             ClusterJobs {
-                id: ClusterId::Dtu,
-                name: String::new(),
                 jobs: vec![job("124", JobState::Pending), job("123", JobState::Running)],
-                gpus: vec![],
-                queues: vec![],
-                ok: true,
-                error: None,
-                hint: None,
-                login: None,
+                ..ClusterJobs::new(ClusterId::Dtu)
             },
         ];
         let rows = merge(&results);

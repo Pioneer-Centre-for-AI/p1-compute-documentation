@@ -67,6 +67,8 @@ pub struct Request {
     pub minutes: u32,
     pub cpus: u32,
     pub mem_per_cpu: String,
+    pub gpus: u32,
+    pub approved: bool,
 }
 
 static MINUTES: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^(\d+)m?$").unwrap());
@@ -146,15 +148,17 @@ pub fn bsub_command(
         "-R",
         "span[hosts=1]",
         "-gpu",
-        "num=1:mode=shared",
+        &format!("num={}:mode=shared", r.gpus),
     ]
     .iter()
     .map(|s| s.to_string())
     .collect();
     args.extend(
-        launcher_args(r.app, &r.path, r.server, r.view, launcher, data, base, "0.0.0.0")
-            .into_iter()
-            .map(|a| if shq(&a) == a { a } else { format!("hex:{}", hex::encode(&a)) }),
+        launcher_args(
+            r.app, &r.path, r.server, r.view, launcher, data, base, "0.0.0.0", r.approved,
+        )
+        .into_iter()
+        .map(|a| if shq(&a) == a { a } else { format!("hex:{}", hex::encode(&a)) }),
     );
     let quoted: Vec<String> = args.iter().map(|a| shq(a)).collect();
     format!("ESUB_BYPASS=1 ESUB_QUIET=1 bsub {}", quoted.join(" "))
@@ -170,12 +174,15 @@ pub fn launcher_args(
     data: &str,
     base: &str,
     bind: &str,
+    approved: bool,
 ) -> Vec<String> {
     let app = if view == Some(View::Desktop) { "sshd" } else { app.as_str() };
-    ["bash", "-l", launcher, app, path, server.as_str(), data, base, bind]
-        .iter()
-        .map(|s| s.to_string())
-        .collect()
+    let mut args = vec![launcher, "launch", "--login"];
+    if approved {
+        args.push("--yes");
+    }
+    args.extend([app, path, server.as_str(), data, base, bind]);
+    args.iter().map(|s| s.to_string()).collect()
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -242,18 +249,25 @@ mod tests {
             minutes: 60,
             cpus: 4,
             mem_per_cpu: "8GB".into(),
+            gpus: 1,
+            approved: false,
         };
-        let line = bsub_command(&r, "/d/session.sh", "/d", "/b", "-I");
+        let line = bsub_command(&r, "/d/aicentre", "/d", "/b", "-I");
         let job = line.split(" num=1:mode=shared ").nth(1).unwrap();
         assert_eq!(
             job,
             format!(
-                "bash -l /d/session.sh jupyter hex:{} vscode /d /b 0.0.0.0",
+                "/d/aicentre launch --login jupyter hex:{} vscode /d /b 0.0.0.0",
                 hex::encode("my  nb;id $(x).ipynb")
             )
         );
         let r = Request { path: "~".into(), ..r };
         assert!(bsub_command(&r, "l", "d", "b", "-I").contains(" jupyter hex:7e vscode "));
+        let r = Request { approved: true, gpus: 2, ..r };
+        assert!(
+            bsub_command(&r, "l", "d", "b", "-I").contains(" -gpu num=2:mode=shared l launch ")
+        );
+        assert!(bsub_command(&r, "l", "d", "b", "-I").contains(" l launch --login --yes jupyter "));
     }
 
     #[test]

@@ -8,13 +8,16 @@ pub mod gallery;
 pub mod http;
 pub mod install;
 pub mod jobs;
+pub mod launch;
 pub mod mcp;
 pub mod paths;
 pub mod platform;
 pub mod remote;
+pub mod seal;
 pub mod session;
 pub mod transfer;
 pub mod ui;
+pub mod unpack;
 pub mod version;
 
 use std::future::Future;
@@ -24,13 +27,19 @@ pub use context::Ctx;
 
 use cli::args::{Command, parse_command};
 use cli::help::render_help;
+use jobs::list::What;
 
 pub type BoxFuture<'a, T> = Pin<Box<dyn Future<Output = T> + Send + 'a>>;
 
+pub fn lock<T>(m: &std::sync::Mutex<T>) -> std::sync::MutexGuard<'_, T> {
+    m.lock().unwrap_or_else(|e| e.into_inner())
+}
+
 pub async fn run(argv: &[String], ctx: &Ctx) -> i32 {
     let loud = |a: &String| a == "--verbose";
-    let proxy = argv.first().is_some_and(|a| a == "proxy");
-    let argv: Vec<String> = if !proxy && argv.iter().any(loud) {
+    let own =
+        argv.first().is_some_and(|a| ["proxy", "launch", "unpack-example"].contains(&a.as_str()));
+    let argv: Vec<String> = if !own && argv.iter().any(loud) {
         exec::set_verbose(true);
         argv.iter().filter(|a| !loud(a)).cloned().collect()
     } else {
@@ -68,9 +77,17 @@ async fn dispatch(command: Command, ctx: &Ctx) -> anyhow::Result<i32> {
         Command::Check { clusters, connect, json } => {
             check::command::check(ctx, &clusters, connect, json).await?
         }
-        Command::Upgrade { version } => install::upgrade::upgrade(ctx, version.as_deref()).await?,
+        Command::Upgrade { version, keep_current } => {
+            install::upgrade::upgrade(ctx, version.as_deref(), keep_current).await?
+        }
         Command::Uninstall { purge } => install::uninstall::uninstall(ctx, purge).await?,
-        Command::SelfInstall => install::self_install::self_install(ctx).await?,
+        Command::SelfInstall { keep_current } => {
+            install::self_install::self_install(ctx, keep_current).await?
+        }
+        Command::Launch { launch } => launch::launch(ctx, &launch).await?,
+        Command::UnpackExample { url, slug, parent } => {
+            gallery::gallery::unpack_example(ctx, &url, &slug, &parent).await?
+        }
         Command::Session { session } => session::command::session(ctx, &session).await?,
         Command::Mcp => mcp::server::mcp(ctx).await?,
         Command::Proxy { host } => session::proxy::proxy(ctx, &host).await?,
@@ -78,9 +95,10 @@ async fn dispatch(command: Command, ctx: &Ctx) -> anyhow::Result<i32> {
             transfer::transfer::transfer(ctx, direction, &from, to.as_deref(), provider).await?
         }
         Command::Gallery { gallery } => gallery::gallery::gallery(ctx, &gallery).await?,
-        Command::List { what, clusters, json } if what == "gpus" => {
-            jobs::list::list_gpus(ctx, &clusters, json).await?
+        Command::List { what, json, .. } if what == "sizes" => session::sizes::list(ctx, json),
+        Command::List { what, clusters, json } => {
+            let what = if what == "gpus" { What::Gpus } else { What::Jobs };
+            jobs::list::list(ctx, &clusters, json, what).await?
         }
-        Command::List { clusters, json, .. } => jobs::list::list_jobs(ctx, &clusters, json).await?,
     })
 }

@@ -21,17 +21,17 @@ jobs:
     timeout-minutes: 20
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       - name: Install nix
-        uses: cachix/install-nix-action@v31
+        uses: cachix/install-nix-action@3dc140bfc76c49fbd4dd958429132e3746bcb086 # v31
         with:
           extra_nix_config: |
             experimental-features = nix-command flakes
             accept-flake-config = true
 
       - name: Set up cachix
-        uses: cachix/cachix-action@v17
+        uses: cachix/cachix-action@38b082610b782e7e93e209c35fd730d399dee866 # v17
         with:
           name: nix-community
 
@@ -55,8 +55,8 @@ jobs:
               exit 1
             fi
           done
-          if [ "$(head -n 1 site/install)" != "#!/bin/sh" ]; then
-            echo "::error::site/install is not the aicentre install script"
+          if ! cmp -s site/install pkgs/cli/install.sh; then
+            echo "::error::site/install is not pkgs/cli/install.sh, byte for byte"
             exit 1
           fi
           echo "Pages: $(find site -name '*.html' | wc -l), size: $(du -sh site | cut -f1)"
@@ -69,19 +69,19 @@ jobs:
               HOME="$home" "$home/.local/bin/aicentre" --version
               exit 0
             fi
-            echo "try $try failed; the signing workflow may still be running"
+            echo "try $try failed"
             sleep 30
           done
-          echo "::error::site/install cannot install the latest release. If it has no signature, run the workflow 'Sign CLI releases'."
+          echo "::error::site/install cannot install the latest release. If it has no signature, sign it with pkgs/cli/scripts/sign-release.sh."
           exit 1
 
       - name: Configure Pages
         if: github.event_name != 'pull_request'
-        uses: actions/configure-pages@v6
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6
 
       - name: Upload Pages artifact
         if: github.event_name != 'pull_request'
-        uses: actions/upload-pages-artifact@v5
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
         with:
           path: site
 
@@ -100,4 +100,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v5
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5

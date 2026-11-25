@@ -45,13 +45,17 @@ fn message(e: &reqwest::Error) -> String {
 }
 
 pub async fn get(url: &str, timeout: Duration) -> Result<Fetched, String> {
+    get_up_to(url, timeout, MAX_BODY).await
+}
+
+pub async fn get_up_to(url: &str, timeout: Duration, most: usize) -> Result<Fetched, String> {
     let https = url.starts_with("https://");
     let mut res = client(timeout, https)?.get(url).send().await.map_err(|e| message(&e))?;
     let status = res.status().as_u16();
     let mut body = Vec::new();
     while let Some(chunk) = res.chunk().await.map_err(|e| message(&e))? {
-        if body.len() + chunk.len() > MAX_BODY {
-            return Err(format!("{url}: more than {} MB", MAX_BODY >> 20));
+        if body.len() + chunk.len() > most {
+            return Err(format!("{url}: more than {} MB", most >> 20));
         }
         body.extend_from_slice(&chunk);
     }

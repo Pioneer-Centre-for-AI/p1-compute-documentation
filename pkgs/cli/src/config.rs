@@ -21,6 +21,12 @@ pub struct Config {
     pub gefion: Option<ClusterSettings>,
     pub ngc: Option<ClusterSettings>,
     pub desktop: Option<DesktopSettings>,
+    pub session: Option<SessionSettings>,
+}
+
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct SessionSettings {
+    pub ask: Option<bool>,
 }
 
 impl Config {
@@ -66,10 +72,14 @@ pub fn parse_config(text: &str, file: &str) -> Result<Config, ConfigError> {
             config.desktop = Some(parse_desktop(&value, file)?);
             continue;
         }
+        if key == "session" {
+            config.session = Some(parse_session(&value, file)?);
+            continue;
+        }
         let Some(id) = ClusterId::parse(&key) else {
             let ids = CLUSTER_IDS.iter().map(|c| c.as_str()).collect::<Vec<_>>().join(", ");
             return Err(ConfigError(format!(
-                "{file}: unknown table [{key}]; expected {ids} or desktop"
+                "{file}: unknown table [{key}]; expected {ids}, desktop or session"
             )));
         };
         let Some(table) = value.as_table() else {
@@ -97,6 +107,11 @@ pub fn parse_config(text: &str, file: &str) -> Result<Config, ConfigError> {
                     )));
                 }
             };
+            if s.starts_with('-') || s.chars().any(char::is_whitespace) {
+                return Err(ConfigError(format!(
+                    "{file}: {key}.{field} must be one word that does not start with -"
+                )));
+            }
             match field.as_str() {
                 "user" => settings.user = Some(s),
                 "alias" => settings.alias = Some(s),
@@ -110,6 +125,25 @@ pub fn parse_config(text: &str, file: &str) -> Result<Config, ConfigError> {
         }
     }
     Ok(config)
+}
+
+fn parse_session(value: &toml::Value, file: &str) -> Result<SessionSettings, ConfigError> {
+    let Some(table) = value.as_table() else {
+        return Err(ConfigError(format!("{file}: session must be a table, as in [session]")));
+    };
+    let mut settings = SessionSettings::default();
+    for (field, v) in table {
+        if field != "ask" {
+            return Err(ConfigError(format!(
+                "{file}: unknown setting session.{field}; expected ask"
+            )));
+        }
+        let Some(ask) = v.as_bool() else {
+            return Err(ConfigError(format!("{file}: session.ask must be true or false")));
+        };
+        settings.ask = Some(ask);
+    }
+    Ok(settings)
 }
 
 fn parse_desktop(value: &toml::Value, file: &str) -> Result<DesktopSettings, ConfigError> {
@@ -135,7 +169,24 @@ fn parse_desktop(value: &toml::Value, file: &str) -> Result<DesktopSettings, Con
     Ok(settings)
 }
 
+fn own_file(file: &str) -> Result<(), ConfigError> {
+    use std::os::unix::fs::MetadataExt;
+    let Ok(meta) = fs::metadata(file) else { return Ok(()) };
+    let uid = nix::unistd::getuid().as_raw();
+    if meta.uid() != uid && meta.uid() != 0 {
+        return Err(ConfigError(format!("{file}: belongs to another user, so it is not read")));
+    }
+    if meta.mode() & 0o022 != 0 {
+        return Err(ConfigError(format!(
+            "{file}: other users can change it (mode {:o}); run chmod go-w on it",
+            meta.mode() & 0o777
+        )));
+    }
+    Ok(())
+}
+
 pub fn load_config(file: &str) -> Result<Config, ConfigError> {
+    own_file(file)?;
     match fs::read_to_string(file) {
         Ok(text) => parse_config(&text, file),
         Err(e) if e.kind() == std::io::ErrorKind::NotFound => Ok(Config::default()),
@@ -158,6 +209,39 @@ mod tests {
     use super::*;
 
     #[test]
+    fn a_file_that_others_can_change_is_not_read_and_a_dash_is_no_alias() {
+        use std::os::unix::fs::PermissionsExt;
+        let dir = tempfile::tempdir().unwrap();
+        let file = dir.path().join("config.toml").to_string_lossy().into_owned();
+        fs::write(&file, "[dtu]\nalias = \"hpc\"\n").unwrap();
+        fs::set_permissions(&file, fs::Permissions::from_mode(0o644)).unwrap();
+        assert_eq!(load_config(&file).unwrap().dtu.unwrap().alias.as_deref(), Some("hpc"));
+        fs::set_permissions(&file, fs::Permissions::from_mode(0o664)).unwrap();
+        let err = load_config(&file).unwrap_err().0;
+        assert!(
+            err.ends_with("other users can change it (mode 664); run chmod go-w on it"),
+            "{err}"
+        );
+        assert!(load_config(&format!("{file}.none")).unwrap().dtu.is_none());
+
+        let err = parse_config("[dtu]\nalias = \"-oProxyCommand=x\"\n", "/c.toml").unwrap_err().0;
+        assert_eq!(err, "/c.toml: dtu.alias must be one word that does not start with -");
+    }
+
+    #[test]
+    fn the_size_question_can_be_turned_off() {
+        let ask = |text: &str| parse_config(text, "/c.toml").map(|c| c.session.and_then(|s| s.ask));
+        assert_eq!(ask("").unwrap(), None);
+        assert_eq!(ask("[session]\nask = false\n").unwrap(), Some(false));
+        assert_eq!(ask("[session]\nask = true\n").unwrap(), Some(true));
+        assert_eq!(
+            ask("[session]\nask = \"no\"\n").unwrap_err().0,
+            "/c.toml: session.ask must be true or false"
+        );
+        assert!(ask("[session]\nsize = \"large\"\n").unwrap_err().0.contains("expected ask"));
+    }
+
+    #[test]
     fn reads_settings_and_names_mistakes() {
         let c = parse_config(
             "[dtu]\nuser = \"s1\"\nsync = false\n[desktop]\nopen = \"zed ssh://{host}{urlpath}\"\n",
@@ -170,7 +254,7 @@ mod tests {
         let err = |t: &str| parse_config(t, "/c.toml").unwrap_err().0;
         assert_eq!(
             err("[foo]\n"),
-            "/c.toml: unknown table [foo]; expected dtu, gefion, ngc or desktop"
+            "/c.toml: unknown table [foo]; expected dtu, gefion, ngc, desktop or session"
         );
         assert_eq!(err("dtu = 1\n"), "/c.toml: dtu must be a table, as in [dtu]");
         assert_eq!(err("[dtu]\nsync = \"no\"\n"), "/c.toml: dtu.sync must be true or false");

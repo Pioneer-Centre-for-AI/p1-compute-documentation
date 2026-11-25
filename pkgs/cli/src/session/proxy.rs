@@ -2,12 +2,14 @@ use std::io::Read;
 use std::path::Path;
 use std::process::Stdio;
 use std::sync::LazyLock;
+use std::time::Duration;
 
 use regex::Regex;
 use tokio::io::AsyncWriteExt;
 use tokio::net::{TcpListener, TcpStream};
 use tokio::sync::mpsc;
 use tokio::task::JoinHandle;
+use tokio_rustls::TlsConnector;
 
 use super::state::{SECRET, known_hosts_file, live_notes, write_private};
 use crate::check::clusters::{GPU_HOST, GpuHost, gpu_host_block};
@@ -16,6 +18,7 @@ use crate::context::Ctx;
 use crate::paths::{Paths, join, state_dir, tilde};
 use crate::platform::is_nix_store;
 use crate::remote::master::shared_socket;
+use crate::seal::{connector, name};
 
 static DEFAULT_KEY: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"(^|/)id_(rsa|dsa|ecdsa|ecdsa_sk|ed25519|ed25519_sk|xmss|mldsa[A-Za-z0-9_]*)$")
@@ -89,20 +92,28 @@ impl Relay {
     }
 }
 
-async fn relay(mut client: TcpStream, upstream: u16, secret: String) {
-    let Ok(mut up) = TcpStream::connect(("127.0.0.1", upstream)).await else { return };
+async fn relay(mut client: TcpStream, upstream: u16, secret: String, seal: TlsConnector) {
+    let Ok(up) = TcpStream::connect(("127.0.0.1", upstream)).await else { return };
+    let connect = tokio::time::timeout(Duration::from_secs(15), seal.connect(name(), up));
+    let Ok(Ok(mut up)) = connect.await else { return };
     if up.write_all(secret.as_bytes()).await.is_err() {
         return;
     }
     let _ = tokio::io::copy_bidirectional(&mut client, &mut up).await;
 }
 
-pub async fn secret_proxy(listen: u16, upstream: u16, secret: &str) -> std::io::Result<Relay> {
+pub async fn secret_proxy(
+    listen: u16,
+    upstream: u16,
+    secret: &str,
+    fingerprint: &str,
+) -> std::io::Result<Relay> {
     let server = TcpListener::bind(("127.0.0.1", listen)).await?;
+    let seal = connector(fingerprint).map_err(std::io::Error::other)?;
     let secret = secret.to_string();
     Ok(Relay(tokio::spawn(async move {
         while let Ok((client, _)) = server.accept().await {
-            tokio::spawn(relay(client, upstream, secret.clone()));
+            tokio::spawn(relay(client, upstream, secret.clone(), seal.clone()));
         }
     })))
 }
@@ -212,16 +223,19 @@ mod tests {
 
     #[tokio::test]
     async fn the_relay_sends_the_secret_before_anything_the_browser_sends() {
+        let gate = crate::seal::sealed().unwrap();
         let upstream = TcpListener::bind("127.0.0.1:0").await.unwrap();
         let up_port = upstream.local_addr().unwrap().port();
         let received = tokio::spawn(async move {
-            let (mut sock, _) = upstream.accept().await.unwrap();
+            let (sock, _) = upstream.accept().await.unwrap();
+            let mut sock = gate.acceptor.accept(sock).await.unwrap();
             let mut data = Vec::new();
             let _ = sock.read_to_end(&mut data).await;
             String::from_utf8_lossy(&data).into_owned()
         });
         let listen = crate::browser::free_port().await.unwrap();
-        let relay = secret_proxy(listen, up_port, &"c".repeat(64)).await.unwrap();
+        let pin = gate.fingerprint.clone();
+        let relay = secret_proxy(listen, up_port, &"c".repeat(64), &pin).await.unwrap();
         let mut client = TcpStream::connect(("127.0.0.1", listen)).await.unwrap();
         client.write_all(b"GET / HTTP/1.1\r\n\r\n").await.unwrap();
         client.shutdown().await.unwrap();

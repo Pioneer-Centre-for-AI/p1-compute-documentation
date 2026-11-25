@@ -199,7 +199,7 @@ pub fn resolver(ctx: &Ctx, config: &Config) -> Resolver {
 impl Resolver {
     pub async fn ssh_g(&self, alias: &str) -> SshGResult {
         let cell = {
-            let mut configs = self.0.configs.lock().unwrap_or_else(|e| e.into_inner());
+            let mut configs = crate::lock(&self.0.configs);
             configs.entry(alias.to_string()).or_default().clone()
         };
         cell.get_or_init(|| ssh_g(alias, &self.0.ctx.env)).await.clone()
@@ -207,7 +207,7 @@ impl Resolver {
 
     pub async fn alias(&self, id: ClusterId) -> Option<String> {
         let cell = {
-            let mut aliases = self.0.aliases.lock().unwrap_or_else(|e| e.into_inner());
+            let mut aliases = crate::lock(&self.0.aliases);
             aliases.entry(id).or_default().clone()
         };
         cell.get_or_init(|| find_alias(id, &self.0.ctx, &self.0.config, self)).await.clone()

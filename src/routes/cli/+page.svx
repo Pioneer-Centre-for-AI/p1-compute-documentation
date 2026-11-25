@@ -34,6 +34,7 @@ are not yet tried on the clusters. Send feedback to #ask-compute or the
 | Interactive, GPU | the same, with `--gpu` | A GPU node, as an interactive job |
 | Your jobs | `aicentre list jobs` | Every provider you use, in one table |
 | Free GPUs | `aicentre list gpus` | How busy each GPU and queue is |
+| Session sizes | `aicentre list sizes` | What `--size` asks for in a `--gpu` session |
 
 `aicentre check` checks your setup. Commands cover every provider you are set up for, and
 `--provider gefion` (or `-p gefion`) picks one.
@@ -109,6 +110,9 @@ alias = "gefion"       # the Host name in ~/.ssh/config
 
 # [desktop]
 # open = "zed ssh://{host}{urlpath}"   # the editor aicentre code opens
+
+# [session]
+# ask = false          # do not ask where to run: the login node unless --gpu says
 ```
 
 The queue is P1's and needs no setting: `--gpu` sessions go to `p1i` on DTU.
@@ -164,30 +168,84 @@ aicentre shell                            # a shell on the login node
 aicentre marimo project/notebook.py       # marimo in your browser
 aicentre jupyter project/notebook.ipynb   # JupyterLab in your browser
 aicentre code project                     # VS Code on your desktop, or in your browser
-aicentre code project --gpu --time 2h     # the same, on a GPU node
+aicentre code project --gpu               # the same, on a GPU node
+aicentre marimo train.py --gpu --size large   # with both GPUs and more memory
 ```
 
-Without `--gpu`, a session starts at once on your first provider's login node. The login node is
+With neither `--gpu` nor `--login`, a session asks in the terminal where to run: the login node
+or a GPU session of one of the sizes below. Move with the arrow keys and press Enter, which alone
+takes the login node. It asks only when you use DTU, and never in a script, where it takes the
+login node.
+
+With `--login`, a session starts at once on your first provider's login node. The login node is
 shared, so keep to editing, installs and light runs. A session there runs at low priority and
 ends after 12 hours; start it again to go on.
 
-With `--gpu`, it runs as an interactive job with one GPU on `p1i`, P1 DTU HPC's interactive
-queue. That queue is one node with two GPUs that everyone's sessions share, so a session takes
-at most 4 CPUs, 225 GB and 4 hours, and a second one from your laptop needs `--another`. `--gpu` is for DTU only, since Gefion runs GPU work as batch jobs and NGC uses its remote
-desktop.
+With `--gpu`, it runs as an interactive job on `p1i`, P1 DTU HPC's interactive queue. That queue
+is one node with two GPUs that everyone's sessions share, so a session takes at most 4 CPUs,
+225 GB and 4 hours, and a second one from your laptop needs `--another`. `--gpu` is for DTU only,
+since Gefion runs GPU work as batch jobs and NGC uses its remote desktop.
+
+`--size` picks how much the job asks for. `aicentre list sizes` prints the same table. With
+`--gpu` and no `--size`, the question lists only the sizes, and Enter alone takes `small`.
+
+| Size | GPUs | Memory | Time |
+| --- | --- | --- | --- |
+| `small` (default) | 1 | 32 GB | 2 hours |
+| `medium` | 1 | 96 GB | 4 hours |
+| `large` | 2 | 200 GB | 4 hours |
+
+A job cannot be given more time once it runs. The terminal rings and tells you when 10 and when
+2 minutes are left, so you can save. The job also ends 10 minutes after you close the browser
+tab or the editor, which frees the GPU for the next person.
+
+### Python and packages
+
+A session picks its Python from the folder it opens:
+
+- A folder with a `pyproject.toml` runs in that project's environment, through uv.
+- A folder with a `.venv` uses that environment.
+- Any other folder uses one default environment that all your sessions share, with Python 3.13.
+
+So in a shell, `pip install torch` puts torch where your notebooks in marimo, JupyterLab and
+VS Code find it. The shell says which environment it uses when it starts.
+
+`aicentre code` opens notebooks too, Jupyter's and marimo's. It installs the Python, Jupyter and
+marimo extensions before the editor opens the first time, and the editor finds the environment
+above as a kernel.
+
+VS Code asks whether you trust a folder before it runs code from it. In a folder that only you
+can write to, such as your home directory, aicentre turns that question off. In a folder that
+others can write to, such as a shared project directory, the question stays: settings that
+someone else puts there could otherwise run a program as you.
+
+### What a session installs
+
+The first time, a session needs software on the cluster that is not aicentre's own: uv, Python,
+marimo or JupyterLab, VS Code. It lists each one with where it comes from and asks before it
+installs anything. Answer yes, or pass `--yes` to agree ahead of time, for a script. Everything
+goes into your project directory, under `.aicentre`.
 
 With no path, a session opens your home directory on the cluster, and the ready message names
 the folder. Other paths are on the cluster, relative to your project directory
-(`/dtu/p1/<username>` on DTU, your home on Gefion) unless absolute or under `~`. Nothing is copied
-from your machine.
+(`/dtu/p1/<username>` on DTU, your home on Gefion) unless absolute or under `~`. Quote a path
+under `~`, as in `'~/work/nb.py'`, or your own shell turns it into a path on your machine.
+
+When a relative path is a file or folder on your machine and not on the cluster, the session
+asks whether to copy it there first. It never copies over something that is on the cluster
+already, and never without asking. Your edits stay on the cluster; `aicentre pull` brings them
+back.
 
 | Option | Default | What |
 | --- | --- | --- |
-| `--gpu` | | Run on a GPU node instead of the login node |
-| `--time 2h` | 1 hour | With `--gpu`: how long the job may run, as `90`, `2h` or `1:30`; at most 4 hours |
+| `--gpu` | | Run on a GPU node |
+| `--login` | | Run on the login node, without the question |
+| `--size medium` | `small` | With `--gpu`: `small`, `medium` or `large`, as in the table above |
+| `--time 2h` | the size's | With `--gpu`: how long the job may run, as `90`, `2h` or `1:30`; at most 4 hours |
 | `--cpus 4` | 4 | With `--gpu`: CPU cores; 4 is the most `p1i` gives |
-| `--mem 8GB` | 8GB | With `--gpu`: memory per core; at most 225 GB in all |
+| `--mem 8GB` | the size's | With `--gpu`: memory per core; at most 225 GB in all |
 | `--another` | | With `--gpu`: start although a session of yours already holds a GPU |
+| `--yes` | | Install what the session needs on the cluster without asking |
 | `--desktop` | | For `code`: the desktop app, or stop if it cannot open |
 | `--browser` | | For `code`: the browser, even when the desktop app is installed |
 | `--server openvscode` | VS Code's own server | For `code` in the browser: openvscode-server, the open build, with extensions from Open VSX |

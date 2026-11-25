@@ -1,18 +1,14 @@
 use std::cmp::Ordering;
 use std::fs;
 use std::io::{ErrorKind, Write};
-use std::path::Path;
 
 use anyhow::bail;
 
 use crate::check::types::Status;
 use crate::context::Ctx;
-use crate::exec::{RunOptions, run};
-use crate::install::layout::{
-    Linked, mkdirp, read_manifest, remove_if_empty, safe_remove, smoke_test, version_dir,
-};
+use crate::install::layout::{Linked, mkdirp, read_manifest, safe_remove, smoke_test, version_dir};
 use crate::install::release::{
-    DownloadError, download, download_base, fetch_text, is_version, parse_sums, sha256,
+    DownloadError, download_base, fetch_bytes, fetch_text, is_version, parse_sums, sha256_hex,
     version_order,
 };
 use crate::install::self_install::commit;
@@ -21,6 +17,7 @@ use crate::paths::{ensure_runtime_dir, join, tilde};
 use crate::platform::{asset_name, is_nix_store};
 use crate::ui::say::fail;
 use crate::ui::style::make_style;
+use crate::unpack::{Rules, unpack};
 
 const INSTALL: &str = "curl -fsSL https://hpc.aicentre.dk/install | sh";
 
@@ -56,7 +53,7 @@ fn lock(ctx: &Ctx) -> anyhow::Result<Lock> {
     bail!("cannot take the upgrade lock")
 }
 
-pub async fn upgrade(ctx: &Ctx, version: Option<&str>) -> anyhow::Result<i32> {
+pub async fn upgrade(ctx: &Ctx, version: Option<&str>, keep_current: bool) -> anyhow::Result<i32> {
     let pinned = version.filter(|v| !v.is_empty());
     if !ctx.compiled {
         return Ok(fail(
@@ -90,14 +87,11 @@ pub async fn upgrade(ctx: &Ctx, version: Option<&str>) -> anyhow::Result<i32> {
         Err(e) => return Ok(fail(ctx, &e.to_string(), &[])),
     };
 
-    let tarball = join(&[&ctx.paths.cache, &asset_name(ctx.platform)]);
-    let mut work = Work { stage: None, created: vec![] };
-    let result = fetch_and_switch(ctx, version, &base, &tarball, &mut work).await;
+    let mut work = Work { stage: None };
+    let result = fetch_and_switch(ctx, version, keep_current, &base, &mut work).await;
     if let Some(stage) = &work.stage {
         safe_remove(stage, &ctx.paths)?;
     }
-    let _ = fs::remove_file(&tarball);
-    remove_if_empty(&work.created);
     drop(held);
     match result {
         Err(e) => match e.downcast_ref::<DownloadError>() {
@@ -110,22 +104,27 @@ pub async fn upgrade(ctx: &Ctx, version: Option<&str>) -> anyhow::Result<i32> {
 
 struct Work {
     stage: Option<String>,
-    created: Vec<String>,
 }
 
 async fn fetch_and_switch(
     ctx: &Ctx,
     version: Option<&str>,
+    keep_current: bool,
     base: &str,
-    tarball: &str,
     work: &mut Work,
 ) -> anyhow::Result<i32> {
     let s = make_style(&ctx.env, &ctx.out);
     let pinned = version.is_some_and(|v| !v.is_empty());
     let asset = asset_name(ctx.platform);
+    let mut named = None;
     let target = match version {
         Some(v) => v.to_string(),
-        None => fetch_text(base, "VERSION").await?.trim().to_string(),
+        None => {
+            let bytes = fetch_bytes(base, "VERSION").await?;
+            let text = String::from_utf8_lossy(&bytes).trim().to_string();
+            named = Some(bytes);
+            text
+        }
     };
     if !is_version(&target) {
         let message =
@@ -169,12 +168,22 @@ async fn fetch_and_switch(
         ));
     }
     let sums = parse_sums(&listed);
+    let named = match named {
+        Some(bytes) => bytes,
+        None => fetch_bytes(base, "VERSION").await?,
+    };
+    let says = String::from_utf8_lossy(&named).trim().to_string();
+    if sums.get("VERSION") != Some(&sha256_hex(&named)) || says != target {
+        let message = format!(
+            "the signed checksums of this release are not those of {target}; nothing was changed."
+        );
+        return Ok(fail(ctx, &message, &[]));
+    }
     let Some(expected) = sums.get(&asset) else {
         return Ok(fail(ctx, &format!("the {target} release has no {asset}."), &[]));
     };
-    work.created = mkdirp(&ctx.paths.cache)?;
-    download(base, &asset, tarball).await?;
-    let actual = sha256(tarball)?;
+    let body = fetch_bytes(base, &asset).await?;
+    let actual = sha256_hex(&body);
     if actual != *expected {
         return Ok(fail(
             ctx,
@@ -186,16 +195,12 @@ async fn fetch_and_switch(
     let stage = format!("{}.partial", version_dir(&ctx.paths, &target));
     work.stage = Some(stage.clone());
     safe_remove(&stage, &ctx.paths)?;
-    fs::create_dir_all(&stage)?;
-    let untar =
-        run("tar", &["-xzf", tarball, "-C", &stage], RunOptions::new(&ctx.env).timeout_ms(120_000))
-            .await;
-    if untar.code != 0 || !Path::new(&join(&[&stage, "aicentre"])).exists() {
-        let why = match untar.stderr.trim() {
-            "" => "no aicentre inside",
-            text => text,
-        };
-        return Ok(fail(ctx, &format!("cannot unpack {asset}: {why}"), &[]));
+    mkdirp(&stage)?;
+    let only = Rules { only: Some("aicentre"), ..Default::default() };
+    match unpack(&body, &stage, only) {
+        Ok(1) => {}
+        Ok(_) => return Ok(fail(ctx, &format!("cannot unpack {asset}: no aicentre inside"), &[])),
+        Err(why) => return Ok(fail(ctx, &format!("cannot unpack {asset}: {why}"), &[])),
     }
     let dir = version_dir(&ctx.paths, &target);
     safe_remove(&dir, &ctx.paths)?;
@@ -207,6 +212,14 @@ async fn fetch_and_switch(
         return Ok(fail(ctx, &message, &[]));
     }
 
+    if keep_current {
+        work.stage = None;
+        ctx.out.write(&format!(
+            "{ok} Added aicentre {target}; {} stays the installed version.\n",
+            ctx.version
+        ));
+        return Ok(0);
+    }
     let link = commit(ctx, &target, &[])?;
     work.stage = None;
     ctx.out.write(&format!("{ok} Upgraded aicentre {} → {target}\n", ctx.version));
