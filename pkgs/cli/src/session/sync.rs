@@ -90,9 +90,10 @@ pub struct Launcher {
 
 const INSTALL: &str = "curl -fsSL https://hpc.aicentre.dk/install";
 
-/// The first version whose `upgrade` checks the release signature and takes
-/// `--keep-current`. An older one on a cluster is replaced by the installer.
-const UPGRADES_ITSELF_FROM: &str = "0.2.0-rc.1";
+/// The first version whose `upgrade` checks the release signature, takes
+/// `--keep-current`, and survives a network home, where the old version's
+/// folder cannot be removed. An older one is replaced by the installer.
+const UPGRADES_ITSELF_FROM: &str = "0.2.0-rc.2";
 
 pub fn upgrades_itself(there: &str) -> bool {
     is_version(there) && version_order(there, UPGRADES_ITSELF_FROM) != std::cmp::Ordering::Less
@@ -545,7 +546,8 @@ echo "kept=${AICENTRE_KEEP_CURRENT:-no}"
         assert_eq!(std::fs::metadata(&state).unwrap().permissions().mode() & 0o077, 0);
 
         assert!(!upgrades_itself("") && !upgrades_itself("0.1.2"));
-        assert!(upgrades_itself("0.2.0-rc.1") && upgrades_itself("0.3.0"));
+        assert!(!upgrades_itself("0.2.0-rc.1"));
+        assert!(upgrades_itself("0.2.0-rc.2") && upgrades_itself("0.3.0"));
         let own = install_command("0.2.0", ClusterId::Dtu, true, true);
         assert!(own.contains(
             r#"{ { "$HOME/.local/bin/aicentre" upgrade --version 0.2.0 --keep-current || AICENTRE_KEEP_CURRENT=1 AICENTRE_VERSION=0.2.0 sh "$s/install.sh"; } >"$s/sync.log" 2>&1;"#
