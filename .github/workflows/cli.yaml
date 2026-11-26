@@ -6,7 +6,6 @@ on:
     paths: ['pkgs/cli/**', '.github/workflows/cli.yaml', 'flake.nix', 'flake.lock']
   pull_request:
     branches: [main]
-    paths: ['pkgs/cli/**', '.github/workflows/cli.yaml', 'flake.nix', 'flake.lock']
   workflow_dispatch:
 
 permissions:
@@ -17,8 +16,35 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  # A required check must report on every pull request, so the workflow always
+  # runs and the CLI jobs are skipped when nothing of the CLI changed.
+  changes:
+    name: Changes
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      cli: ${{ steps.diff.outputs.cli }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+
+      - id: diff
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+        run: |
+          if [ -z "$BASE" ]; then echo cli=true >> "$GITHUB_OUTPUT"; exit 0; fi
+          if git diff --name-only "$BASE"...HEAD | grep -qE '^(pkgs/cli/|\.github/workflows/cli\.yaml$|flake\.(nix|lock)$)'; then
+            echo cli=true >> "$GITHUB_OUTPUT"
+          else
+            echo cli=false >> "$GITHUB_OUTPUT"
+          fi
+
   test:
     name: Test (${{ matrix.os }})
+    needs: changes
+    if: needs.changes.outputs.cli == 'true'
     strategy:
       fail-fast: false
       matrix:
@@ -61,6 +87,8 @@ jobs:
 
   static:
     name: Static Linux build
+    needs: changes
+    if: needs.changes.outputs.cli == 'true'
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     defaults:
@@ -95,6 +123,8 @@ jobs:
 
   nix:
     name: Nix package (${{ matrix.os }})
+    needs: changes
+    if: needs.changes.outputs.cli == 'true'
     strategy:
       fail-fast: false
       matrix:
@@ -116,3 +146,16 @@ jobs:
 
       - name: Smoke test
         run: ./result/bin/aicentre --version
+
+  ci:
+    name: CLI
+    needs: [changes, test, static, nix]
+    if: always()
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - env:
+          RESULTS: ${{ join(needs.*.result, ' ') }}
+        run: |
+          echo "$RESULTS"
+          case " $RESULTS " in *" failure "*|*" cancelled "*) exit 1 ;; esac
