@@ -10,10 +10,8 @@ providerDocs:
   note: Requires signing in to DCAI before the link resolves.
 quotas:
   wallTime: Not published; ask the compute coordinator before planning a long run
-  # Quoted: a bare 2 is a YAML number, and the schema wants the string it will
-  # print, so that a value can always carry its own unit or caveat.
-  gpusPerJob: '2'
-  gpusAtOnce: 4, as 2 concurrent jobs of 2 GPUs, more while GPUs sit idle
+  gpusPerJob: Up to 16, a full 8-GPU node or both nodes, while they are free
+  gpusAtOnce: Up to 16 while GPUs sit idle, about 4 when others are waiting
   homeDirectory: 25 GB
   projectStorage: 500 GB default
   sharedPool: 300 TB
@@ -50,9 +48,10 @@ hardware:
 
 The P1 Gefion HPC is a sandbox with on-demand H100 GPUs on [Gefion](https://dcai.dk/gefion). Use
 it to develop, test and pilot a workload on the hardware generation it will scale up on. P1's
-partition runs in Gefion AI Cloud, DCAI's environment for non-sensitive work. Full 8-GPU
-production nodes need separate funding, such as a Novo Nordisk Foundation (NNF) compute voucher or
-another allocation. A workload that already runs here is what you apply with.
+partition runs in Gefion AI Cloud, DCAI's environment for non-sensitive work. Jobs can use a full
+8-GPU node or span both of P1's nodes. Going past those two nodes needs separate funding, such as a
+Novo Nordisk Foundation (NNF) compute voucher or another allocation. A workload that already runs
+here is what you apply with.
 
 ## Getting Access
 
@@ -149,14 +148,16 @@ ends, ask the compute coordinator what to move off.
 
 ### What if I need more GPUs?
 
-The default limit is 2 concurrent jobs of at most 2 GPUs each. When GPUs are idle on P1's two
-NVIDIA DGX H100 nodes (account `iu_0096`), you can go past it. Check what is free with `sinfo` and
-submit the larger job. No request is needed.
+Ask Slurm for them. P1's two NVIDIA DGX H100 nodes (account `iu_0096`) take full 8-GPU jobs and
+multi-node jobs across both, such as `--nodes=2 --gpus-per-node=8`. Check what is free with
+`sinfo`. No request is needed.
+
+When others are waiting, keep to about 2 jobs of 2 GPUs each, so everyone gets a turn.
 
 <Aside type="caution">
 
-Jobs beyond the default limits can be cancelled when demand picks up. You are responsible for
-checkpointing, so a cancelled job resumes instead of starting over.
+Large jobs can be cancelled when demand picks up. You are responsible for checkpointing, so a
+cancelled job resumes instead of starting over.
 
 </Aside>
 
