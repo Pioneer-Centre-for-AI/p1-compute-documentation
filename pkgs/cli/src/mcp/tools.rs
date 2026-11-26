@@ -18,12 +18,21 @@ pub const MCP_INSTRUCTIONS: &str = r#"The p1_* tools come from aicentre, the com
 - P1 Gefion HPC (gefion): Slurm, reached through Teleport (tsh login). GPU work runs as batch jobs only, charged to P1's Slurm account iu_0096 unless a project has its own.
 - P1 NGC HPC (ngc): for sensitive data, air-gapped, reached only through its remote desktop.
 
+The user does not have to use aicentre for any of this. Many work with plain ssh, their own editor, their own scripts or another agent. These tools are there to give you correct facts about P1 compute, so that what you write and suggest fits it, with whatever tools the user prefers. Do not steer the user to aicentre commands. Mention one only as a shortcut next to the plain way, or when the user already uses aicentre.
+
+Facts that hold whatever the tool:
+- DTU batch job: bsub -q p1 with #BSUB lines; bjobs and bkill follow and end it. Gefion batch job: sbatch with #SBATCH lines and --account; squeue and scancel.
+- DTU interactive GPU job: bsub -Is -q p1i -app h100app -gpu "num=1:mode=shared" -n 4 -R "rusage[mem=8GB]" -R "span[hosts=1]" -W 2:00 bash. p1i is one node with two GPUs that everyone shares: at most 4 cores, 225 GB in all and 4 hours for a job. Memory in rusage is for each core.
+- A server in a job (Jupyter, marimo, an editor) should listen on 127.0.0.1 with a token, and be reached through ssh port forwarding by way of the login node. Other users are on the same nodes.
+- Login nodes are shared: editing, installs and light runs only.
+- Files move with rsync or scp over the user's ssh Host for the provider.
+
 How to help:
 - Answer from the documentation with p1_docs rather than from memory, and say which page you used. If the docs do not say, say so and suggest the compute coordinator.
-- Look at the user's situation with p1_jobs and p1_check before giving advice about it.
-- aicentre does not submit, follow or cancel batch jobs. The user does that in aicentre shell: bsub, bjobs and bkill on DTU, sbatch, squeue and scancel on Gefion. You can write a job script as a file in the working directory, with #BSUB lines for DTU or #SBATCH lines for Gefion, and copy it up with aicentre push.
-- Interactive sessions are started by the user in another terminal: aicentre shell, aicentre marimo [notebook], aicentre jupyter [notebook] or aicentre code [folder], with --gpu for a GPU on p1i. aicentre code opens the user's desktop editor over ssh when one is installed here, and VS Code in the browser otherwise. Suggest the exact command.
-- If a tool says a provider wants a password, tell the user to run any aicentre command in another terminal, such as aicentre list jobs, which logs in once for 30 minutes, and then try again.
+- Look at the user's situation with p1_check, p1_jobs and p1_gpus before giving advice about it. They only read.
+- Write job scripts, ssh config and commands that fit the facts above and the provider's page, in the form the user works in.
+- These tools start nothing on a cluster. Submitting, following and cancelling is the user's to do, or yours through the user's own shell if they ask.
+- If a tool says a provider wants a password, the user has to log in once in a terminal of their own: ssh to the provider's Host, or any aicentre command such as aicentre list jobs, which keeps the login for 30 minutes.
 - Be brief and concrete. Use the user's own paths and job ids."#;
 
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
@@ -130,6 +139,15 @@ fn list() -> Vec<P1Tool> {
             }),
         },
         P1Tool {
+            name: "p1_gpus",
+            label: "P1 GPUs",
+            description: "The GPUs of P1 compute and how busy they are, as JSON: each GPU on DTU with its node, model, memory in use and jobs, and one line for each queue and partition with what is free. For choosing where and when to run.".into(),
+            parameters: json!({
+                "type": "object",
+                "properties": { "providers": providers_schema() }
+            }),
+        },
+        P1Tool {
             name: "p1_check",
             label: "P1 setup check",
             description: "Whether this machine is set up for P1 compute: OpenSSH, ~/.ssh/config Host blocks, keys, the Teleport login for Gefion. As JSON, with a hint for every problem. connect also logs in to each provider.".into(),
@@ -178,7 +196,7 @@ impl P1Tools {
                     Err(e) => format!("Could not read the docs: {e}"),
                 }))
             }
-            "p1_jobs" | "p1_check" => {
+            "p1_jobs" | "p1_gpus" | "p1_check" => {
                 let mut asked = providers(&params["providers"]);
                 asked.sort();
                 asked.dedup();
@@ -191,10 +209,10 @@ impl P1Tools {
                     return Ok(answer.clone());
                 }
                 let (c, out) = quiet(ctx);
-                let code = if name == "p1_jobs" {
-                    list::list(&c, &asked, true, What::Jobs).await?
-                } else {
-                    check(&c, &asked, connect, true).await?
+                let code = match name {
+                    "p1_jobs" => list::list(&c, &asked, true, What::Jobs).await?,
+                    "p1_gpus" => list::list(&c, &asked, true, What::Gpus).await?,
+                    _ => check(&c, &asked, connect, true).await?,
                 };
                 let answer = said(&out, code);
                 let keep = if code == 0 { FRESH } else { RETRY };

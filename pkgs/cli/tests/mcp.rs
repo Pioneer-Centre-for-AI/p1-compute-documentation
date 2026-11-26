@@ -191,7 +191,7 @@ async fn speaks_only_json_rpc_on_stdout_and_lists_the_tools() {
             .iter()
             .map(|t| t["name"].as_str().unwrap())
             .collect();
-        assert_eq!(names, ["p1_docs", "p1_jobs", "p1_check"]);
+        assert_eq!(names, ["p1_docs", "p1_jobs", "p1_gpus", "p1_check"]);
         let jobs: Value = serde_json::from_str(&c.tool("p1_jobs", json!({})).await).unwrap();
         assert_eq!(jobs["jobs"][0]["provider"], "dtu");
         assert_eq!(jobs["jobs"][0]["id"], "123");

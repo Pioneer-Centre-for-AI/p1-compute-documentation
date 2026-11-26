@@ -318,8 +318,11 @@ aicentre gallery get int-gpu        # one of them onto the cluster, in examples/
 
 ## In your agent tool
 
-`aicentre mcp` gives an agent tool you already use tools that read this site, your setup and
-your jobs. Add it once:
+`aicentre mcp` gives an agent tool you already use tools that read this site, your setup, your
+jobs and how busy the GPUs are. You do not have to use `aicentre` for anything else. The point
+is that your agent knows P1 compute: the queues, the limits, how a job is asked for, where files
+go. What it then writes for you fits P1, whether you work with plain `ssh`, your own scripts or
+another tool. Add it once:
 
 ```bash
 claude mcp add --scope user aicentre -- aicentre mcp     # Claude Code
@@ -337,7 +340,7 @@ For opencode, add this to `opencode.json`:
 ```
 
 Other agent tools that take an MCP server on stdio start it the same way: the command
-`aicentre mcp`. Its tools only read: the docs, your jobs and your setup. The prompt under
+`aicentre mcp`. Its tools only read: the docs, your jobs, the GPUs and your setup. The prompt under
 [With your agent](#with-your-agent) installs `aicentre` and offers this step at the end.
 
 Versions before 0.2 had `aicentre chat`, which kept model logins and conversations of its own.
