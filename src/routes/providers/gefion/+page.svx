@@ -49,7 +49,8 @@ hardware:
 </script>
 
 The P1 Gefion HPC is a sandbox with on-demand H100 GPUs on [Gefion](https://dcai.dk/gefion). Use
-it to develop, test and pilot a workload on the hardware generation it will scale up on. Full 8-GPU
+it to develop, test and pilot a workload on the hardware generation it will scale up on. P1's
+partition runs in Gefion AI Cloud, DCAI's environment for non-sensitive work. Full 8-GPU
 production nodes need separate funding, such as a Novo Nordisk Foundation (NNF) compute voucher or
 another allocation. A workload that already runs here is what you apply with.
 
@@ -98,11 +99,13 @@ details.
 The sandbox runs Slurm. Submit GPU work as batch jobs instead of holding an interactive session
 open.
 
-- Every job names the Slurm account it is charged to. P1's default account is `iu_0096`
-  (`--account=iu_0096`). A project with its own account uses that one instead.
+- The login node is shared with every other Gefion AI Cloud user. P1 has no login node of its
+  own, so keep work on it light.
+- The Slurm account decides where a job runs. `--account=iu_0096` sends it to P1's reserved
+  nodes. A project with its own DCAI account uses that one instead. Nothing else in the job
+  changes.
 - Nodes have 2 TB of memory, so size `--mem` for the data a job loads, not its GPUs.
-- The P1 partition is on Gefion's open system. The login node reaches public git hosts and package
-  indexes.
+- The login node reaches public git hosts and package indexes.
 - Large transfers use the SFTP endpoint `xfer.dcai.dk`. To get your public IP whitelisted, send
   [DCAI support](mailto:support@dcai.dk) the output of `curl ifconfig.io`.
 
@@ -125,11 +128,12 @@ See [every example that runs on P1 Gefion HPC](/gallery/?provider=gefion).
 
 Limits may change to meet the needs of P1 students and faculty.
 
-<Aside type="note" title="GDPR Compliance">
+<Aside type="caution" title="Not for personal data">
 
-The P1 Gefion HPC is GDPR-compliant, so projects with personal data can run here. Have the
-data-processing paperwork in place, and agree the details with DCAI and the compute coordinator,
-before you upload any.
+P1's account runs in Gefion AI Cloud, which is not GDPR-compliant. Do not upload personal or
+sensitive data. Gefion also has a separate environment, Gefion Confidential, for that kind of data,
+but P1 has no resources there. For personal data, use the [P1 NGC HPC](/providers/ngc/), or ask
+the compute coordinator about other options.
 
 </Aside>
 
@@ -155,6 +159,10 @@ Jobs beyond the default limits can be cancelled when demand picks up. You are re
 checkpointing, so a cancelled job resumes instead of starting over.
 
 </Aside>
+
+For more than P1's two nodes, ask [DCAI support](mailto:support@dcai.dk) for an account of your
+own, for example under an NNF compute voucher. Then pass that account in `--account`. Your scripts,
+environment and login stay the same.
 
 <GpuAllowance selfServeDocumented />
 

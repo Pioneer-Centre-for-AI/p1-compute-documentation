@@ -94,7 +94,7 @@ export const clusterDecisions: ClusterDecision[] = [
   {
     need: 'To mature a workload for large-scale runs',
     slug: 'gefion',
-    why: 'GDPR-compliant DGX H100 sandbox; the step to full nodes needs its own funding'
+    why: 'DGX H100 sandbox in Gefion AI Cloud, for non-sensitive data; the step to full nodes needs its own funding'
   }
 ];
 
