@@ -1,6 +1,6 @@
 [package]
 name = "aicentre"
-version = "0.2.0-rc.2"
+version = "0.2.0-rc.3"
 edition = "2024"
 description = "Command line tool for the P1 HPC clusters"
 publish = false
