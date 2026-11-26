@@ -337,8 +337,10 @@ async fn shell(
     out.or_die(pyenv::ensure(env, python).await)?;
     python.activate(env);
     match python {
-        pyenv::Python::Project => println!("Python: this folder's project; uv run uses it."),
-        pyenv::Python::Own(venv) => println!("Python: {venv}, this folder's own."),
+        pyenv::Python::Project => {
+            println!("Python: the project this folder is in; uv run uses it.")
+        }
+        pyenv::Python::Own(venv) => println!("Python: {venv}, this folder's or its project's own."),
         pyenv::Python::Default(venv) => println!(
             "Python: {venv}, shared by your sessions. pip install adds to it; a folder with a pyproject.toml or a .venv uses its own."
         ),
@@ -435,7 +437,7 @@ async fn serve(ctx: &Ctx, r: &LaunchRequest, left: &Mutex<Leftovers>) -> Step<i3
     if std::env::set_current_dir(&dir).is_err() {
         return out.die(&format!("cannot open {dir}"));
     }
-    let python = pyenv::choose(&dir, &data);
+    let python = pyenv::choose(&dir, &data, &[&home, &base]);
     let wanted = fetch::wanted(&env, &r.app, &r.server, &data, &python);
     if r.needs {
         for need in &wanted {

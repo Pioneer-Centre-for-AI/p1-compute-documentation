@@ -201,11 +201,17 @@ tab or the editor, which frees the GPU for the next person.
 
 ### Python and packages
 
-A session picks its Python from the folder it opens:
+A session picks its Python from the folder it opens, or the folder of the notebook it opens. It
+looks there first and then in the folders above it, up to your home or project directory:
 
-- A folder with a `pyproject.toml` runs in that project's environment, through uv.
-- A folder with a `.venv` uses that environment.
-- Any other folder uses one default environment that all your sessions share, with Python 3.13.
+- A `pyproject.toml` means that project's environment, through uv.
+- A `.venv` means that environment.
+- With neither, it uses one default environment that all your sessions share, with Python 3.13.
+
+So a notebook in `myproject/notebooks/` runs in the environment of `myproject/`, with the
+packages you installed there. To import your own code from `myproject/src/`, make the project
+installable (`uv init --package`, or a `[build-system]` in `pyproject.toml`): uv then installs
+it into the environment and `import` finds it from any notebook.
 
 So in a shell, `pip install torch` puts torch where your notebooks in marimo, JupyterLab and
 VS Code find it. The shell says which environment it uses when it starts.

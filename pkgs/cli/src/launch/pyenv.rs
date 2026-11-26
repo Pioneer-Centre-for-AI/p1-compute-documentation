@@ -14,14 +14,23 @@ pub enum Python {
     Default(String),
 }
 
-pub fn choose(dir: &str, data: &str) -> Python {
-    let own = format!("{dir}/.venv");
-    if Path::new(dir).join("pyproject.toml").is_file() {
-        Python::Project
-    } else if Path::new(&own).join("bin/python").exists() {
-        Python::Own(own)
-    } else {
-        Python::Default(format!("{data}/venv"))
+/// Looks in the folder and then in the ones above it, as uv does, so a
+/// notebook in `project/notebooks` runs in the project's environment. It
+/// stops at the top of `roots`, the user's own directories.
+pub fn choose(dir: &str, data: &str, roots: &[&str]) -> Python {
+    let mut at = Path::new(dir);
+    loop {
+        if at.join("pyproject.toml").is_file() {
+            return Python::Project;
+        }
+        let own = at.join(".venv");
+        if own.join("bin/python").exists() {
+            return Python::Own(own.to_string_lossy().into_owned());
+        }
+        match at.parent().filter(|up| roots.iter().any(|root| up.starts_with(root))) {
+            Some(up) => at = up,
+            None => return Python::Default(format!("{data}/venv")),
+        }
     }
 }
 
@@ -96,7 +105,7 @@ mod tests {
         let dir = tempfile::tempdir().unwrap();
         let at = dir.path().to_string_lossy().into_owned();
         let default = Python::Default("/d/venv".into());
-        assert_eq!(choose(&at, "/d"), default);
+        assert_eq!(choose(&at, "/d", &[]), default);
         assert!(!default.exists() && !default.has("marimo") && !default.imports("ipykernel"));
 
         let own = format!("{at}/.venv");
@@ -104,7 +113,7 @@ mod tests {
         std::fs::write(format!("{own}/bin/python"), "").unwrap();
         std::fs::write(format!("{own}/bin/marimo"), "").unwrap();
         std::fs::create_dir_all(format!("{own}/lib/python3.13/site-packages/ipykernel")).unwrap();
-        let chosen = choose(&at, "/d");
+        let chosen = choose(&at, "/d", &[]);
         assert_eq!(chosen, Python::Own(own.clone()));
         assert!(chosen.exists() && chosen.has("marimo") && chosen.imports("ipykernel"));
         assert!(!chosen.has("jupyter-lab") && !chosen.imports("torch"));
@@ -115,7 +124,15 @@ mod tests {
         assert_eq!(env["VIRTUAL_ENV"], own);
 
         std::fs::write(dir.path().join("pyproject.toml"), "").unwrap();
-        assert_eq!(choose(&at, "/d"), Python::Project);
+        assert_eq!(choose(&at, "/d", &[]), Python::Project);
+
+        let deep = format!("{at}/notebooks/drafts");
+        std::fs::create_dir_all(&deep).unwrap();
+        assert_eq!(choose(&deep, "/d", &[]), default);
+        assert_eq!(choose(&deep, "/d", &[&deep]), default);
+        assert_eq!(choose(&deep, "/d", &[&at]), Python::Project);
+        std::fs::remove_file(dir.path().join("pyproject.toml")).unwrap();
+        assert_eq!(choose(&deep, "/d", &[&at]), Python::Own(own));
         assert!(Python::Project.exists() && Python::Project.venv().is_none());
     }
 }

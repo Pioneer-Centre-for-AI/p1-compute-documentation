@@ -233,9 +233,14 @@ mod tests {
             let _ = sock.read_to_end(&mut data).await;
             String::from_utf8_lossy(&data).into_owned()
         });
-        let listen = crate::browser::free_port().await.unwrap();
         let pin = gate.fingerprint.clone();
-        let relay = secret_proxy(listen, up_port, &"c".repeat(64), &pin).await.unwrap();
+        // Another test can take the free port before the relay binds it.
+        let (listen, relay) = loop {
+            let listen = crate::browser::free_port().await.unwrap();
+            if let Ok(relay) = secret_proxy(listen, up_port, &"c".repeat(64), &pin).await {
+                break (listen, relay);
+            }
+        };
         let mut client = TcpStream::connect(("127.0.0.1", listen)).await.unwrap();
         client.write_all(b"GET / HTTP/1.1\r\n\r\n").await.unwrap();
         client.shutdown().await.unwrap();
